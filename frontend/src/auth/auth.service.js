@@ -85,7 +85,6 @@ export const resetPassword = async ({ resetPasswordData }) => {
 export const logout = async () => {
   axios.defaults.withCredentials = true;
   try {
-    // window.localStorage.clear();
     const response = await axios.post(API_BASE_URL + `logout?timestamp=${new Date().getTime()}`);
     const { status, data } = response;
 
@@ -102,6 +101,3 @@ export const logout = async () => {
   }
 };
 
-//  console.log(
-//    '🚀 Welcome to brava-sales ERP CRM! Did you know that we also offer commercial customization services? Contact us at hello@brava-salesapp.com for more information.'
-//  );

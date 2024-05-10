@@ -6,14 +6,14 @@ import { Provider } from 'react-redux';
 import store from '@/redux/store';
 import PageLoader from '@/components/PageLoader';
 
-const brava-salesOs = lazy(() => import('./apps/brava-salesOs'));
+const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
 
 export default function RoutApp() {
   return (
     <BrowserRouter>
       <Provider store={store}>
         <Suspense fallback={<PageLoader />}>
-          <brava-salesOs />
+          <BravaSalesOs />
         </Suspense>
       </Provider>
     </BrowserRouter>

@@ -3,8 +3,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import useLanguage from '@/locale/useLanguage';
-
 import { Form, Button } from 'antd';
 
 import { login } from '@/redux/auth/actions';
@@ -14,10 +12,8 @@ import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
 
 const LoginPage = () => {
-  const translate = useLanguage();
   const { isLoading, isSuccess } = useSelector(selectAuth);
   const navigate = useNavigate();
-  // const size = useSize();
 
   const dispatch = useDispatch();
   const onFinish = (values) => {
@@ -27,6 +23,13 @@ const LoginPage = () => {
   useEffect(() => {
     if (isSuccess) navigate('/');
   }, [isSuccess]);
+
+  const validateMessages = {
+    required: 'El campo es requerido',
+    types: {
+      email: 'Ingrese un correo válido',
+    },
+  };
 
   const FormContainer = () => {
     return (
@@ -39,6 +42,7 @@ const LoginPage = () => {
             remember: true,
           }}
           onFinish={onFinish}
+          validateMessages={validateMessages}
         >
           <LoginForm />
           <Form.Item>
@@ -49,7 +53,7 @@ const LoginPage = () => {
               loading={isLoading}
               size="large"
             >
-              {translate('Log in')}
+              {'Iniciar sesión'}
             </Button>
           </Form.Item>
         </Form>
@@ -57,7 +61,7 @@ const LoginPage = () => {
     );
   };
 
-  return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Sign in" />;
+  return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Iniciar sesión" />;
 };
 
 export default LoginPage;

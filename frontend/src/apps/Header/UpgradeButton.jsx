@@ -15,7 +15,7 @@ export default function UpgradeButton() {
         <Button
           type="primary"
           onClick={() => {
-            window.open(`https://www.brava-salesapp.com/contact-us/`);
+            window.open(`https://www.idurarapp.com/contact-us/`);
           }}
         >
           {translate('Contact us')}
@@ -43,5 +43,5 @@ export default function UpgradeButton() {
 }
 
 //  console.log(
-//    '🚀 Welcome to brava-sales ERP CRM! Did you know that we also offer commercial customization services? Contact us at hello@brava-salesapp.com for more information.'
+//    '🚀 Welcome to IDURAR ERP CRM! Did you know that we also offer commercial customization services? Contact us at hello@idurarapp.com for more information.'
 //  );

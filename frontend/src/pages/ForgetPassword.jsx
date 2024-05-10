@@ -6,14 +6,10 @@ import { request } from '@/request';
 
 import ForgetPasswordForm from '@/forms/ForgetPasswordForm';
 
-import useLanguage from '@/locale/useLanguage';
-
 import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
 
 const ForgetPassword = () => {
-  const translate = useLanguage();
-
   const navigate = useNavigate();
 
   const { onFetch, isSuccess, isLoading } = useOnFetch();
@@ -27,6 +23,13 @@ const ForgetPassword = () => {
     onFetch(callback);
   };
 
+  const validateMessages = {
+    required: 'El campo es requerido',
+    types: {
+      email: 'Ingrese un correo válido',
+    },
+  };
+
   const FormContainer = () => {
     return (
       <Loading isLoading={isLoading}>
@@ -37,26 +40,26 @@ const ForgetPassword = () => {
             remember: true,
           }}
           onFinish={onFinish}
+          validateMessages={validateMessages}
         >
           <ForgetPasswordForm />
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button" size="large">
-              {translate('Request new Password')}
+              {'Cambiar contraseña'}
             </Button>
-            {translate('Or')} <a href="/login"> {translate('already have account Login')} </a>
+            {'O'} <a href="/login"> {'Ya tengo una cuenta'} </a>
           </Form.Item>
         </Form>
       </Loading>
     );
   };
   if (!isSuccess) {
-    return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Forget Password" />;
+    return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Olvidé mi contraseña" />;
   } else {
     return (
       <Result
         status="success"
-        title={translate('Check your email address to reset your password')}
-        subTitle={translate('Password Reset in progress')}
+        title={'Revisa tu email para reestablecer tu contraseña'}
         style={{ maxWidth: '450px', margin: 'auto' }}
         extra={
           <Button
@@ -65,7 +68,7 @@ const ForgetPassword = () => {
               navigate(`/login`);
             }}
           >
-            {translate('Login')}
+            {'Login'}
           </Button>
         }
       ></Result>
