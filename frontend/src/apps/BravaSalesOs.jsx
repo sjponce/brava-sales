@@ -4,13 +4,16 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '@/redux/auth/selectors';
 import PageLoader from '@/components/PageLoader';
 import AuthRouter from '@/router/AuthRouter';
+import { AppContextProvider } from '@/context/appContext';
 
 const ErpApp = lazy(() => import('./ErpApp'));
 
 const DefaultApp = () => (
-  <Suspense fallback={<PageLoader />}>
-    <ErpApp />
-  </Suspense>
+  <AppContextProvider>
+    <Suspense fallback={<PageLoader />}>
+      <ErpApp />
+    </Suspense>
+  </AppContextProvider>
 );
 
 export default function BravaSalesOs() {

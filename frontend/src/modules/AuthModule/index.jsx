@@ -36,7 +36,6 @@ const AuthModule = ({ authContent, AUTH_TITLE, isForRegistre = false }) => {
           <div className="site-layout-content">{authContent}</div>
         </Content>
       </AuthLayout>
-
   );
 };
 
