@@ -16,7 +16,7 @@ const setup = async (req, res) => {
 
   const newAdminPassword = new AdminPassword();
 
-  const { name, email, password, language, timezone, country, config = {} } = req.body;
+  const { name, email, password, timezone, country, config = {} } = req.body;
 
   const objectSchema = Joi.object({
     name: Joi.string().required(),
@@ -64,11 +64,10 @@ const setup = async (req, res) => {
     const file = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
     const settingsToUpdate = {
-      brava-sales_app_email: email,
-      brava-sales_app_company_email: email,
-      brava-sales_app_timezone: timezone,
-      brava-sales_app_country: country,
-      brava-sales_app_language: language || 'en_us',
+      brava_sales_app_email: email,
+      brava_sales_app_company_email: email,
+      brava_sales_app_timezone: timezone,
+      brava_sales_app_country: country,
     };
 
     const newSettings = file.map((x) => {
@@ -98,7 +97,7 @@ const setup = async (req, res) => {
   return res.status(200).json({
     success: true,
     result: {},
-    message: 'Successfully brava-sales App Setup',
+    message: 'Successfully IDURAR App Setup',
   });
 };
 

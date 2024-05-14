@@ -1,14 +1,6 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 
 const mongoose = require('mongoose');
-
-const checkAndCorrectURL = require('./checkAndCorrectURL');
-const sendMail = require('./sendMail');
-
-const { loadSettings } = require('@/middlewares/settings');
-const { useAppSettings } = require('@/settings');
 
 const authUser = require('./authUser');
 
@@ -36,9 +28,8 @@ const login = async (req, res, { userModel }) => {
     });
   }
 
-  const user = await UserModel.findOne({ email: email, removed: false });
+  const user = await UserModel.findOne({ email, removed: false });
 
-  // console.log(user);
   if (!user)
     return res.status(404).json({
       success: false,

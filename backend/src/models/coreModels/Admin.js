@@ -19,14 +19,6 @@ const adminSchema = new Schema({
   },
   name: { type: String, required: true },
   surname: { type: String },
-  photo: {
-    type: String,
-    trim: true,
-  },
-  created: {
-    type: Date,
-    default: Date.now,
-  },
   role: {
     type: String,
     default: 'employee',

@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 
 const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel }) => {
   const isMatch = await bcrypt.compare(databasePassword.salt + password, databasePassword.password);
-
   if (!isMatch)
     return res.status(403).json({
       success: false,

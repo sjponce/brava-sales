@@ -15,10 +15,10 @@ const resetPassword = async (req, res, { userModel }) => {
 
   if (!user.enabled && user.role === 'owner') {
     const settings = useAppSettings();
-    const brava-sales_app_email = settings['brava-sales_app_email'];
-    const brava-sales_base_url = settings['brava-sales_base_url'];
+    const idurar_app_email = settings['idurar_app_email'];
+    const idurar_base_url = settings['idurar_base_url'];
 
-    const url = checkAndCorrectURL(brava-sales_base_url);
+    const url = checkAndCorrectURL(idurar_base_url);
 
     const link = url + '/verify/' + user._id + '/' + databasePassword.emailToken;
 
@@ -26,7 +26,7 @@ const resetPassword = async (req, res, { userModel }) => {
       email,
       name: user.name,
       link,
-      brava-sales_app_email,
+      idurar_app_email,
       emailToken: databasePassword.emailToken,
     });
 

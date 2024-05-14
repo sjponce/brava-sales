@@ -4,7 +4,6 @@ const moment = require('moment');
 let pdf = require('html-pdf');
 const { listAllSettings, loadSettings } = require('@/middlewares/settings');
 const { getData } = require('@/middlewares/serverData');
-const useLanguage = require('@/locale/useLanguage');
 const { useMoney, useDate } = require('@/settings');
 
 const pugFiles = ['invoice', 'offer', 'quote', 'payment'];
@@ -39,8 +38,6 @@ exports.generatePdf = async (
       };
 
       const settings = await loadSettings();
-      const selectedLang = settings['brava-sales_app_language'];
-      const translate = useLanguage({ selectedLang });
       const currencyList = await loadCurrency();
       const currentCurrency = currencyList.find(
         (currency) => currency.currency_code.toLowerCase() == result.currency.toLowerCase()

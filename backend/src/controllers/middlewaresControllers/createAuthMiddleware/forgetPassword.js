@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const checkAndCorrectURL = require('./checkAndCorrectURL');
 const sendMail = require('./sendMail');
 const shortid = require('shortid');
-const { loadSettings } = require('@/middlewares/settings');
 
 const { useAppSettings } = require('@/settings');
 
@@ -33,7 +32,6 @@ const forgetPassword = async (req, res, { userModel }) => {
   }
 
   const user = await User.findOne({ email: email, removed: false });
-  const databasePassword = await UserPassword.findOne({ user: user._id, removed: false });
 
   if (!user.enabled)
     return res.status(409).json({
@@ -60,10 +58,10 @@ const forgetPassword = async (req, res, { userModel }) => {
   ).exec();
 
   const settings = useAppSettings();
-  const brava-sales_app_email = settings['brava-sales_app_email'];
-  const brava-sales_base_url = settings['brava-sales_base_url'];
+  const idurar_app_email = settings['idurar_app_email'];
+  const idurar_base_url = settings['idurar_base_url'];
 
-  const url = checkAndCorrectURL(brava-sales_base_url);
+  const url = checkAndCorrectURL(idurar_base_url);
 
   const link = url + '/resetpassword/' + user._id + '/' + resetToken;
 
@@ -71,8 +69,8 @@ const forgetPassword = async (req, res, { userModel }) => {
     email,
     name: user.name,
     link,
-    subject: 'Reset your password | brava-sales',
-    brava-sales_app_email,
+    subject: 'Reset your password | idurar',
+    idurar_app_email,
     type: 'passwordVerfication',
   });
 
