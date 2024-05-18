@@ -8,10 +8,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js --ignore public/",
-    "production": "NODE_ENV=production",
-    "setup": "node src/setup/setup.js",
-    "upgrade": "node src/setup/upgrade.js",
-    "reset": "node src/setup/reset.js"
+    "production": "NODE_ENV=production"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -27,7 +24,7 @@
     "mongoose": "^8.1.1",
     "mongoose-autopopulate": "^1.1.0",
     "resend": "^2.0.0",
-    "shortid": "^2.2.16",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "nodemon": "3.0.1"
