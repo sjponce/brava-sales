@@ -8,10 +8,10 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
-   build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +23,21 @@ jobs:
 
       - name: Build backend
         run: npm run build:backend
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and deploy Container App
+        uses: azure/container-apps-deploy-action@v0
+        with:
+          appSourcePath: ${{ github.workspace }}
+          acrName: bravasalesbackend
+          acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+          containerAppName: backend
+          containerAppEnvironment: prod
+          resourceGroup: brava-server_group
+          imageToBuild: bravasalesbackend.azurecr.io/backend:<Tag e.g. ${{ github.sha }}>
+          dockerfilePath: /backend
