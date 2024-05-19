@@ -33,10 +33,10 @@ jobs:
         uses: azure/container-apps-deploy-action@v0
         with:
           appSourcePath: ${{ github.workspace }}
-          acrName: bravasalesbackend
+          acrName: pfbravasales
           acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-          containerAppName: brava-sales-backend
+          containerAppName: pfbravasales
           resourceGroup: brava-server_group
-          imageToBuild: bravasalesbackend.azurecr.io/brava-sales-backend:${{ github.sha }}
+          imageToBuild: pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}
           dockerfilePath: backend/Dockerfile
