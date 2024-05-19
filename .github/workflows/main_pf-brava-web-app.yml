@@ -47,4 +47,4 @@ jobs:
             app-name: 'pf-brava-web-app'
             slot-name: 'production'
             publish-profile: ${{ secrets.AzureAppService_PublishProfile_00127ce4b7bd4f018ffa7a9b2f496279 }}
-            images: 'pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_4dee8156ebf34d6f9232cdb338516dec }}/pfbravasales:${{ github.sha }}'
+            images: 'pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}'
