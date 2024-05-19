@@ -36,8 +36,7 @@ jobs:
           acrName: bravasalesbackend
           acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-          containerAppName: backend
-          containerAppEnvironment: prod
+          containerAppName: bravasalesbackend
           resourceGroup: brava-server_group
           imageToBuild: bravasalesbackend.azurecr.io/bravasalesbackend:<Tag e.g. ${{ github.sha }}>
           dockerfilePath: /backend
