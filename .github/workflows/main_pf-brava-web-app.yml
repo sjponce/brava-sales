@@ -11,41 +11,42 @@ on:
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Log in to registry
-      uses: docker/login-action@v2
-      with:
-        registry: https://pfbravasales.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_3dd0b0b9874f4b2c900f729a2bad9895 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_bf0e3569b4ba48deafd0057d668e18c3 }}
+      - name: Log in to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://pfbravasales.azurecr.io/
+          username: ${{ secrets.AzureAppService_ContainerUsername_6e0b40dc65c44f2e852d225cf581c97e }}
+          password: ${{ secrets.AzureAppService_ContainerPassword_56ac1ed68f334a3daa91d6298cd95597 }}
 
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3dd0b0b9874f4b2c900f729a2bad9895 }}/pfbravasales:${{ github.sha }}
-        file: backend/Dockerfile
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_6e0b40dc65c44f2e852d225cf581c97e }}/pfbravasales:${{ github.sha }}
+          file: ./backend/Dockerfile
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      runs-on: ubuntu-latest
+      needs: build
+      environment:
+        name: 'production'
+        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'pf-brava-web-app'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_6a57b2972eef4d5bb95d9051bc39bf34 }}
-        images: 'pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3dd0b0b9874f4b2c900f729a2bad9895 }}/pfbravasales:${{ github.sha }}'
+      steps:
+        - name: Deploy to Azure Web App
+          id: deploy-to-webapp
+          uses: azure/webapps-deploy@v2
+          with:
+            app-name: 'pf-brava-web-app'
+            slot-name: 'production'
+            publish-profile: ${{ secrets.AzureAppService_PublishProfile_e88efb03b40b4a899bc95d74af9fe3d8 }}
+            images: 'pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_6e0b40dc65c44f2e852d225cf581c97e }}/pfbravasales:${{ github.sha }}'
