@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ae0b2d0445244173a263adc9f5a6d2db }}/pfbravasales:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./backend/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
