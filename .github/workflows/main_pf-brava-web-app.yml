@@ -19,19 +19,22 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Log in to registry
-      uses: docker/login-action@v2
+    - name: Log in to Azure
+      uses: azure/login@v1
       with:
-        registry: https://pfbravasales.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_3dd0b0b9874f4b2c900f729a2bad9895 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_bf0e3569b4ba48deafd0057d668e18c3 }}
-
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+    - name: Build and deploy Container App
+      uses: azure/container-apps-deploy-action@v0
       with:
-        push: true
-        tags: pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3dd0b0b9874f4b2c900f729a2bad9895 }}/pfbravasales:${{ github.sha }}
-        file: ./Dockerfile
+          appSourcePath: ${{ github.workspace }}
+          acrName: pfbravasales
+          acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+          containerAppName: pfbravasales
+          resourceGroup: PF-BRAVA-SALES
+          imageToBuild: pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}
+          dockerfilePath: backend/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,5 +50,4 @@ jobs:
       with:
         app-name: 'pf-brava-web-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_6a57b2972eef4d5bb95d9051bc39bf34 }}
-        images: 'pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3dd0b0b9874f4b2c900f729a2bad9895 }}/pfbravasales:${{ github.sha }}'
+        images: 'pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}'
