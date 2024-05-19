@@ -28,7 +28,7 @@ app.use(compression());
 // Here our API Routes
 
 app.get('/', function (req, res) {
-  res.send('AZURE');
+  res.send('AZURE2');
 });
 
 app.use('/api', coreAuthRouter);
