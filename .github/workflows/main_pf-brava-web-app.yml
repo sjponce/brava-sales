@@ -22,7 +22,7 @@ jobs:
     - name: Log in to Azure
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ secrets.AZURE_CREDENTIALS_PUBLISH }}
       
     - name: Build and deploy Container App
       uses: azure/container-apps-deploy-action@v0
@@ -56,4 +56,4 @@ jobs:
         app-name: 'pf-brava-web-app'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_e88efb03b40b4a899bc95d74af9fe3d8 }}
-        images: 'pfbravasales.azurecr.io/pfbravADSHKBJDSAJHVDSADSABUYSADHBUYHBUYDSAHBIUYDSAasales:${{ github.sha }}'
+        images: 'pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}'
