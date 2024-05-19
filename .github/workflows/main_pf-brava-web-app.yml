@@ -19,22 +19,19 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Log in to Azure
-      uses: azure/login@v1
+    - name: Log in to registry
+      uses: docker/login-action@v2
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS_PUBLISH }}
-      
-    - name: Build and deploy Container App
-      uses: azure/container-apps-deploy-action@v0
+        registry: https://pfbravasales.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_e536102c68a04e2383d0b17289209186 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_a2a5d0e5ea25436c981a8ed0f9c731f3 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
       with:
-          appSourcePath: ${{ github.workspace }}
-          acrName: pfbravasales
-          acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-          acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-          containerAppName: pfbravasales
-          resourceGroup: pf-brava-web-app_group
-          imageToBuild: pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}
-          dockerfilePath: backend/Dockerfile
+        push: true
+        tags: pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_e536102c68a04e2383d0b17289209186 }}/pfbravasales:${{ github.sha }}
+        file: ./Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
@@ -44,16 +41,11 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS_PUBLISH }}
-
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'pf-brava-web-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e88efb03b40b4a899bc95d74af9fe3d8 }}
-        images: 'pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_5613282695724237a84cec1735a1ba92 }}
+        images: 'pfbravasales.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_e536102c68a04e2383d0b17289209186 }}/pfbravasales:${{ github.sha }}'
