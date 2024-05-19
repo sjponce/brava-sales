@@ -32,7 +32,7 @@ jobs:
           acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
           containerAppName: pfbravasales
-          resourceGroup: PF-BRAVA-SALES
+          resourceGroup: pf-brava-web-app_group
           imageToBuild: pfbravasales.azurecr.io/pfbravasales:${{ github.sha }}
           dockerfilePath: backend/Dockerfile
 
