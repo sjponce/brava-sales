@@ -28,7 +28,7 @@ app.use(compression());
 // Here our API Routes
 
 app.get('/', function (req, res) {
-  res.send('AZURE5');
+  res.send('AZURE6');
 });
 
 app.use('/api', coreAuthRouter);
