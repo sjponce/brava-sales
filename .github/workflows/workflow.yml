@@ -24,37 +24,19 @@ jobs:
       - name: Build backend
         run: npm run build:backend
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to container registry
-        uses: docker/login-action@v2
+      - name: Log in to Azure
+        uses: azure/login@v1
         with:
-          registry: https://mcr.microsoft.com/
-          username: ${{ secrets.AzureAppService_ContainerUsername_a8f9035f841e40da8a13f6c4b238e143 }}
-          password: ${{ secrets.AzureAppService_ContainerPassword_d83f9bb857024514898817e7bd3da728 }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build and push container image to registry
-        uses: docker/build-push-action@v3
+      - name: Build and deploy Container App
+        uses: azure/container-apps-deploy-action@v0
         with:
-          context: .
-          push: true
-          tags: mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_a8f9035f841e40da8a13f6c4b238e143 }}/appsvc/staticsite:${{ github.sha }}
-          file: ./backend/Dockerfile
-
-  deploy:
-      runs-on: ubuntu-latest
-      needs: build
-      environment:
-        name: 'production'
-        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-      steps:
-        - name: Deploy to Azure Web App
-          id: deploy-to-webapp
-          uses: azure/webapps-deploy@v2
-          with:
-            app-name: 'brava-sales-backend'
-            slot-name: 'production'
-            publish-profile: ${{ secrets.AzureAppService_PublishProfile_8cf5be25c6b74d1c92e64d694ea6669f }}
-            images: 'mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_a8f9035f841e40da8a13f6c4b238e143 }}/appsvc/staticsite:${{ github.sha }}'
+          appSourcePath: ${{ github.workspace }}
+          acrName: bravasalesbackend
+          acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+          containerAppName: brava-sales-backend
+          resourceGroup: brava-server_group
+          imageToBuild: bravasalesbackend.azurecr.io/brava-sales-backend:${{ github.sha }}
+          dockerfilePath: backend/Dockerfile

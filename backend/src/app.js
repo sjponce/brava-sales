@@ -27,6 +27,10 @@ app.use(compression());
 
 // Here our API Routes
 
+app.get('/', function (req, res) {
+  res.send('AZURE');
+});
+
 app.use('/api', coreAuthRouter);
 
 // If that above routes didnt work, we 404 them and forward to error handler
