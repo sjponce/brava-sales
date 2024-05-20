@@ -35,5 +35,5 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/bravasales
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/bravasales:${{ github.sha }}
 
