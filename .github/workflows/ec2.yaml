@@ -24,7 +24,7 @@ jobs:
           instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
           # Command execution location
           # !!! The line below may vary depending on where your docker-compose file is located.
-          working-directory: /home/ubuntu
+          working-directory: ./
           # Bash commands you want to execute
           command: |
             sudo docker-compose stop
