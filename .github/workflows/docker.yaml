@@ -32,15 +32,8 @@ jobs:
       - name: Build and push FE
         uses: docker/build-push-action@v2
         with:
-          context: ./book-portal-fe
-          file: ./book-portal-fe/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/book-portal-fe:latest
 
-      - name: Build and push Nginx
-        uses: docker/build-push-action@v3
-        with:
-          context: ./nginx
-          file: ./nginx/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/book-portal-proxy:latest
