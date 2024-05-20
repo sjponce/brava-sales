@@ -35,5 +35,5 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/book-portal-fe:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/bravasales
 
