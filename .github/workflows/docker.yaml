@@ -15,6 +15,10 @@ jobs:
     name: Docker Build and Push
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: ['21.x']
+
     steps:
       - name: Checkoutgit add .
 
