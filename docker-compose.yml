@@ -6,15 +6,15 @@ services:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "8080:8080"
+      - "8888:8888"
     environment:
       - NODE_ENV=development
       - DATABASE=mongodb://mongo:27017/local-brava-salesdb
-      - PORT=8080
+      - PORT=8888
       - NODE_OPTIONS=--openssl-legacy-provider
       - JWT_SECRET=bravaSales
 
-    command: sh -c "npm run dev"
+    command: sh -c "npm run setup && npm run dev"
 
     networks:
       - server-mongo
@@ -31,7 +31,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - REACT_APP_API_URL=http://backend:8080/api
+      - REACT_APP_API_URL=http://backend:8888/api
       - NODE_OPTIONS=--openssl-legacy-provider
 
     depends_on:
