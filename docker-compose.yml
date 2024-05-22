@@ -18,7 +18,6 @@ services:
 
     networks:
       - server-mongo
-
     depends_on:
       - mongo
 

@@ -5,6 +5,7 @@ on:
     workflows: ["Node.js CI"]
     types: [completed]
 
+    
 jobs:
   on-success:
 
@@ -31,9 +32,7 @@ jobs:
           working-directory: .
           # Bash commands you want to execute
           command: |
-            ls
-            pwd
-            echo //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            sed -i 's/^GITHUB_SHA=.*/GITHUB_SHA=${{ github.sha }}/'
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker-compose pull
