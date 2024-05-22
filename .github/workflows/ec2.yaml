@@ -31,6 +31,8 @@ jobs:
           working-directory: .
           # Bash commands you want to execute
           command: |
+            ls
+            pwd
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker-compose pull
