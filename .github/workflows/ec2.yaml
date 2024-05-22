@@ -32,7 +32,7 @@ jobs:
           working-directory: .
           # Bash commands you want to execute
           command: |
-            sed -i 's/^GITHUB_SHA=.*/GITHUB_SHA=${{ github.sha }}/' .env
+            sed -i 's/^GITHUB_SHA=.*/GITHUB_SHA=${{ github.sha }}/' /var/snap/amazon-ssm-agent/.env
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker-compose pull
