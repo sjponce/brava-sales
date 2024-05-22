@@ -33,6 +33,7 @@ jobs:
           command: |
             ls
             pwd
+            echo //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker-compose pull
