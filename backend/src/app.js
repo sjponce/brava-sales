@@ -28,7 +28,7 @@ app.use(compression());
 // Here our API Routes
 
 app.get('/', function (req, res) {
-  res.send('AZURE6');
+  res.send('AWS');
 });
 
 app.use('/api', coreAuthRouter);
