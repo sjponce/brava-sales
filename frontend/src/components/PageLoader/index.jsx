@@ -1,11 +1,11 @@
 import React from 'react';
-import { Spin } from 'antd';
+import { Box, CircularProgress } from '@mui/material';
 
 const PageLoader = () => {
   return (
-    <div className="centerAbsolute">
-      <Spin size="large" />
-    </div>
+    <Box sx={{ height: '100vh', backgroundColor: "background.default", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <CircularProgress />
+    </Box>
   );
 };
 export default PageLoader;

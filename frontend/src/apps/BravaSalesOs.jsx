@@ -1,5 +1,4 @@
 import { lazy, Suspense } from 'react';
-
 import { useSelector } from 'react-redux';
 import { selectAuth } from '@/redux/auth/selectors';
 import PageLoader from '@/components/PageLoader';

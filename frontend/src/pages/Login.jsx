@@ -1,67 +1,50 @@
 import { useEffect } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import { Form, Button } from 'antd';
-
+import { Button, Box, Typography } from '@mui/material';
 import { login } from '@/redux/auth/actions';
 import { selectAuth } from '@/redux/auth/selectors';
 import LoginForm from '@/forms/LoginForm';
-import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
+import { useForm } from 'react-hook-form';
+import Loading from '@/components/Loading';
 
 const LoginPage = () => {
   const { isLoading, isSuccess } = useSelector(selectAuth);
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-  const onFinish = (values) => {
-    dispatch(login({ loginData: values }));
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    dispatch(login({ loginData: data }));
   };
 
   useEffect(() => {
     if (isSuccess) navigate('/');
   }, [isSuccess]);
 
-  const validateMessages = {
-    required: 'El campo es requerido',
-    types: {
-      email: 'Ingrese un correo válido',
-    },
-  };
-
   const FormContainer = () => {
     return (
-      <Loading isLoading={isLoading}>
-        <Form
-          layout="vertical"
-          name="normal_login"
-          className="login-form"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          validateMessages={validateMessages}
-        >
-          <LoginForm />
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              loading={isLoading}
-              size="large"
-            >
-              {'Iniciar sesión'}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Loading>
+      <Box>
+        <Loading isLoading={isLoading} />
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} name="normal_login">
+          <LoginForm register={register} />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isLoading}
+            size="large"
+            fullWidth
+            sx={{ mt: 1 }}
+          >
+            <Typography variant="button">Iniciar sesión</Typography>
+          </Button>
+        </Box>
+      </Box>
     );
   };
-
-  return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Iniciar sesión" />;
+  return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Iniciar sesión" />
 };
 
 export default LoginPage;
