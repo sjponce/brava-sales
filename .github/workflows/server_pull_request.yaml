@@ -3,11 +3,11 @@ name: Server PR CI
 on:
   push:
     branches: ["develop", "main"]
-    paths: './backend'
+    paths: '../backend'
   pull_request:
     branches: ["develop", "main"]
     paths:
-      - './backend'
+      - '../backend'
 jobs:
   build:
 
