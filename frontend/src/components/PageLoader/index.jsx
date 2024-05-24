@@ -1,11 +1,11 @@
-import React from 'react';
-import { Spin } from 'antd';
+import { Spin } from "antd";
+import React from "react";
 
 const PageLoader = () => {
-  return (
-    <div className="centerAbsolute">
-      <Spin size="large" />
-    </div>
-  );
+	return (
+		<div className="centerAbsolute">
+			<Spin size="large" />
+		</div>
+	);
 };
 export default PageLoader;

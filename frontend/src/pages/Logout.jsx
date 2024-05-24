@@ -1,21 +1,21 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout as logoutAction } from '@/redux/auth/actions';
-import PageLoader from '@/components/PageLoader';
+import PageLoader from "@/components/PageLoader";
+import { logout as logoutAction } from "@/redux/auth/actions";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  function asyncLogout() {
-    dispatch(logoutAction());
-  }
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	function asyncLogout() {
+		dispatch(logoutAction());
+	}
 
-  useEffect(() => {
-    asyncLogout();
-    navigate('/login');
-  }, []);
+	useEffect(() => {
+		asyncLogout();
+		navigate("/login");
+	}, []);
 
-  return <PageLoader />;
+	return <PageLoader />;
 };
 export default Logout;
