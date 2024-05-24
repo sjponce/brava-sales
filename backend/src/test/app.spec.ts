@@ -7,7 +7,7 @@ describe('GET /', () => {
   beforeEach(() => {
     app = express();
     app.get("/", (req, res) => {
-      res.send("Brava sales!!!");
+      res.send("Brava sales!!");
     });
   });
 
