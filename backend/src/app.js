@@ -28,7 +28,7 @@ app.use(compression());
 // Here our API Routes
 
 app.get("/", (req, res) => {
-	res.send("Brava sales!!");
+	res.send("Brava sales!!!");
 });
 
 app.use("/api", coreAuthRouter);
