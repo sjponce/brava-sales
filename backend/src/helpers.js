@@ -24,7 +24,7 @@ exports.icon = (name) => {
 exports.image = (name) => fs.readFileSync(`./public/images/photos/${name}.jpg`);
 
 // Some details about the site
-exports.siteName = `Express.js / MongoBD / Rest Api`;
+exports.siteName = `Brava server`;
 
 exports.timeRange = (start, end, format, interval) => {
   if (format == undefined) {

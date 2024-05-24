@@ -1,21 +1,21 @@
-import './style/app.css';
+import "./style/app.css";
 
-import { Suspense, lazy } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from '@/redux/store';
-import PageLoader from '@/components/PageLoader';
+import PageLoader from "@/components/PageLoader";
+import store from "@/redux/store";
+import { Suspense, lazy } from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
-const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
+const BravaSalesOs = lazy(() => import("./apps/BravaSalesOs"));
 
 export default function RoutApp() {
-  return (
-    <BrowserRouter>
-      <Provider store={store}>
-        <Suspense fallback={<PageLoader />}>
-          <BravaSalesOs />
-        </Suspense>
-      </Provider>
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<Provider store={store}>
+				<Suspense fallback={<PageLoader />}>
+					<BravaSalesOs />
+				</Suspense>
+			</Provider>
+		</BrowserRouter>
+	);
 }

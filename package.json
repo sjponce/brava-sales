@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:docker": "npm run build:backend && docker build -t backend .o"
+    "build:backend": "cd backend && docker build -t backend ."
   },
   "author": "",
   "license": "ISC"

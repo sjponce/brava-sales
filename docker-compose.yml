@@ -12,13 +12,12 @@ services:
       - DATABASE=mongodb://mongo:27017/local-brava-salesdb
       - PORT=8888
       - NODE_OPTIONS=--openssl-legacy-provider
-      - JWT_SECRET=secret_key_1234
+      - JWT_SECRET=bravaSales
 
     command: sh -c "npm run setup && npm run dev"
 
     networks:
       - server-mongo
-
     depends_on:
       - mongo
 
