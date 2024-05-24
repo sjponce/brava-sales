@@ -46,9 +46,8 @@ const LoginPage = () => {
 				>
 					<LoginForm />
 					<Form.Item>
+						<button></button>
 						<Button
-							type="primary"
-							htmlType="submit"
 							className="login-form-button"
 							loading={isLoading}
 							size="large"

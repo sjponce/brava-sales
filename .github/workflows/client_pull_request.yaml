@@ -22,4 +22,5 @@ jobs:
       - run: cd backend
       - run: npm i
       - run: npm run test
-      - run: npm run biome
+      - run: npm run lint
+      - run: npm run format

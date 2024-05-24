@@ -1,13 +1,12 @@
-import { createSelector } from "reselect";
-const authSelect = (state) => state.auth;
+import { createSelector } from 'reselect';
 
 export const selectAuth = (state) => state.auth;
 export const selectCurrentAdmin = createSelector(
-	[selectAuth],
-	(auth) => auth.current,
+  [selectAuth],
+  (auth) => auth.current,
 );
 
 export const isLoggedIn = createSelector(
-	[selectAuth],
-	(auth) => auth.isLoggedIn,
+  [selectAuth],
+  (auth) => auth.isLoggedIn,
 );
