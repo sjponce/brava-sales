@@ -15,6 +15,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - working-directory: 'backend'
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
