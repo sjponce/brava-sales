@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 const listAll = async (userModel, req, res) => {
 	const User = mongoose.model(userModel);
 
-	const limit = Number.parseInt(req.query.items) || 100;
-
 	//  Query the database for a list of all results
 	const result = await User.find({ removed: false, enabled: true })
 		.sort({ enabled: -1 })

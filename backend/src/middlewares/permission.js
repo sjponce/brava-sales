@@ -6,8 +6,8 @@ const roles = {
 	manager: ["create", "read", "update", "delete", "download", "upload"],
 	employee: ["create", "read", "update", "download", "upload"],
 	staff: ["create", "read", "update", "download", "upload"],
-	create_only: ["create", "read", "download", "upload"],
-	read_only: ["read", "download"],
+	createOnly: ["create", "read", "download", "upload"],
+	readOnly: ["read", "download"],
 };
 exports.roles = roles;
 

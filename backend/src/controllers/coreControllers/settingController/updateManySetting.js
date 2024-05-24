@@ -10,8 +10,8 @@ const updateManySetting = async (req, res) => {
 
 	for (const setting of settings) {
 		if (
-			!setting.hasOwnProperty("settingKey") ||
-			!setting.hasOwnProperty("settingValue")
+			!Object.prototype.hasOwnProperty.call(setting, "settingKey") ||
+			!Object.prototype.hasOwnProperty.call(setting, "settingValue")
 		) {
 			settingsHasError = true;
 			break;
