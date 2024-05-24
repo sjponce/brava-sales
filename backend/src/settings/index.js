@@ -1,5 +1,5 @@
-const useAppSettings = require('./useAppSettings');
+const useAppSettings = require("./useAppSettings");
 
 module.exports = {
-  useAppSettings,
+	useAppSettings,
 };

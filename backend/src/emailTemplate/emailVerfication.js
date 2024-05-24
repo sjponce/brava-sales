@@ -1,11 +1,11 @@
 exports.emailVerfication = ({
-  title = 'Verify your email',
-  name = '',
-  link = '',
-  time = new Date(),
-  emailToken,
+	title = "Verify your email",
+	name = "",
+	link = "",
+	time = new Date(),
+	emailToken,
 }) => {
-  return `
+	return `
     <div>
 
         <head data-id="__react-email-head">
@@ -33,12 +33,12 @@ exports.emailVerfication = ({
 };
 
 exports.passwordVerfication = ({
-  title = 'Reset your Password',
-  name = '',
-  link = '',
-  time = new Date(),
+	title = "Reset your Password",
+	name = "",
+	link = "",
+	time = new Date(),
 }) => {
-  return `
+	return `
     <div>
 
         <head data-id="__react-email-head">
@@ -64,10 +64,10 @@ exports.passwordVerfication = ({
 };
 
 exports.afterRegistrationSuccess = ({
-  title = 'Customize IDURAR ERP CRM or build your own SaaS',
-  name = '',
+	title = "Customize IDURAR ERP CRM or build your own SaaS",
+	name = "",
 }) => {
-  return `
+	return `
     <div>
 
         <head data-id="__react-email-head">
