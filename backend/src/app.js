@@ -33,6 +33,10 @@ app.get("/", (req, res) => {
 
 app.use("/api", coreAuthRouter);
 
+app.get("/test", (req, res) => {
+	res.send("Brava sales!!");
+});
+
 // If that above routes didnt work, we 404 them and forward to error handler
 app.use(errorHandlers.notFound);
 
