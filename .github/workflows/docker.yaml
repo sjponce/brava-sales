@@ -1,7 +1,7 @@
 env:
   CI: false
 
-name: Node.js CI
+name: Docker CI
 
 on:
   push:
