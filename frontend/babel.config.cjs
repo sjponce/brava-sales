@@ -5,9 +5,9 @@ module.exports = {
       'babel-plugin-module-resolver',
       {
         alias: {
-          '@': './src',
-        },
-      },
-    ],
-  ],
+          '@': './src'
+        }
+      }
+    ]
+  ]
 };

@@ -1,6 +1,6 @@
-import { login, register, logout } from './auth.service.js';
 import axios from 'axios';
 import { jest } from '@jest/globals';
+import { login, register, logout } from './auth.service.js';
 
 jest.mock('axios');
 
@@ -24,10 +24,7 @@ describe('Auth Function Tests', () => {
     const response = await login({ loginData });
 
     expect(response).toEqual(mockData.data);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.stringContaining('login'),
-      loginData
-    );
+    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('login'), loginData);
   });
 
   test('test_register_server_error', async () => {
@@ -46,10 +43,7 @@ describe('Auth Function Tests', () => {
     const response = await register({ registerData });
 
     expect(response).toEqual(mockError.response.data);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.stringContaining('register'),
-      registerData
-    );
+    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('register'), registerData);
   });
 
   test('test_logout_with_credentials', async () => {
@@ -66,8 +60,6 @@ describe('Auth Function Tests', () => {
 
     expect(response).toEqual(mockData.data);
     expect(axios.defaults.withCredentials).toBe(true);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.stringContaining('logout')
-    );
+    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('logout'));
   });
 });

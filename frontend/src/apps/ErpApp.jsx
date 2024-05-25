@@ -1,11 +1,11 @@
-import { Layout } from "antd";
+import { Layout } from 'antd';
 
-import AppRouter from "@/router/AppRouter";
+import AppRouter from '@/router/AppRouter';
 
 export default function ErpCrmApp() {
-	return (
-		<Layout>
-			<AppRouter />
-		</Layout>
-	);
+  return (
+    <Layout>
+      <AppRouter />
+    </Layout>
+  );
 }
