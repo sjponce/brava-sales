@@ -6,14 +6,14 @@ describe('GET /', () => {
 
   beforeEach(() => {
     app = express();
-    app.get("/", (req, res) => {
-      res.send("Brava sales!!!");
+    app.get('/', (req, res) => {
+      res.send('Brava sales!!');
     });
   });
 
   test('should return the correct response on the root URL', async () => {
     const response = await request(app).get('/');
     expect(response.status).toBe(200);
-    expect(response.text).toBe("Brava sales!!");
+    expect(response.text).toBe('Brava sales!!');
   });
 });
