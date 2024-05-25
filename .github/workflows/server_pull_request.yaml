@@ -15,12 +15,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - working-directory: 'backend'
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-      - run: cd backend
+      - working-directory: 'backend'
       - run: npm i
       - run: npm run test
       - run: npm run lint
-      - run: nom run format
+      - run: npm run format
