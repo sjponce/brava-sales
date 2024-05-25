@@ -8,7 +8,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_MODAL });
-      }
+      },
     },
     updatePanel: {
       open: () => {
@@ -16,8 +16,8 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_PANEL });
-      }
-    }
+      },
+    },
   };
 };
 

@@ -5,7 +5,7 @@ const contextSelectors = (state) => {
     },
     isPanelOpen: () => {
       return state.isPanelOpen;
-    }
+    },
   };
 };
 

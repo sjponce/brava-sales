@@ -2,14 +2,14 @@ import * as actionTypes from './types';
 
 export const initialState = {
   read: {
-    isOpen: true
+    isOpen: true,
   },
   update: {
-    isOpen: false
+    isOpen: false,
   },
   passwordModal: {
-    isOpen: false
-  }
+    isOpen: false,
+  },
 };
 
 export function contextReducer(state, action) {
@@ -18,24 +18,24 @@ export function contextReducer(state, action) {
     case actionTypes.OPEN_MODAL:
       return {
         ...state,
-        passwordModal: { isOpen: true }
+        passwordModal: { isOpen: true },
       };
     case actionTypes.CLOSE_MODAL:
       return {
         ...state,
-        passwordModal: { isOpen: false }
+        passwordModal: { isOpen: false },
       };
     case actionTypes.OPEN_PANEL:
       return {
         ...initialState,
         read: {
-          isOpen: false
+          isOpen: false,
         },
-        [keyState]: { isOpen: true }
+        [keyState]: { isOpen: true },
       };
     case actionTypes.CLOSE_PANEL:
       return {
-        ...initialState
+        ...initialState,
       };
 
     default: {

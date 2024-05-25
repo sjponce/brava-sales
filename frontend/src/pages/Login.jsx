@@ -27,8 +27,8 @@ const LoginPage = () => {
   const validateMessages = {
     required: 'El campo es requerido',
     types: {
-      email: 'Ingrese un correo válido'
-    }
+      email: 'Ingrese un correo válido',
+    },
   };
 
   const FormContainer = () => {
@@ -39,7 +39,7 @@ const LoginPage = () => {
           name="normal_login"
           className="login-form"
           initialValues={{
-            remember: true
+            remember: true,
           }}
           onFinish={onFinish}
           validateMessages={validateMessages}

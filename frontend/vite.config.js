@@ -16,8 +16,8 @@ export default ({ mode }) => {
     resolve: {
       base: '/',
       alias: {
-        '@': path.resolve(__dirname, 'src')
-      }
+        '@': path.resolve(__dirname, 'src'),
+      },
     },
     server: {
       port: 3000,
@@ -25,10 +25,10 @@ export default ({ mode }) => {
         '/api': {
           target: proxyUrl,
           changeOrigin: true,
-          secure: false
-        }
-      }
-    }
+          secure: false,
+        },
+      },
+    },
   };
   return defineConfig(config);
 };

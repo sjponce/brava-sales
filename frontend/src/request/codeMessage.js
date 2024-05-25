@@ -13,7 +13,7 @@ const codeMessage = {
   500: 'An error occurred in the server, please check the server. ',
   502: 'Gateway error. ',
   503: 'The service is unavailable, the server is temporarily overloaded or maintained. ',
-  504: 'The gateway has timed out. '
+  504: 'The gateway has timed out. ',
 };
 
 export default codeMessage;

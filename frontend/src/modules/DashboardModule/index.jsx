@@ -13,7 +13,7 @@ export default function DashboardModule() {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100vw',
-            height: '100vh'
+            height: '100vh',
           }}
         >
           <span>Logged in!</span>

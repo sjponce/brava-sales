@@ -8,7 +8,7 @@ const contextSelectors = (state) => {
     },
     isBoxOpen: () => {
       return state.isBoxOpen;
-    }
+    },
   };
 };
 
