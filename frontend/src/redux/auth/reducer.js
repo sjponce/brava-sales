@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   current: {},
   isLoggedIn: false,
   isLoading: false,
-  isSuccess: false,
+  isSuccess: false
 };
 
 const authReducer = (action, state = INITIAL_STATE) => {
@@ -13,7 +13,7 @@ const authReducer = (action, state = INITIAL_STATE) => {
       return {
         ...state,
         isLoggedIn: false,
-        isLoading: true,
+        isLoading: true
       };
     case actionTypes.REQUEST_FAILED:
       return INITIAL_STATE;
@@ -23,7 +23,7 @@ const authReducer = (action, state = INITIAL_STATE) => {
         current: action.payload,
         isLoggedIn: true,
         isLoading: false,
-        isSuccess: true,
+        isSuccess: true
       };
 
     case actionTypes.REGISTER_SUCCESS:
@@ -31,7 +31,7 @@ const authReducer = (action, state = INITIAL_STATE) => {
         current: null,
         isLoggedIn: false,
         isLoading: false,
-        isSuccess: true,
+        isSuccess: true
       };
     case actionTypes.LOGOUT_SUCCESS:
       return INITIAL_STATE;
@@ -41,7 +41,7 @@ const authReducer = (action, state = INITIAL_STATE) => {
         current: action.payload,
         isLoggedIn: true,
         isLoading: false,
-        isSuccess: true,
+        isSuccess: true
       };
 
     default:

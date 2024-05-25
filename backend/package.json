@@ -12,7 +12,7 @@
 		"build": "docker build -t backend .o",
 		"test": "jest",
 		"lint": "eslint --fix .",
-		"format": "prettier src/**/*.js --write. --config ./.prettierrc"
+		"format": "prettier ./**/*.js --write --config ./.prettierrc"
 	},
 	"dependencies": {
 		"@biomejs/biome": "^1.7.3",

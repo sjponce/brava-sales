@@ -12,29 +12,29 @@ const routes = {
   default: [
     {
       path: '/login',
-      element: <Navigate to="/" />,
+      element: <Navigate to="/" />
     },
     {
       path: '/verify/*',
-      element: <Navigate to="/" />,
+      element: <Navigate to="/" />
     },
     {
       path: '/resetpassword/*',
-      element: <Navigate to="/" />,
+      element: <Navigate to="/" />
     },
     {
       path: '/logout',
-      element: <Logout />,
+      element: <Logout />
     },
     {
       path: '/',
-      element: <Dashboard />,
+      element: <Dashboard />
     },
     {
       path: '*',
-      element: <NotFound />,
-    },
-  ],
+      element: <NotFound />
+    }
+  ]
 };
 
 export default routes;

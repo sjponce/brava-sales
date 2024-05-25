@@ -40,7 +40,8 @@ export const storePersist = {
     if (!isJsonString(result)) {
       window.localStorage.removeItem(key);
       return false;
-    } return JSON.parse(result);
+    }
+    return JSON.parse(result);
   },
   remove: (key) => {
     window.localStorage.removeItem(key);
@@ -48,5 +49,5 @@ export const storePersist = {
   getAll: () => window.localStorage,
   clear: () => {
     window.localStorage.clear();
-  },
+  }
 };

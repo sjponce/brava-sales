@@ -19,6 +19,9 @@ export default function useOnFetch() {
   };
 
   return {
-    onFetch, result, isSuccess, isLoading,
+    onFetch,
+    result,
+    isSuccess,
+    isLoading
   };
 }

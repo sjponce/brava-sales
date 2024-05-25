@@ -8,7 +8,7 @@ export const login = async ({ loginData }) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL}login?timestamp=${new Date().getTime()}`,
-      loginData,
+      loginData
     );
 
     const { status, data } = response;
@@ -17,8 +17,8 @@ export const login = async ({ loginData }) => {
       { data, status },
       {
         notifyOnSuccess: false,
-        notifyOnFailed: true,
-      },
+        notifyOnFailed: true
+      }
     );
     return data;
   } catch (error) {
@@ -36,8 +36,8 @@ export const register = async ({ registerData }) => {
       { data, status },
       {
         notifyOnSuccess: true,
-        notifyOnFailed: true,
-      },
+        notifyOnFailed: true
+      }
     );
     return data;
   } catch (error) {
@@ -47,9 +47,7 @@ export const register = async ({ registerData }) => {
 
 export const verify = async ({ userId, emailToken }) => {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}verify/${userId}/${emailToken}`,
-    );
+    const response = await axios.get(`${API_BASE_URL}verify/${userId}/${emailToken}`);
 
     const { status, data } = response;
 
@@ -57,8 +55,8 @@ export const verify = async ({ userId, emailToken }) => {
       { data, status },
       {
         notifyOnSuccess: true,
-        notifyOnFailed: true,
-      },
+        notifyOnFailed: true
+      }
     );
     return data;
   } catch (error) {
@@ -68,10 +66,7 @@ export const verify = async ({ userId, emailToken }) => {
 
 export const resetPassword = async ({ resetPasswordData }) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}resetpassword`,
-      resetPasswordData,
-    );
+    const response = await axios.post(`${API_BASE_URL}resetpassword`, resetPasswordData);
 
     const { status, data } = response;
 
@@ -79,8 +74,8 @@ export const resetPassword = async ({ resetPasswordData }) => {
       { data, status },
       {
         notifyOnSuccess: true,
-        notifyOnFailed: true,
-      },
+        notifyOnFailed: true
+      }
     );
     return data;
   } catch (error) {
@@ -90,17 +85,15 @@ export const resetPassword = async ({ resetPasswordData }) => {
 export const logout = async () => {
   axios.defaults.withCredentials = true;
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}logout?timestamp=${new Date().getTime()}`,
-    );
+    const response = await axios.post(`${API_BASE_URL}logout?timestamp=${new Date().getTime()}`);
     const { status, data } = response;
 
     successHandler(
       { data, status },
       {
         notifyOnSuccess: false,
-        notifyOnFailed: true,
-      },
+        notifyOnFailed: true
+      }
     );
     return data;
   } catch (error) {

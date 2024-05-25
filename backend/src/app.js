@@ -1,22 +1,22 @@
-const express = require("express");
+const express = require('express');
 
-const cors = require("cors");
-const compression = require("compression");
+const cors = require('cors');
+const compression = require('compression');
 
-const cookieParser = require("cookie-parser");
+const cookieParser = require('cookie-parser');
 
-const coreAuthRouter = require("./routes/coreRoutes/coreAuth");
+const coreAuthRouter = require('./routes/coreRoutes/coreAuth');
 
-const errorHandlers = require("./handlers/errorHandlers");
+const errorHandlers = require('./handlers/errorHandlers');
 
 // create our Express app
 const app = express();
 
 app.use(
-	cors({
-		origin: true,
-		credentials: true,
-	}),
+  cors({
+    origin: true,
+    credentials: true,
+  })
 );
 
 app.use(cookieParser());
@@ -27,14 +27,14 @@ app.use(compression());
 
 // Here our API Routes
 
-app.get("/", (req, res) => {
-	res.send("Brava sales!!");
+app.get('/', (req, res) => {
+  res.send('Brava sales!!');
 });
 
-app.use("/api", coreAuthRouter);
+app.use('/api', coreAuthRouter);
 
-app.get("/test", (req, res) => {
-	res.send("Brava sales!!");
+app.get('/test', (req, res) => {
+  res.send('Brava sales!!');
 });
 
 // If that above routes didnt work, we 404 them and forward to error handler

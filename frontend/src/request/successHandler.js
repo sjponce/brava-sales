@@ -2,10 +2,7 @@ import { notification } from 'antd';
 
 import codeMessage from './codeMessage';
 
-const successHandler = (
-  response,
-  options = { notifyOnSuccess: false, notifyOnFailed: true },
-) => {
+const successHandler = (response, options = { notifyOnSuccess: false, notifyOnFailed: true }) => {
   const { data } = response;
   if (data && data.success === true) {
     const message = response.data && data.message;
@@ -14,11 +11,11 @@ const successHandler = (
     if (options.notifyOnSuccess) {
       notification.config({
         duration: 2,
-        maxCount: 2,
+        maxCount: 2
       });
       notification.success({
         message: 'Request success',
-        description: successText,
+        description: successText
       });
     }
   } else {
@@ -28,11 +25,11 @@ const successHandler = (
     if (options.notifyOnFailed) {
       notification.config({
         duration: 4,
-        maxCount: 2,
+        maxCount: 2
       });
       notification.error({
         message: `Request error ${status}`,
-        description: errorText,
+        description: errorText
       });
     }
   }

@@ -14,9 +14,9 @@ describe('Auth Function Tests', () => {
       data: {
         success: true,
         message: 'Login successful',
-        user: { id: 1, name: 'John Doe' },
+        user: { id: 1, name: 'John Doe' }
       },
-      status: 200,
+      status: 200
     };
     axios.post.mockResolvedValue(mockData);
 
@@ -32,10 +32,10 @@ describe('Auth Function Tests', () => {
       response: {
         data: {
           success: false,
-          message: 'Error registering user',
+          message: 'Error registering user'
         },
-        status: 500,
-      },
+        status: 500
+      }
     };
     axios.post.mockRejectedValue(mockError);
 
@@ -50,9 +50,9 @@ describe('Auth Function Tests', () => {
     const mockData = {
       data: {
         success: true,
-        message: 'Logout successful',
+        message: 'Logout successful'
       },
-      status: 200,
+      status: 200
     };
     axios.post.mockResolvedValue(mockData);
 
