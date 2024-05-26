@@ -1,1 +1,3 @@
-export { default as reducer } from './reducer';
+import authReducer from './reducer';
+
+export default authReducer;

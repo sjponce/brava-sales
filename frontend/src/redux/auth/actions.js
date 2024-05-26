@@ -1,5 +1,5 @@
 import * as authService from '@/auth';
-import { request } from './request';
+import { request } from '../../request/request';
 import * as actionTypes from './types';
 
 export const login = ({ loginData }) => async (dispatch) => {

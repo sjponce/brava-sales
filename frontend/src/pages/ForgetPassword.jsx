@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Form, Result } from 'antd';
 
 import useOnFetch from '@/hooks/useOnFetch';
-import { request } from './request';
+import { request } from '../request/request';
 
 import ForgetPasswordForm from '@/forms/ForgetPasswordForm';
 

@@ -8,7 +8,7 @@ export const login = async ({ loginData }) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL}login?timestamp=${new Date().getTime()}`,
-      loginData
+      loginData,
     );
 
     const { status, data } = response;
@@ -18,7 +18,7 @@ export const login = async ({ loginData }) => {
       {
         notifyOnSuccess: false,
         notifyOnFailed: true,
-      }
+      },
     );
     return data;
   } catch (error) {
@@ -37,7 +37,7 @@ export const register = async ({ registerData }) => {
       {
         notifyOnSuccess: true,
         notifyOnFailed: true,
-      }
+      },
     );
     return data;
   } catch (error) {
@@ -56,7 +56,7 @@ export const verify = async ({ userId, emailToken }) => {
       {
         notifyOnSuccess: true,
         notifyOnFailed: true,
-      }
+      },
     );
     return data;
   } catch (error) {
@@ -75,7 +75,7 @@ export const resetPassword = async ({ resetPasswordData }) => {
       {
         notifyOnSuccess: true,
         notifyOnFailed: true,
-      }
+      },
     );
     return data;
   } catch (error) {
@@ -93,7 +93,7 @@ export const logout = async () => {
       {
         notifyOnSuccess: false,
         notifyOnFailed: true,
-      }
+      },
     );
     return data;
   } catch (error) {
