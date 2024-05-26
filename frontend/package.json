@@ -10,7 +10,7 @@
     "build": "vite build",
     "test": "jest",
     "lint": "eslint --fix .",
-    "format": "prettier './**/*.{js,jsx} --write --config ./.prettierrc"
+    "format": "prettier './**/*.{js,jsx}' --write --config ./.prettierrc"
   },
   "type": "module",
   "dependencies": {
