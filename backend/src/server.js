@@ -18,7 +18,7 @@ mongoose.connect(process.env.DATABASE);
 
 mongoose.connection.on('error', (error) => {
   console.log(
-    `1. 🔥 Common Error caused issue: check your .env file first and add your mongodb url`
+    `1. 🔥 Common Error caused issue → : check your .env file first and add your mongodb url`
   );
   console.error(`2. 🚫 Error → : ${error.message}`);
 });
