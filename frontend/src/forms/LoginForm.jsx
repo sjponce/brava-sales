@@ -10,11 +10,11 @@ export default function LoginForm() {
         name="email"
         rules={[
           {
-            required: true
+            required: true,
           },
           {
-            type: 'email'
-          }
+            type: 'email',
+          },
         ]}
       >
         <Input
@@ -29,8 +29,8 @@ export default function LoginForm() {
         name="password"
         rules={[
           {
-            required: true
-          }
+            required: true,
+          },
         ]}
       >
         <Input.Password

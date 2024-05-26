@@ -8,7 +8,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_MODAL });
-      }
+      },
     },
     advancedBox: {
       open: () => {
@@ -16,7 +16,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_ADVANCED_BOX });
-      }
+      },
     },
     editBox: {
       open: () => {
@@ -24,7 +24,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_EDIT_BOX });
-      }
+      },
     },
     panel: {
       open: () => {
@@ -35,7 +35,7 @@ const contextActions = (dispatch) => {
       },
       collapse: () => {
         dispatch({ type: actionTypes.COLLAPSE_PANEL });
-      }
+      },
     },
     collapsedBox: {
       open: () => {
@@ -46,7 +46,7 @@ const contextActions = (dispatch) => {
       },
       collapse: () => {
         dispatch({ type: actionTypes.COLLAPSE_BOX });
-      }
+      },
     },
     readBox: {
       open: () => {
@@ -59,8 +59,8 @@ const contextActions = (dispatch) => {
       },
       collapse: () => {
         dispatch({ type: actionTypes.COLLAPSE_READ_BOX });
-      }
-    }
+      },
+    },
   };
 };
 

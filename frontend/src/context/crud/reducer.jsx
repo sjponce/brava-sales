@@ -6,7 +6,7 @@ export const initialState = {
   isBoxCollapsed: false,
   isReadBoxOpen: false,
   isAdvancedBoxOpen: false,
-  isEditBoxOpen: false
+  isEditBoxOpen: false,
 };
 
 export function contextReducer(state, action) {
@@ -14,84 +14,84 @@ export function contextReducer(state, action) {
     case actionTypes.OPEN_MODAL:
       return {
         ...state,
-        isModalOpen: true
+        isModalOpen: true,
       };
     case actionTypes.CLOSE_MODAL:
       return {
         ...state,
-        isModalOpen: false
+        isModalOpen: false,
       };
 
     case actionTypes.OPEN_PANEL:
       return {
         ...state,
-        isPanelClose: false
+        isPanelClose: false,
       };
     case actionTypes.CLOSE_PANEL:
       return {
         ...state,
-        isPanelClose: true
+        isPanelClose: true,
       };
     case actionTypes.COLLAPSE_PANEL:
       return {
         ...state,
-        isPanelClose: !state.isPanelClose
+        isPanelClose: !state.isPanelClose,
       };
     case actionTypes.OPEN_BOX:
       return {
         ...state,
-        isBoxCollapsed: true
+        isBoxCollapsed: true,
       };
     case actionTypes.CLOSE_BOX:
       return {
         ...state,
-        isBoxCollapsed: false
+        isBoxCollapsed: false,
       };
     case actionTypes.COLLAPSE_BOX:
       return {
         ...state,
-        isBoxCollapsed: !state.isBoxCollapsed
+        isBoxCollapsed: !state.isBoxCollapsed,
       };
     case actionTypes.OPEN_READ_BOX:
       return {
         ...state,
         isAdvancedBoxOpen: false,
         isEditBoxOpen: false,
-        isReadBoxOpen: true
+        isReadBoxOpen: true,
       };
     case actionTypes.CLOSE_READ_BOX:
       return {
         ...state,
-        isReadBoxOpen: false
+        isReadBoxOpen: false,
       };
     case actionTypes.OPEN_ADVANCED_BOX:
       return {
         ...state,
         isReadBoxOpen: false,
         isEditBoxOpen: false,
-        isAdvancedBoxOpen: true
+        isAdvancedBoxOpen: true,
       };
     case actionTypes.CLOSE_ADVANCED_BOX:
       return {
         ...state,
-        isAdvancedBoxOpen: false
+        isAdvancedBoxOpen: false,
       };
     case actionTypes.OPEN_EDIT_BOX:
       return {
         ...state,
         isReadBoxOpen: false,
         isAdvancedBoxOpen: false,
-        isEditBoxOpen: true
+        isEditBoxOpen: true,
       };
     case actionTypes.CLOSE_EDIT_BOX:
       return {
         ...state,
-        isEditBoxOpen: false
+        isEditBoxOpen: false,
       };
     case actionTypes.COLLAPSE_READ_BOX:
       return {
         ...state,
-        isReadBoxOpen: !state.isReadBoxOpen
+        isReadBoxOpen: !state.isReadBoxOpen,
       };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);

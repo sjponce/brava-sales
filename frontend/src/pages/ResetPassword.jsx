@@ -24,8 +24,8 @@ const ResetPassword = () => {
         resetPasswordData: {
           password: values.password,
           userId,
-          resetToken
-        }
+          resetToken,
+        },
       })
     );
   };
@@ -37,8 +37,8 @@ const ResetPassword = () => {
   const validateMessages = {
     required: 'El campo es requerido',
     types: {
-      email: 'Ingrese un correo válido'
-    }
+      email: 'Ingrese un correo válido',
+    },
   };
 
   const FormContainer = () => {
@@ -48,7 +48,7 @@ const ResetPassword = () => {
           name="signup"
           className="login-form"
           initialValues={{
-            remember: true
+            remember: true,
           }}
           onFinish={onFinish}
           validateMessages={validateMessages}

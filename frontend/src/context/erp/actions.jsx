@@ -8,7 +8,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_MODAL });
-      }
+      },
     },
     readPanel: {
       open: () => {
@@ -16,7 +16,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_PANEL });
-      }
+      },
     },
     updatePanel: {
       open: () => {
@@ -24,7 +24,7 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_PANEL });
-      }
+      },
     },
     createPanel: {
       open: () => {
@@ -32,19 +32,19 @@ const contextActions = (dispatch) => {
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_PANEL });
-      }
+      },
     },
     recordPanel: {
       open: () => {
         dispatch({
           type: actionTypes.OPEN_PANEL,
-          keyState: 'recordPayment'
+          keyState: 'recordPayment',
         });
       },
       close: () => {
         dispatch({ type: actionTypes.CLOSE_PANEL });
-      }
-    }
+      },
+    },
   };
 };
 

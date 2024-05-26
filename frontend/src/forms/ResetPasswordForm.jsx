@@ -9,8 +9,8 @@ export default function ResetPasswordForm() {
         name="password"
         rules={[
           {
-            required: true
-          }
+            required: true,
+          },
         ]}
       >
         <Input.Password
@@ -23,7 +23,7 @@ export default function ResetPasswordForm() {
         name="confirm_password"
         rules={[
           {
-            required: true
+            required: true,
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
@@ -31,8 +31,8 @@ export default function ResetPasswordForm() {
                 return Promise.resolve();
               }
               return Promise.reject(new Error('The two passwords that you entered do not match!'));
-            }
-          })
+            },
+          }),
         ]}
         hasFeedback
       >

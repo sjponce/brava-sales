@@ -14,7 +14,7 @@ const AuthModule = ({ authContent, AUTH_TITLE, isForRegistre = false }) => {
         style={{
           padding: isForRegistre ? '40px 30px 30px' : '100px 30px 30px',
           maxWidth: '440px',
-          margin: '0 auto'
+          margin: '0 auto',
         }}
       >
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 0 }} span={0}>
@@ -23,7 +23,7 @@ const AuthModule = ({ authContent, AUTH_TITLE, isForRegistre = false }) => {
             alt="Logo"
             style={{
               margin: '0px auto 20px',
-              display: 'block'
+              display: 'block',
             }}
             height={63}
             width={220}

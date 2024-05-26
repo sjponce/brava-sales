@@ -11,7 +11,7 @@ const contextActions = (dispatch) => {
       },
       collapse: () => {
         dispatch({ type: actionTypes.COLLAPSE_NAV_MENU });
-      }
+      },
     },
     app: {
       open: (appName) => {
@@ -19,8 +19,8 @@ const contextActions = (dispatch) => {
       },
       default: () => {
         dispatch({ type: actionTypes.DEFAULT_APP });
-      }
-    }
+      },
+    },
   };
 };
 

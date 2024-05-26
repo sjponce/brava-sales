@@ -49,5 +49,5 @@ export const storePersist = {
   getAll: () => window.localStorage,
   clear: () => {
     window.localStorage.clear();
-  }
+  },
 };

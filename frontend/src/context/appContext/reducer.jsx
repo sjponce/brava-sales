@@ -2,7 +2,7 @@ import * as actionTypes from './types';
 
 export const initialState = {
   isNavMenuClose: false,
-  currentApp: 'default'
+  currentApp: 'default',
 };
 
 export function contextReducer(state, action) {
@@ -10,27 +10,27 @@ export function contextReducer(state, action) {
     case actionTypes.OPEN_NAV_MENU:
       return {
         ...state,
-        isNavMenuClose: false
+        isNavMenuClose: false,
       };
     case actionTypes.CLOSE_NAV_MENU:
       return {
         ...state,
-        isNavMenuClose: true
+        isNavMenuClose: true,
       };
     case actionTypes.COLLAPSE_NAV_MENU:
       return {
         ...state,
-        isNavMenuClose: !state.isNavMenuClose
+        isNavMenuClose: !state.isNavMenuClose,
       };
     case actionTypes.CHANGE_APP:
       return {
         ...state,
-        currentApp: action.playload
+        currentApp: action.playload,
       };
     case actionTypes.DEFAULT_APP:
       return {
         ...state,
-        currentApp: 'default'
+        currentApp: 'default',
       };
 
     default: {
