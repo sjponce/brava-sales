@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
+import { Button, Form, Result } from 'antd';
 
 import useOnFetch from '@/hooks/useOnFetch';
-import { request } from '@/request';
-import { Button, Form, Result } from 'antd';
+import { request } from './request';
 
 import ForgetPasswordForm from '@/forms/ForgetPasswordForm';
 
 import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
 
-const ForgetPassword = () => {
+function ForgetPassword() {
   const navigate = useNavigate();
 
   const { onFetch, isSuccess, isLoading } = useOnFetch();
@@ -30,7 +30,7 @@ const ForgetPassword = () => {
     },
   };
 
-  const FormContainer = () => {
+  function FormContainer() {
     return (
       <Loading isLoading={isLoading}>
         <Form
@@ -45,35 +45,36 @@ const ForgetPassword = () => {
           <ForgetPasswordForm />
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button" size="large">
-              {'Cambiar contraseña'}
+              Cambiar contraseña
             </Button>
-            {'O'} <a href="/login"> {'Ya tengo una cuenta'} </a>
+            O
+            {' '}
+            <a href="/login"> Ya tengo una cuenta </a>
           </Form.Item>
         </Form>
       </Loading>
     );
-  };
+  }
   if (!isSuccess) {
     return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Olvidé mi contraseña" />;
-  } else {
-    return (
-      <Result
-        status="success"
-        title={'Revisa tu email para reestablecer tu contraseña'}
-        style={{ maxWidth: '450px', margin: 'auto' }}
-        extra={
-          <Button
-            type="primary"
-            onClick={() => {
-              navigate(`/login`);
-            }}
-          >
-            {'Login'}
-          </Button>
-        }
-      ></Result>
-    );
   }
-};
+  return (
+    <Result
+      status="success"
+      title="Revisa tu email para reestablecer tu contraseña"
+      style={{ maxWidth: '450px', margin: 'auto' }}
+      extra={(
+        <Button
+          type="primary"
+          onClick={() => {
+            navigate('/login');
+          }}
+        >
+          Login
+        </Button>
+      )}
+    />
+  );
+}
 
 export default ForgetPassword;
