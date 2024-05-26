@@ -6,10 +6,9 @@ import { defineConfig, loadEnv } from 'vite';
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
-  const proxyUrl =
-    process.env.VITE_DEV_REMOTE === 'remote'
-      ? process.env.VITE_BACKEND_SERVER
-      : 'http://localhost:8080/';
+  const proxyUrl = process.env.VITE_DEV_REMOTE === 'remote'
+    ? process.env.VITE_BACKEND_SERVER
+    : 'http://localhost:8080/';
 
   const config = {
     plugins: [react()],

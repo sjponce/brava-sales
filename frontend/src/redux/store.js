@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import rootReducer from './rootReducer';
-import storePersist, { localStorageHealthCheck } from './storePersist';
+import { storePersist, localStorageHealthCheck } from './storePersist';
 
 localStorageHealthCheck();
 const AUTH_INITIAL_STATE = {
