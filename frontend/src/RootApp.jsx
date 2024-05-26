@@ -8,6 +8,7 @@ import PageLoader from '@/components/PageLoader';
 
 const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
 export default function RootApp() {
+  console.log('Deployed on AWS');
   return (
     <BrowserRouter>
       <Provider store={store}>
