@@ -17,7 +17,7 @@ export const login = async ({ loginData }) => {
       { data, status },
       {
         notifyOnSuccess: false,
-        notifyOnFailed: true
+        notifyOnFailed: true,
       }
     );
     return data;
@@ -36,7 +36,7 @@ export const register = async ({ registerData }) => {
       { data, status },
       {
         notifyOnSuccess: true,
-        notifyOnFailed: true
+        notifyOnFailed: true,
       }
     );
     return data;
@@ -55,7 +55,7 @@ export const verify = async ({ userId, emailToken }) => {
       { data, status },
       {
         notifyOnSuccess: true,
-        notifyOnFailed: true
+        notifyOnFailed: true,
       }
     );
     return data;
@@ -74,7 +74,7 @@ export const resetPassword = async ({ resetPasswordData }) => {
       { data, status },
       {
         notifyOnSuccess: true,
-        notifyOnFailed: true
+        notifyOnFailed: true,
       }
     );
     return data;
@@ -92,7 +92,7 @@ export const logout = async () => {
       { data, status },
       {
         notifyOnSuccess: false,
-        notifyOnFailed: true
+        notifyOnFailed: true,
       }
     );
     return data;

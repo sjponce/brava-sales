@@ -8,11 +8,11 @@ export default function ForgetPasswordForm() {
       name="email"
       rules={[
         {
-          required: true
+          required: true,
         },
         {
-          type: 'email'
-        }
+          type: 'email',
+        },
       ]}
     >
       <Input

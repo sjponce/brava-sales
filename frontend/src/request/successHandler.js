@@ -11,11 +11,11 @@ const successHandler = (response, options = { notifyOnSuccess: false, notifyOnFa
     if (options.notifyOnSuccess) {
       notification.config({
         duration: 2,
-        maxCount: 2
+        maxCount: 2,
       });
       notification.success({
         message: 'Request success',
-        description: successText
+        description: successText,
       });
     }
   } else {
@@ -25,11 +25,11 @@ const successHandler = (response, options = { notifyOnSuccess: false, notifyOnFa
     if (options.notifyOnFailed) {
       notification.config({
         duration: 4,
-        maxCount: 2
+        maxCount: 2,
       });
       notification.error({
         message: `Request error ${status}`,
-        description: errorText
+        description: errorText,
       });
     }
   }

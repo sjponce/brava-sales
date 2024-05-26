@@ -10,8 +10,8 @@ export default function RegisterForm() {
         label={'nombre'}
         rules={[
           {
-            required: true
-          }
+            required: true,
+          },
         ]}
       >
         <Input prefix={<UserOutlined className="site-form-item-icon" />} size="large" />
@@ -21,11 +21,11 @@ export default function RegisterForm() {
         label={'correo electrónico'}
         rules={[
           {
-            required: true
+            required: true,
           },
           {
-            type: 'email'
-          }
+            type: 'email',
+          },
         ]}
       >
         <Input
@@ -39,8 +39,8 @@ export default function RegisterForm() {
         label={'contraseña'}
         rules={[
           {
-            required: true
-          }
+            required: true,
+          },
         ]}
       >
         <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} size="large" />

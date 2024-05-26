@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div
       style={{
-        marginLeft: 140
+        marginLeft: 140,
       }}
     >
       {children}

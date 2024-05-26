@@ -22,6 +22,6 @@ export default function useOnFetch() {
     onFetch,
     result,
     isSuccess,
-    isLoading
+    isLoading,
   };
 }
