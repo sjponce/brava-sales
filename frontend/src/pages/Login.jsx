@@ -11,7 +11,7 @@ import AuthModule from '@/modules/AuthModule';
 import { login } from '@/redux/auth/actions';
 import { selectAuth } from '@/redux/auth/selectors';
 
-const LoginPage = () => {
+function LoginPage() {
   const { isLoading, isSuccess } = useSelector(selectAuth);
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const LoginPage = () => {
     },
   };
 
-  const FormContainer = () => {
+  function FormContainer() {
     return (
       <Loading isLoading={isLoading}>
         <Form
@@ -46,17 +46,17 @@ const LoginPage = () => {
         >
           <LoginForm />
           <Form.Item>
-            <button></button>
+            <button />
             <Button className="login-form-button" loading={isLoading} size="large">
-              {'Iniciar sesión'}
+              Iniciar sesión
             </Button>
           </Form.Item>
         </Form>
       </Loading>
     );
-  };
+  }
 
   return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Iniciar sesión" />;
-};
+}
 
 export default LoginPage;

@@ -1,5 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Spinw } from 'antd';
+import { Spin } from 'antd';
 
 export default function Loading({ isLoading, children }) {
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;

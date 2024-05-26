@@ -9,7 +9,7 @@ export default ({ mode }) => {
   const proxyUrl =
     process.env.VITE_DEV_REMOTE === 'remote'
       ? process.env.VITE_BACKEND_SERVER
-      : 'http://localhost:8888/';
+      : 'http://localhost:8080/';
 
   const config = {
     plugins: [react()],
