@@ -51,3 +51,5 @@ export const storePersist = {
     window.localStorage.clear();
   },
 };
+
+export default storePersist;
