@@ -1,11 +1,10 @@
 name: Server PR CI
 
 on:
-  push:
+  pull_request:
     paths: 'backend/**'
     branches:
       - '**'
-
 jobs:
   build:
 

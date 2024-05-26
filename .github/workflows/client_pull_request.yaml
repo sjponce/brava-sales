@@ -1,10 +1,10 @@
 name: Client PR CI
 
 on:
-  push:
-    branches: ["develop", "main"]
+  pull_request:
     paths: 'frontend/**'
-
+    branches:
+      - '**'
 jobs:
   build:
 
