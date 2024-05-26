@@ -1,8 +1,8 @@
-name: AWS-EC2 Instance CD
+name: AWS-EC2 SV CD
 
 on:
   workflow_run:
-    workflows: ["Node.js CI"]
+    workflows: ["Docker Client CI"]
     types: [completed]
 
     
@@ -32,7 +32,7 @@ jobs:
           working-directory: .
           # Bash commands you want to execute
           command: |
-            sed -i 's/^GITHUB_SHA=.*/GITHUB_SHA=${{ github.sha }}/' /var/snap/amazon-ssm-agent/.env
+            sed -i 's/^GITHUB_SHA_FE=.*/GITHUB_SHA_FE=${{ github.sha }}/' /var/snap/amazon-ssm-agent/.env
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker-compose pull
