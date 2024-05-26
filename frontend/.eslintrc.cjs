@@ -18,6 +18,7 @@ module.exports = {
     'import/no-unresolved': 'off',
     'no-console': 'off',
     'import/extensions': 'off',
+    'import/no-named-as-default': 'off',
   },
   overrides: [
     {
