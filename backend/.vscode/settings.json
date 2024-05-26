@@ -13,4 +13,5 @@
     "./frontend"
 ],
 "eslint.validate": [ "javascript", "javascriptreact", "html", "typescriptreact" ],
+"files.eol": "\n",
 }
