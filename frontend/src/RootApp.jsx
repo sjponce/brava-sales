@@ -1,23 +1,19 @@
-// import './style/app.css';
+import './style/global.scss';
 import { Suspense, lazy } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store from '@/redux/store';
 import PageLoader from '@/components/PageLoader';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+
 import { lightTheme, darkTheme } from './theme/theme';
+import { current } from '@reduxjs/toolkit';
 
 const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
 
 export default function RoutApp() {
-  const getTheme = () => {
-    const storedTheme = localStorage.getItem('theme');
-    return storedTheme === 'dark' ? darkTheme : lightTheme;
-  };
-  
   return (
-    <ThemeProvider theme={getTheme()}>
-      <Suspense fallback={<PageLoader />}>
+    <Suspense fallback={<PageLoader />}>
       <BrowserRouter>
         <Provider store={store}>
           <Suspense fallback={<PageLoader />}>
@@ -25,8 +21,7 @@ export default function RoutApp() {
           </Suspense>
         </Provider>
       </BrowserRouter>
-      </Suspense>
       <CssBaseline />
-    </ThemeProvider>
+    </Suspense>
   );
 }

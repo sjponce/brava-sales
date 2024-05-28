@@ -1,11 +1,12 @@
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Content } from 'antd/es/layout/layout';
+import { LayoutMaterial } from '@/components/Layout/Layout';
 export default function DashboardModule() {
   const navigate = useNavigate();
   return (
     <>
-      <Content>
+      {/* <Content>
         <div style={{display: "flex",flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100vw", height: "100vh"}}>
 
         <span>Logged in!</span>
@@ -19,7 +20,8 @@ export default function DashboardModule() {
           {'Logout'}
         </Button>
             </div>
-      </Content>
+      </Content> */}
+      <LayoutMaterial />
     </>
   );
 }

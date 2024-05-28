@@ -1,0 +1,45 @@
+@import "variables.scss";
+@import "responsive.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.menuContainer {
+  width: 250px;
+  // background-color: $main-bg;
+  padding: 5px 20px;
+
+  // border-right: 2px solid $soft_bg;
+  @include sm {
+    display: flex;
+  }
+
+}
+
+.contentContainer {
+  padding: 20px 20px;
+  width: 100%;
+}
+
+.footerContainer {
+  height: 100px;
+}
+
+.icon {
+  filter: $main-icon;
+}
