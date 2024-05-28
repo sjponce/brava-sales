@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const bcrypt = require('bcryptjs');
 
-const AdminPasswordSchema = new Schema({
+const UserPasswordSchema = new Schema({
   removed: {
     type: Boolean,
     default: false,
   },
-  user: { type: mongoose.Schema.ObjectId, ref: 'Admin', required: true, unique: true },
+  user: { type: mongoose.Schema.ObjectId, ref: 'User', required: true, unique: true },
   password: {
     type: String,
     required: true,
@@ -33,15 +33,15 @@ const AdminPasswordSchema = new Schema({
   },
 });
 
-// AdminPasswordSchema.index({ user: 1 });
+// UserPasswordSchema.index({ user: 1 });
 // generating a hash
-AdminPasswordSchema.methods.generateHash = function (salt, password) {
+UserPasswordSchema.methods.generateHash = function (salt, password) {
   return bcrypt.hashSync(salt + password);
 };
 
 // checking if password is valid
-AdminPasswordSchema.methods.validPassword = function (salt, userpassword) {
-  return bcrypt.compareSync(salt + userpassword, this.password);
+UserPasswordSchema.methods.validPassword = function (userpassword) {
+  return bcrypt.compareSync(this.salt + userpassword, this.password);
 };
 
-module.exports = mongoose.model('AdminPassword', AdminPasswordSchema);
+module.exports = mongoose.model('UserPassword', UserPasswordSchema);

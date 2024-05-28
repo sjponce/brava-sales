@@ -8,7 +8,7 @@ const photo = async (userModel, req, res) => {
   };
 
   const tmpResult = await User.findOneAndUpdate(
-    { _id: req.admin._id, removed: false },
+    { _id: req.user._id, removed: false },
 
     { $set: updates },
     { new: true, runValidators: true }

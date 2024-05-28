@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Content } from 'antd/es/layout/layout';
 export default function DashboardModule() {
@@ -11,7 +11,7 @@ export default function DashboardModule() {
         <span>Logged in!</span>
 
         <Button
-          type="primary"
+          variant="contained"
           onClick={() => {
               navigate('/logout');
             }}
