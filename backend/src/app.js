@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 const coreAuthRouter = require('./routes/coreRoutes/coreAuth');
 
 const errorHandlers = require('./handlers/errorHandlers');
-const userAuth = require('./controllers/coreControllers/userAuth');
 
 // create our Express app
 const app = express();
