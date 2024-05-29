@@ -1,27 +1,10 @@
 import { Outlet } from "react-router-dom"
-import { Box, Stack, ThemeProvider } from "@mui/material"
+import { Box, Stack } from "@mui/material"
 import { CssBaseline } from '@mui/material';
-import { useState } from "react"
 import { NavbarMaterial } from "./navbar";
 import { Menu } from "./menu/Menu";
-//import { lightTheme, darkTheme } from '../../styles/theme'
 
 export const LayoutMaterial = () => {
-    // const [openMenu, setOpenMenu] = useState(false);
-
-    // const getTheme = () => {
-    //     const storedTheme = localStorage.getItem('theme');
-    //     return storedTheme === 'dark' ? darkTheme : lightTheme;
-    // };
-
-    // const [theme, setTheme] = useState(getTheme());
-
-    // const toggleTheme = () => {
-    //     const newTheme = theme.palette.mode === 'light' ? darkTheme : lightTheme;
-    //     setTheme(newTheme);
-    //     localStorage.setItem('theme', newTheme.palette.mode);
-    // }
-
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
                 <NavbarMaterial/>

@@ -1,10 +1,38 @@
-@import "../../../style/variables.scss";
-@import "../../../style/responsive.scss";
+$sm: 600px;
+$md: 900px;
+$lg: 1200px;
+$xl: 1536px;
+
+@mixin sm {
+  @media screen and (max-width: ($sm)) {
+    @content;
+  }
+}
+@mixin md {
+  @media screen and (max-width: ($md)) {
+    @content;
+  }
+}
+@mixin lg {
+  @media screen and (max-width: ($lg)) {
+    @content;
+  }
+}
+@mixin xl {
+  @media screen and (max-width: ($xl)) {
+    @content;
+  }
+}
 
 .menu {
     @include lg {
         width: 45px;
     }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+      }
     
     .item {
         display: flex;
