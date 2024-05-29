@@ -1,11 +1,10 @@
-import { Layout } from 'antd';
-
 import AppRouter from '@/router/AppRouter';
+import { Box } from '@mui/material';
 
 export default function ErpCrmApp() {
-  return (
-    <Layout>
-      <AppRouter />
-    </Layout>
-  );
+    return (
+      <Box bgcolor="background.default">
+        <AppRouter />
+      </Box>
+    );
 }

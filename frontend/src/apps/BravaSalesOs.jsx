@@ -1,10 +1,9 @@
-import { Suspense, lazy } from 'react';
-
-import PageLoader from '@/components/PageLoader';
-import { AppContextProvider } from '@/context/appContext';
-import { selectAuth } from '@/redux/auth/selectors';
-import AuthRouter from '@/router/AuthRouter';
 import { useSelector } from 'react-redux';
+import { lazy, Suspense } from 'react';
+import { selectAuth } from '@/redux/auth/selectors';
+import { AppContextProvider } from '@/context/appContext';
+import PageLoader from '@/components/PageLoader';
+import AuthRouter from '@/router/AuthRouter';
 
 const ErpApp = lazy(() => import('./ErpApp'));
 

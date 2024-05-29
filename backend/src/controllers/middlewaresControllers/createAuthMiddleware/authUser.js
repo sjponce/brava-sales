@@ -1,7 +1,6 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel }) => {
-  const isMatch = await bcrypt.compare(databasePassword.salt + password, databasePassword.password);
+  const isMatch = databasePassword.validPassword(password);
   if (!isMatch)
     return res.status(403).json({
       success: false,
@@ -15,7 +14,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
         id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: req.body.remember ? 365 * 24 + 'h' : '24h' }
+      { expiresIn: req.body.remember ? 5 * 24 + 'h' : '24h' }
     );
 
     await UserPasswordModel.findOneAndUpdate(
@@ -29,7 +28,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
     res
       .status(200)
       .cookie('token', token, {
-        maxAge: req.body.remember ? 365 * 24 * 60 * 60 * 1000 : null,
+        maxAge: req.body.remember ? 5 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
         sameSite: 'Lax',
         httpOnly: true,
         secure: false,
@@ -45,6 +44,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
           surname: user.surname,
           role: user.role,
           email: user.email,
+          phone: user.phone,
           photo: user.photo,
         },
         message: 'Successfully login user',
@@ -59,3 +59,4 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
 };
 
 module.exports = authUser;
+
