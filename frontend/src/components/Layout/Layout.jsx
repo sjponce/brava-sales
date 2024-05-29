@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { Box, Stack, CssBaseline } from '@mui/material';
-import { NavbarMaterial } from '@/navbar';
-import { Menu } from '@/menu/Menu';
+import NavbarMaterial from './navbar/NavbarMaterial';
+import Menu from './menu/Menu';
 
 const LayoutMaterial = () => (
   <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
