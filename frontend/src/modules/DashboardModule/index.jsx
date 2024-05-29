@@ -1,4 +1,4 @@
-import { LayoutMaterial } from '@/components/Layout/Layout';
+import LayoutMaterial from '@/components/Layout/Layout';
 
 const DashboardModule = () => <LayoutMaterial />;
 
