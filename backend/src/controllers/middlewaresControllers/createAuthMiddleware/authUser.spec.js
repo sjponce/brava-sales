@@ -1,81 +1,99 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authUser = require('./authUser');
-describe('Authentication Middleware Tests', () => {
+const authUser = require('./authUser'); // Adjust the path as necessary
+
+describe('authUser', () => {
   let req, res, user, databasePassword, password, UserPasswordModel;
 
   beforeEach(() => {
-    user = {
-      _id: '123',
-      name: 'John',
-      surname: 'Doe',
-      role: 'user',
-      email: 'john@example.com',
-      photo: 'photo.jpg',
-    };
-    databasePassword = {
-      salt: 'salt',
-      password: 'hashedpassword',
-    };
-    password = 'password';
-    UserPasswordModel = {
-      findOneAndUpdate: () => ({ exec: () => null }),
-    };
     req = {
-      body: { remember: true },
+      body: {
+        remember: false,
+      },
       hostname: 'localhost',
     };
     res = {
-      status: jest.fn().mockReturnThis(200),
-      json: jest.fn().mockReturnThis({ success: true }),
-      cookie: jest.fn().mockReturnThis(''),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+      cookie: jest.fn().mockReturnThis(),
+    };
+    user = {
+      _id: 'user123',
+      name: 'John',
+      surname: 'Doe',
+      role: 'user',
+      email: 'john.doe@example.com',
+      phone: '1234567890',
+      photo: 'photo.jpg',
+    };
+    databasePassword = {
+      validPassword: jest.fn(),
+    };
+    password = 'password123';
+    UserPasswordModel = {
+      findOneAndUpdate: () => ({ exec: () => null }),
     };
   });
 
-  it('should authenticate a user with valid credentials', async () => {
-    bcrypt.compare = jest.fn().mockResolvedValue(true);
-    jwt.sign = jest.fn().mockReturnValue('token');
+  it('should return a 403 status code with an "Invalid credentials." message when the password does not match the database password', async () => {
+    databasePassword.validPassword.mockReturnValue(false);
 
-    (res.status = jest.fn().mockReturnThis(200)),
-      await authUser(req, res, {
-        user,
-        databasePassword,
-        password,
-        UserPasswordModel,
-      });
+    await authUser(req, res, { user, databasePassword, password, UserPasswordModel });
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'Invalid credentials.',
+    });
+  });
+
+  it('should return a 200 status code and set a cookie with a JWT token when the password matches the database password', async () => {
+    databasePassword.validPassword.mockReturnValue(true);
+    jest.spyOn(jwt, 'sign').mockReturnValue('fakeToken');
+
+    await authUser(req, res, { user, databasePassword, password, UserPasswordModel });
 
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
-    expect(res.cookie).toHaveBeenCalledWith('token', 'token', expect.anything());
-  });
-
-  it('should return an error response when provided with incorrect credentials', async () => {
-    bcrypt.compare = jest.fn().mockResolvedValue(false);
-    res.status = jest.fn().mockReturnThis(403);
-
-    await authUser(req, res, {
-      user,
-      databasePassword,
-      password,
-      UserPasswordModel,
+    expect(res.cookie).toHaveBeenCalledWith('token', 'fakeToken', {"Partitioned": true, "domain": "localhost", "httpOnly": true, "maxAge": 86400000, "path": "/", "sameSite": "Lax", "secure": false});
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      result: {
+        _id: user._id,
+        name: user.name,
+        surname: user.surname,
+        role: user.role,
+        email: user.email,
+        phone: user.phone,
+        photo: user.photo,
+      },
+      message: 'Successfully login user',
     });
 
-    expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
+    jwt.sign.mockRestore();
   });
 
-  it('should handle exceptions during the authentication process', async () => {
-    (res.status = jest.fn().mockReturnThis(403)),
-      await authUser(req, res, {
-        user,
-        databasePassword,
-        password,
-        UserPasswordModel,
-      });
+  it('should correctly handle the "remember me" option by setting the token expiration and cookie maxAge accordingly', async () => {
+    databasePassword.validPassword.mockReturnValue(true);
+    jest.spyOn(jwt, 'sign').mockReturnValue('fakeToken');
+    req.body.remember = true;
 
-    expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'Invalid credentials.' })
+    await authUser(req, res, { user, databasePassword, password, UserPasswordModel });
+
+    expect(jwt.sign).toHaveBeenCalledWith(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '120h' }
     );
+    expect(res.cookie).toHaveBeenCalledWith('token', 'fakeToken', {
+      maxAge: 5 * 24 * 60 * 60 * 1000,
+      sameSite: 'Lax',
+      httpOnly: true,
+      secure: false,
+      domain: req.hostname,
+      path: '/',
+      Partitioned: true,
+    });
+
+    jwt.sign.mockRestore();
   });
 });

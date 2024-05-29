@@ -1,42 +1,25 @@
-import { Col, Divider, Layout, Typography } from 'antd';
-
+import {
+  Box, Divider, Paper, Typography,
+} from '@mui/material';
+import PropTypes from 'prop-types';
 import AuthLayout from '@/layout/AuthLayout';
 
-import logo from '@/style/images/idurar-crm-erp.svg';
+const AuthModule = ({ authContent, AUTH_TITLE }) => (
+  <AuthLayout>
+    <Paper sx={{
+      padding: '1.2em', borderRadius: '1em', backgroundColor: 'background.default', minWidth: { xs: '95%', sm: 400 },
+    }}
+    >
+      <Typography variant="h4" color="primary.main">{AUTH_TITLE}</Typography>
+      <Divider sx={{ mt: 0.5 }} />
+      <Box mt={3}>{authContent}</Box>
+    </Paper>
+  </AuthLayout>
+);
 
-const { Content } = Layout;
-const { Title } = Typography;
-
-const AuthModule = ({ authContent, AUTH_TITLE, isForRegistre = false }) => {
-  return (
-    <AuthLayout>
-      <Content
-        style={{
-          padding: isForRegistre ? '40px 30px 30px' : '100px 30px 30px',
-          maxWidth: '440px',
-          margin: '0 auto',
-        }}
-      >
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 0 }} span={0}>
-          <img
-            src={logo}
-            alt="Logo"
-            style={{
-              margin: '0px auto 20px',
-              display: 'block',
-            }}
-            height={63}
-            width={220}
-          />
-          <div className="space10" />
-        </Col>
-        <Title level={1}>{AUTH_TITLE}</Title>
-
-        <Divider />
-        <div className="site-layout-content">{authContent}</div>
-      </Content>
-    </AuthLayout>
-  );
+AuthModule.propTypes = {
+  authContent: PropTypes.node.isRequired,
+  AUTH_TITLE: PropTypes.string.isRequired,
 };
 
 export default AuthModule;

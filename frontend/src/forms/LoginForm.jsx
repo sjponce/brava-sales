@@ -1,53 +1,71 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Checkbox, Form, Input } from 'antd';
 import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Link,
+  Box,
+  Typography,
+  InputAdornment,
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
 
-export default function LoginForm() {
-  return (
-    <div>
-      <Form.Item
-        label={'Correo electrónico'}
-        name="email"
-        rules={[
-          {
-            required: true,
-          },
-          {
-            type: 'email',
-          },
-        ]}
-      >
-        <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder={'correo electrónico'}
-          type="email"
-          size="large"
-        />
-      </Form.Item>
-      <Form.Item
-        label={'Contraseña'}
-        name="password"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input.Password
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder={'contraseña'}
-          size="large"
-        />
-      </Form.Item>
+const LoginForm = ({ register }) => (
+  <Box display="flex" flexDirection="column">
+    <TextField
+      label="Correo electrónico"
+      name="email"
+      type="email"
+      required
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <EmailIcon color="disabled" />
+          </InputAdornment>
+        ),
+      }}
+      {...register('email', { required: true })}
+      variant="outlined"
+      size="large"
+      fullWidth
+      sx={{ mb: 3 }}
+    />
+    <TextField
+      label="Contraseña"
+      type="password"
+      name="password"
+      required
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <LockIcon color="disabled" />
+          </InputAdornment>
+        ),
+        minLength: 8,
+      }}
+      {...register('password', { required: true })}
+      variant="outlined"
+      size="large"
+      fullWidth
+    />
 
-      <Form.Item>
-        <Form.Item name="remember" valuePropName="checked" noStyle>
-          <Checkbox>{'Mantener la sesión iniciada'}</Checkbox>
-        </Form.Item>
-        <a className="login-form-forgot" href="/forgetpassword">
-          {'Olvidé mi contraseña'}
-        </a>
-      </Form.Item>
-    </div>
-  );
-}
+    <Box display="flex" alignItems="center" justifyContent="space-between">
+      <FormControlLabel
+        control={<Checkbox defaultChecked name="remember" />}
+        {...register('remember')}
+        label={<Typography variant="subtitle2">Recuérdame</Typography>}
+      />
+      <Link href="/forgetpassword">
+        <Typography variant="subtitle2">Olvidé mi contraseña</Typography>
+      </Link>
+    </Box>
+  </Box>
+);
+
+LoginForm.propTypes = {
+  register: PropTypes.func.isRequired,
+};
+
+export default LoginForm;

@@ -14,7 +14,6 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-    'react/react-in-jsx-scope': 'off',
     'import/no-unresolved': 'off',
     'no-console': 'off',
     'import/extensions': 'off',
@@ -24,6 +23,17 @@ module.exports = {
       files: ['*.spec.js'],
       rules: {
         'jest/expect-expect': 'off',
+      },
+    },
+    {
+      files: ['*.jsx'],
+      rules: {
+        'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
+        'react/react-in-jsx-scope': 'off',
+        'import/no-unresolved': 'off',
+        'no-console': 'off',
+        'import/extensions': 'off',
+        'react/jsx-props-no-spreading': 'off',
       },
     },
   ],

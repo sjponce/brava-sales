@@ -1,17 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Layout } from 'antd';
+const DashboardLayout = ({ children }) => (
+  <div
+    style={{
+      marginLeft: 140,
+    }}
+  >
+    {children}
+  </div>
+);
 
-const { Content } = Layout;
+DashboardLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
-export default function DashboardLayout({ children }) {
-  return (
-    <div
-      style={{
-        marginLeft: 140,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+export default DashboardLayout;

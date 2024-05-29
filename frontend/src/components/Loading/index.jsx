@@ -1,12 +1,18 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
+import { CircularProgress, Backdrop, Box } from '@mui/material';
+import PropTypes from 'prop-types';
 
-export default function Loading({ isLoading, children }) {
-  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+const Loading = ({ isLoading, children }) => (
+  <Box>
+    {children}
+    <Backdrop open={isLoading} style={{ color: '#fff', zIndex: 1500 }}>
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  </Box>
+);
 
-  return (
-    <Spin indicator={antIcon} spinning={isLoading}>
-      {children}
-    </Spin>
-  );
-}
+Loading.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+export default Loading;

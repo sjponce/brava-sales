@@ -1,80 +1,66 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, Result } from 'antd';
-
+import {
+  Box, Button, Link, Typography,
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
 import useOnFetch from '@/hooks/useOnFetch';
-import { request } from '../request/request';
-
+import request from '@/request';
 import ForgetPasswordForm from '@/forms/ForgetPasswordForm';
-
 import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
 
-function ForgetPassword() {
+const ForgetPassword = () => {
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
 
   const { onFetch, isSuccess, isLoading } = useOnFetch();
 
-  async function postData(data) {
-    return await request.post({ entity: 'forgetpassword', jsonData: data });
+  function postData(data) {
+    return request.post({ entity: 'forgetpassword', jsonData: data });
   }
 
-  const onFinish = (values) => {
+  const onSubmit = (values) => {
     const callback = postData(values);
     onFetch(callback);
   };
 
-  const validateMessages = {
-    required: 'El campo es requerido',
-    types: {
-      email: 'Ingrese un correo válido',
-    },
-  };
-
-  function FormContainer() {
+  if (!isSuccess) {
     return (
-      <Loading isLoading={isLoading}>
-        <Form
-          name="signup"
-          className="login-form"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          validateMessages={validateMessages}
-        >
-          <ForgetPasswordForm />
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button" size="large">
-              Cambiar contraseña
-            </Button>
-            O
-            {' '}
-            <a href="/login"> Ya tengo una cuenta </a>
-          </Form.Item>
-        </Form>
-      </Loading>
+      <AuthModule
+        authContent={(
+          <Box>
+            <Loading isLoading={isLoading} />
+            <Box component="form" name="signup" onSubmit={handleSubmit(onSubmit)}>
+              <ForgetPasswordForm register={register} />
+              <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+                <Button type="submit" className="login-form-button" variant="contained" fullWidth>
+                  <Typography variant="button">Cambiar contraseña</Typography>
+                </Button>
+                <Link href="/login">
+                  <Typography variant="body2">Regresar al login</Typography>
+                </Link>
+              </Box>
+            </Box>
+          </Box>
+        )}
+        AUTH_TITLE="Olvidé mi contraseña"
+      />
     );
   }
-  if (!isSuccess) {
-    return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Olvidé mi contraseña" />;
-  }
   return (
-    <Result
-      status="success"
-      title="Revisa tu email para reestablecer tu contraseña"
-      style={{ maxWidth: '450px', margin: 'auto' }}
-      extra={(
-        <Button
-          type="primary"
-          onClick={() => {
-            navigate('/login');
-          }}
-        >
-          Login
-        </Button>
-      )}
-    />
+    <Box>
+      <Typography>
+        Se ha enviado un correo electrónico con instrucciones para cambiar la contraseña
+      </Typography>
+      <Button
+        onClick={() => {
+          navigate('/login');
+        }}
+      >
+        <Typography>Login</Typography>
+      </Button>
+    </Box>
   );
-}
+};
 
 export default ForgetPassword;
