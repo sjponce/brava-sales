@@ -1,8 +1,8 @@
-import PageLoader from '@/components/PageLoader';
-import { logout as logoutAction } from '@/redux/auth/actions';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { logout as logoutAction } from '@/redux/auth/actions';
+import PageLoader from '@/components/PageLoader';
 
 const Logout = () => {
   const dispatch = useDispatch();

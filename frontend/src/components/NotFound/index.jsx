@@ -1,7 +1,7 @@
 import { Button, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-export default function NotFound({ entity = '' }) {
+const NotFound = () => {
   const navigate = useNavigate();
 
   return (
@@ -18,13 +18,15 @@ export default function NotFound({ entity = '' }) {
       <Button
         variant="contained"
         color="primary"
-        size='large'
+        size="large"
         onClick={() => {
           navigate('/');
         }}
       >
-        <Typography variant='button'>Volver</Typography>
+        <Typography variant="button">Volver</Typography>
       </Button>
     </Box>
   );
-}
+};
+
+export default NotFound;

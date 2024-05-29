@@ -1,6 +1,4 @@
 import NotFound from '@/components/NotFound';
 
-const NotFoundPage = () => {
-  return <NotFound entity={''} />;
-};
+const NotFoundPage = () => <NotFound entity="" />;
 export default NotFoundPage;

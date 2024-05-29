@@ -5,20 +5,18 @@ import { CssBaseline } from '@mui/material';
 import store from '@/redux/store';
 import PageLoader from '@/components/PageLoader';
 
-
 const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
 
-export default function RoutApp() {
-  return (
-    <Suspense fallback={<PageLoader />}>
-      <BrowserRouter>
-        <Provider store={store}>
-          <Suspense fallback={<PageLoader />}>
-            <BravaSalesOs />
-          </Suspense>
-        </Provider>
-      </BrowserRouter>
-      <CssBaseline />
-    </Suspense>
-  );
-}
+const RootApp = () => (
+  <Suspense fallback={<PageLoader />}>
+    <BrowserRouter>
+      <Provider store={store}>
+        <Suspense fallback={<PageLoader />}>
+          <BravaSalesOs />
+        </Suspense>
+      </Provider>
+    </BrowserRouter>
+    <CssBaseline />
+  </Suspense>
+);
+export default RootApp;

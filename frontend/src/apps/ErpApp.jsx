@@ -1,10 +1,10 @@
-import AppRouter from '@/router/AppRouter';
 import { Box } from '@mui/material';
+import AppRouter from '@/router/AppRouter';
 
-export default function ErpCrmApp() {
-    return (
-      <Box bgcolor="background.default">
-        <AppRouter />
-      </Box>
-    );
-}
+const ErpCrmApp = () => (
+  <Box bgcolor="background.default">
+    <AppRouter />
+  </Box>
+);
+
+export default ErpCrmApp;

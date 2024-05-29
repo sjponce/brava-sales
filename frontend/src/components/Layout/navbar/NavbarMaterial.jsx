@@ -1,4 +1,4 @@
-import { AccountCircleOutlined, DarkModeOutlined, LightModeOutlined } from '@mui/icons-material';
+import { DarkModeOutlined, LightModeOutlined } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -11,12 +11,10 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { toggleTheme } from '@/redux/themeReducer';
-
 
 const StyledToolbar = styled(Toolbar)({
   paddingRight: '20px',
@@ -24,7 +22,7 @@ const StyledToolbar = styled(Toolbar)({
   display: 'flex',
   justifyContent: 'space-between',
   height: '64px',
-  boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .1)'
+  boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .1)',
 });
 
 const Logo = styled(Box)(() => ({
@@ -39,10 +37,10 @@ const Logo = styled(Box)(() => ({
   },
 }));
 
-export const NavbarMaterial = () => {
+const NavbarMaterial = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
 
@@ -97,3 +95,5 @@ export const NavbarMaterial = () => {
     </Stack>
   );
 };
+
+export default NavbarMaterial;

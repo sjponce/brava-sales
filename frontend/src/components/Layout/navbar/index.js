@@ -1,1 +1,1 @@
-export * from './NavbarMaterial';
+export * from '@/NavbarMaterial';

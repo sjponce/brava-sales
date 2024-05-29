@@ -1,82 +1,85 @@
-import { AirportShuttleOutlined, FeedOutlined, HomeOutlined, InsertChartOutlined, LocalAtmRounded, PeopleAltOutlined, SellOutlined, ShoppingBagOutlined, WorkOutlineRounded } from "@mui/icons-material";
-
+import {
+  AirportShuttleOutlined, FeedOutlined, HomeOutlined,
+  InsertChartOutlined, LocalAtmRounded, PeopleAltOutlined,
+  SellOutlined, ShoppingBagOutlined, WorkOutlineRounded,
+} from '@mui/icons-material';
 
 export const menuMaterial = [
   {
     id: 1,
-    title: "Dashboard",
+    title: 'Dashboard',
     listItems: [
       {
         id: 1,
-        title: "Home",
-        url: "/",
+        title: 'Home',
+        url: '/',
         icon: <HomeOutlined />,
       },
     ],
   },
   {
     id: 2,
-    title: "Administrar",
+    title: 'Administrar',
     listItems: [
       {
         id: 1,
-        title: "Clientes",
-        url: "",
+        title: 'Clientes',
+        url: '',
         icon: <PeopleAltOutlined />,
       },
       {
         id: 3,
-        title: "Vendedores",
-        url: "",
+        title: 'Vendedores',
+        url: '',
         icon: <WorkOutlineRounded />,
       },
       {
         id: 4,
-        title: "Productos",
-        url: "",
+        title: 'Productos',
+        url: '',
         icon: <SellOutlined />,
       },
     ],
   },
   {
     id: 3,
-    title: "Ventas",
+    title: 'Ventas',
     listItems: [
       {
         id: 1,
-        title: "Viajes",
-        url: "inputs",
+        title: 'Viajes',
+        url: 'inputs',
         icon: <AirportShuttleOutlined />,
       },
 
       {
         id: 2,
-        title: "Pedidos",
-        url: "outputs",
+        title: 'Pedidos',
+        url: 'outputs',
         icon: <ShoppingBagOutlined />,
       },
       {
         id: 3,
-        title: "Promociones",
-        url: "outputs",
+        title: 'Promociones',
+        url: 'outputs',
         icon: <LocalAtmRounded />,
       },
     ],
   },
   {
     id: 4,
-    title: "Reportes",
+    title: 'Reportes',
     listItems: [
       {
         id: 1,
-        title: "Informes",
-        url: "/",
+        title: 'Informes',
+        url: '/',
         icon: <FeedOutlined />,
       },
       {
         id: 2,
-        title: "Estadísticas",
-        url: "/",
+        title: 'Estadísticas',
+        url: '/',
         icon: <InsertChartOutlined />,
       },
 
@@ -87,66 +90,66 @@ export const menuMaterial = [
 export const menuMaterialUser = [
   {
     id: 1,
-    title: "Dashboard",
+    title: 'Dashboard',
     listItems: [
       {
         id: 1,
-        title: "Home",
-        url: "/",
+        title: 'Home',
+        url: '/',
         icon: <HomeOutlined />,
       },
     ],
   },
   {
     id: 2,
-    title: "Administrar",
+    title: 'Administrar',
     listItems: [
       {
         id: 1,
-        title: "Clientes",
-        url: "",
+        title: 'Clientes',
+        url: '',
         icon: <PeopleAltOutlined />,
       },
     ],
   },
   {
     id: 3,
-    title: "Ventas",
+    title: 'Ventas',
     listItems: [
       {
         id: 1,
-        title: "Viajes",
-        url: "inputs",
+        title: 'Viajes',
+        url: 'inputs',
         icon: <AirportShuttleOutlined />,
       },
       {
         id: 2,
-        title: "Pedidos",
-        url: "outputs",
+        title: 'Pedidos',
+        url: 'outputs',
         icon: <ShoppingBagOutlined />,
       },
       {
         id: 3,
-        title: "Promociones",
-        url: "outputs",
+        title: 'Promociones',
+        url: 'outputs',
         icon: <LocalAtmRounded />,
       },
     ],
   },
   {
     id: 4,
-    title: "Reportes",
+    title: 'Reportes',
     listItems: [
       {
         id: 1,
-        title: "Informes",
-        url: "/",
+        title: 'Informes',
+        url: '/',
         icon: <FeedOutlined />,
       },
       {
         id: 2,
-        title: "Estadísticas",
-        url: "/",
+        title: 'Estadísticas',
+        url: '/',
         icon: <InsertChartOutlined />,
       },
     ],

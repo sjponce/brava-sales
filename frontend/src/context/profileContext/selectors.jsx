@@ -1,12 +1,6 @@
-const contextSelectors = (state) => {
-  return {
-    isModalOpen: () => {
-      return state.isModalOpen;
-    },
-    isPanelOpen: () => {
-      return state.isPanelOpen;
-    },
-  };
-};
+const contextSelectors = (state) => ({
+  isModalOpen: () => state.isModalOpen,
+  isPanelOpen: () => state.isPanelOpen,
+});
 
 export default contextSelectors;

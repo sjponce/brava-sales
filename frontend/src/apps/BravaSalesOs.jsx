@@ -17,18 +17,21 @@ const DefaultApp = () => (
   </AppContextProvider>
 );
 
-export default function BravaSalesOs() {
+const BravaSalesOs = () => {
   const { isLoggedIn } = useSelector(selectAuth);
   const theme = useSelector((state) => state.theme);
-  
-  const getTheme = () =>{
+
+  const getTheme = () => {
     if (theme) {
       return theme === 'light' ? lightTheme : darkTheme;
     }
     return lightTheme;
-  }
+  };
 
   return (
-    <ThemeProvider theme={getTheme()}>{!isLoggedIn ? <AuthRouter /> : <DefaultApp />}</ThemeProvider>
+    <ThemeProvider theme={getTheme()}>
+      {!isLoggedIn ? <AuthRouter /> : <DefaultApp />}
+    </ThemeProvider>
   );
-}
+};
+export default BravaSalesOs;
