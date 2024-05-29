@@ -2,8 +2,8 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { CssBaseline } from '@mui/material';
-import store from '@/redux/store';
 import PageLoader from '@/components/PageLoader';
+import store from '@/redux/store';
 
 const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
 
