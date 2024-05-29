@@ -1,7 +1,9 @@
 import { useSelector } from 'react-redux';
+import { ThemeProvider } from '@mui/material';
 import { lazy, Suspense } from 'react';
 import { selectAuth } from '@/redux/auth/selectors';
 import { AppContextProvider } from '@/context/appContext';
+import { lightTheme, darkTheme } from '../theme/theme';
 import PageLoader from '@/components/PageLoader';
 import AuthRouter from '@/router/AuthRouter';
 
@@ -17,9 +19,16 @@ const DefaultApp = () => (
 
 export default function BravaSalesOs() {
   const { isLoggedIn } = useSelector(selectAuth);
-
-  if (!isLoggedIn) return <AuthRouter />;
-  else {
-    return <DefaultApp />;
+  const theme = useSelector((state) => state.theme);
+  
+  const getTheme = () =>{
+    if (theme) {
+      return theme === 'light' ? lightTheme : darkTheme;
+    }
+    return lightTheme;
   }
+
+  return (
+    <ThemeProvider theme={getTheme()}>{!isLoggedIn ? <AuthRouter /> : <DefaultApp />}</ThemeProvider>
+  );
 }
