@@ -6,13 +6,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '@/redux/auth/actions';
 import { selectAuth } from '@/redux/auth/selectors';
 
-import { Form, Button } from 'antd';
+import { Button, Form } from 'antd';
 
 import ResetPasswordForm from '@/forms/ResetPasswordForm';
 
 import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
-
 const ResetPassword = () => {
   const { isLoading, isSuccess } = useSelector(selectAuth);
   const navigate = useNavigate();

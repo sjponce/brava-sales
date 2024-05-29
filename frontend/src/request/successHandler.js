@@ -14,7 +14,7 @@ const successHandler = (response, options = { notifyOnSuccess: false, notifyOnFa
         maxCount: 2,
       });
       notification.success({
-        message: `Request success`,
+        message: 'Request success',
         description: successText,
       });
     }

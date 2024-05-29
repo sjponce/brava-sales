@@ -9,7 +9,7 @@ import AuthModule from '@/modules/AuthModule';
 import { useForm } from 'react-hook-form';
 import Loading from '@/components/Loading';
 
-const LoginPage = () => {
+function LoginPage() {
   const { isLoading, isSuccess } = useSelector(selectAuth);
   const navigate = useNavigate();
   const dispatch = useDispatch();

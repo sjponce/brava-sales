@@ -4,7 +4,7 @@ const paginatedList = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
 
   const page = req.query.page || 1;
-  const limit = parseInt(req.query.items) || 10;
+  const limit = Number.parseInt(req.query.items) || 10;
   const skip = page * limit - limit;
 
   const { sortBy = 'enabled', sortValue = -1, filter, equal } = req.query;

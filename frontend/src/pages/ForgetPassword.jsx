@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import useOnFetch from '@/hooks/useOnFetch';
-import { request } from '@/request';
+import request from '@/request';
 import ForgetPasswordForm from '@/forms/ForgetPasswordForm';
 import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
 import { Box, Button, Link, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-const ForgetPassword = () => {
+function ForgetPassword() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
@@ -43,7 +43,7 @@ const ForgetPassword = () => {
         </Box>
       </Box>
     );
-  };
+  }
   if (!isSuccess) {
     return <AuthModule authContent={<FormContainer />} AUTH_TITLE="Olvidé mi contraseña" />;
   } else {
@@ -60,6 +60,6 @@ const ForgetPassword = () => {
       </Box>
     );
   }
-};
+}
 
 export default ForgetPassword;

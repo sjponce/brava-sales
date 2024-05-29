@@ -1,0 +1,26 @@
+name: Client PR CI
+
+on:
+  pull_request:
+    paths: 'frontend/**'
+    branches:
+      - '**'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm i
+        working-directory: 'frontend'
+      - run: npm run lint
+        working-directory: 'frontend'
+      - run: npm run format
+        working-directory: 'frontend'
+      - run: npm run test
+        working-directory: 'frontend'

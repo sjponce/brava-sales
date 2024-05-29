@@ -17,7 +17,7 @@ const read = async (userModel, req, res) => {
     });
   } else {
     // Return success resposne
-    let result = {
+    const result = {
       _id: tmpResult._id,
       enabled: tmpResult.enabled,
       email: tmpResult.email,

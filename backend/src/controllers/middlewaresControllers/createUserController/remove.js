@@ -3,7 +3,6 @@ const { generate: uniqueId } = require('shortid');
 
 const remove = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
-  const reqUserName = userModel.toLowerCase();
 
   // Find the document by id and delete it
   const user = await User.findOne({
@@ -20,7 +19,7 @@ const remove = async (userModel, req, res) => {
     });
   }
 
-  let updates = {
+  const updates = {
     removed: true,
     email: 'removed+' + uniqueId() + '+' + user.email,
   };

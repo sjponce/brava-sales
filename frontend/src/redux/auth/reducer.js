@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   isSuccess: false,
 };
 
+// eslint-disable-next-line default-param-last
 const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actionTypes.REQUEST_LOADING:

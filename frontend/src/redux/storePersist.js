@@ -9,13 +9,14 @@ function isJsonString(str) {
 }
 
 export const localStorageHealthCheck = async () => {
-  for (var i = 0; i < localStorage.length; ++i) {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < localStorage.length; ++i) {
     try {
       const result = window.localStorage.getItem(localStorage.key(i));
       if (!isJsonString(result)) {
         window.localStorage.removeItem(localStorage.key(i));
       }
-      if (result && Object.keys(localStorage.key(i)).length == 0) {
+      if (result && Object.keys(localStorage.key(i)).length === 0) {
         window.localStorage.removeItem(localStorage.key(i));
       }
     } catch (error) {
@@ -35,19 +36,17 @@ export const storePersist = {
     const result = window.localStorage.getItem(key);
     if (!result) {
       return false;
-    } else {
-      if (!isJsonString(result)) {
-        window.localStorage.removeItem(key);
-        return false;
-      } else return JSON.parse(result);
     }
+    if (!isJsonString(result)) {
+      window.localStorage.removeItem(key);
+      return false;
+    }
+    return JSON.parse(result);
   },
   remove: (key) => {
     window.localStorage.removeItem(key);
   },
-  getAll: () => {
-    return window.localStorage;
-  },
+  getAll: () => window.localStorage,
   clear: () => {
     window.localStorage.clear();
   },

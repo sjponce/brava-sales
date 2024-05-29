@@ -8,7 +8,7 @@ const updateProfilePassword = async (userModel, req, res) => {
 
   const reqUserName = userModel.toLowerCase();
   const userProfile = req[reqUserName];
-  let { password, passwordCheck } = req.body;
+  const { password, passwordCheck } = req.body;
 
   if (!password || !passwordCheck)
     return res.status(400).json({ msg: 'Not all fields have been entered.' });

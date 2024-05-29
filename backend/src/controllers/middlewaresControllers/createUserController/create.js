@@ -5,7 +5,7 @@ const { generate: uniqueId } = require('shortid');
 const create = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const UserPassword = mongoose.model(userModel + 'Password');
-  let { email, password, enabled, name, surname, role } = req.body;
+  const { email, password, enabled, name, surname, role } = req.body;
   if (!email || !password)
     return res.status(400).json({
       success: false,

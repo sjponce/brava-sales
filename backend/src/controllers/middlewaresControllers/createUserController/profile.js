@@ -1,7 +1,4 @@
-const mongoose = require('mongoose');
-
-const profile = async (userModel, req, res) => {
-  const User = mongoose.model(userModel);
+const profile = async (req, res) => {
   //  Query the database for a list of all results
   if (!req.admin) {
     return res.status(404).json({
@@ -10,7 +7,7 @@ const profile = async (userModel, req, res) => {
       message: "couldn't found  admin Profile ",
     });
   }
-  let result = {
+  const result = {
     _id: req.admin._id,
     email: req.admin.email,
     name: req.admin.name,

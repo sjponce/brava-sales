@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const remove = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
 
-  let updates = {
+  const updates = {
     enabled: false,
   };
 

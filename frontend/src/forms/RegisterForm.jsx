@@ -1,9 +1,8 @@
-import React from 'react';
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import React from 'react';
 
 export default function RegisterForm() {
-
   return (
     <>
       <Form.Item

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const update = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const reqUserName = userModel.toLowerCase();
-  let { email, enabled, name, photo, surname, role } = req.body;
+  const { email, enabled, name, photo, surname, role } = req.body;
 
   if (role === 'owner' && req[reqUserName].role !== 'owner') {
     return res.status(403).send({

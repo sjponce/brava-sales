@@ -17,7 +17,7 @@ const login = async (req, res, { userModel }) => {
     password: Joi.string().required(),
   });
 
-  const { error, value } = objectSchema.validate({ email, password });
+  const { error } = objectSchema.validate({ email, password });
   if (error) {
     return res.status(409).json({
       success: false,
@@ -37,7 +37,10 @@ const login = async (req, res, { userModel }) => {
       message: 'No account with this email has been registered.',
     });
 
-  const databasePassword = await UserPasswordModel.findOne({ user: user._id, removed: false });
+  const databasePassword = await UserPasswordModel.findOne({
+    user: user._id,
+    removed: false,
+  });
 
   if (!user.enabled)
     return res.status(409).json({

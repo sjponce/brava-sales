@@ -1,11 +1,10 @@
-// import './style/app.css';
 import { Suspense, lazy } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import store from '@/redux/store';
 import PageLoader from '@/components/PageLoader';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import { lightTheme, darkTheme } from './theme/theme';
+import { lightTheme, darkTheme } from '@/theme/theme';
 
 const BravaSalesOs = lazy(() => import('./apps/BravaSalesOs'));
 
@@ -14,7 +13,6 @@ export default function RoutApp() {
     const storedTheme = localStorage.getItem('theme');
     return storedTheme === 'dark' ? darkTheme : lightTheme;
   };
-  
   return (
     <ThemeProvider theme={getTheme()}>
       <Suspense fallback={<PageLoader />}>

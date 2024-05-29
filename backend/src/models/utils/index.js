@@ -33,7 +33,7 @@ for (const filePath of appModelsFiles) {
   );
   const entity = fileNameWithoutExtension.toLowerCase();
 
-  controllerName = fileNameLowerCaseFirstChar + 'Controller';
+  const controllerName = fileNameLowerCaseFirstChar + 'Controller';
   constrollersList.push(controllerName);
   appModelsList.push(modelName);
   entityList.push(entity);
@@ -46,4 +46,10 @@ for (const filePath of appModelsFiles) {
   routesList.push(route);
 }
 
-module.exports = { constrollersList, appModelsList, modelsFiles, entityList, routesList };
+module.exports = {
+  constrollersList,
+  appModelsList,
+  modelsFiles,
+  entityList,
+  routesList,
+};

@@ -7,7 +7,7 @@ const NotFound = lazy(() => import('@/pages/NotFound.jsx'));
 
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
 
-let routes = {
+const routes = {
   expense: [],
   default: [
     {

@@ -8,7 +8,7 @@ const updatePassword = async (userModel, req, res) => {
   const reqUserName = userModel.toLowerCase();
   const userProfile = req[reqUserName];
 
-  let { password } = req.body;
+  const { password } = req.body;
 
   if (password.length < 8)
     return res.status(400).json({

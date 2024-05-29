@@ -1,31 +1,28 @@
 import { useEffect } from 'react';
 
-import {} from 'react-router-dom';
-import {} from 'react-router-dom';
 import { useLocation, useRoutes } from 'react-router-dom';
 import { useAppContext } from '@/context/appContext';
 
 import routes from './routes';
 
 export default function AppRouter() {
-  let location = useLocation();
-  const { state: stateApp, appContextAction } = useAppContext();
+  const location = useLocation();
+  const { appContextAction } = useAppContext();
   const { app } = appContextAction;
 
   const routesList = [];
 
-  Object.entries(routes).forEach(([key, value]) => {
+  Object.entries(routes).forEach(([, value]) => {
     routesList.push(...value);
   });
 
   function getAppNameByPath(path) {
-    for (let key in routes) {
-      for (let i = 0; i < routes[key].length; i++) {
-        if (routes[key][i].path === path) {
-          return key;
-        }
+    Object.keys(routes).forEach((key) => {
+      if (routes[key].some((route) => route.path === path)) {
+        return key;
       }
-    }
+      return '';
+    });
     // Return 'default' app  if the path is not found
     return 'default';
   }
@@ -38,7 +35,7 @@ export default function AppRouter() {
     }
   }, [location]);
 
-  let element = useRoutes(routesList);
+  const element = useRoutes(routesList);
 
   return element;
 }

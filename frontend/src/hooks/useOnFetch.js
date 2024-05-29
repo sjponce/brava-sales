@@ -5,7 +5,7 @@ export default function useOnFetch() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  let onFetch = async (callback) => {
+  const onFetch = async (callback) => {
     setIsLoading(true);
 
     const data = await callback;
@@ -18,5 +18,10 @@ export default function useOnFetch() {
     setIsLoading(false);
   };
 
-  return { onFetch, result, isSuccess, isLoading };
+  return {
+    onFetch,
+    result,
+    isSuccess,
+    isLoading,
+  };
 }

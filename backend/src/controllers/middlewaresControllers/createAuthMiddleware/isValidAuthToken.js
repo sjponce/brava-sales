@@ -25,7 +25,10 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
         jwtExpired: true,
       });
 
-    const userPasswordPromise = UserPassword.findOne({ user: verified.id, removed: false });
+    const userPasswordPromise = UserPassword.findOne({
+      user: verified.id,
+      removed: false,
+    });
     const userPromise = User.findOne({ _id: verified.id, removed: false });
 
     const [user, userPassword] = await Promise.all([userPromise, userPasswordPromise]);

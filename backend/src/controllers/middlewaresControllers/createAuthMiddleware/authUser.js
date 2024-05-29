@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel }) => {
   const isMatch = databasePassword.validPassword(password);
   if (!isMatch)

@@ -1,6 +1,6 @@
 const remove = async (Model, req, res) => {
   // Find the document by id and delete it
-  let updates = {
+  const updates = {
     removed: true,
   };
   // Find the document by id and delete it

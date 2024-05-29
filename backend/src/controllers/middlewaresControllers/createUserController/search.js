@@ -25,7 +25,7 @@ const search = async (userModel, req, res) => {
   for (const field of fieldsArray) {
     fields.$or.push({ [field]: { $regex: new RegExp(req.query.q, 'i') } });
   }
-  let result = await User.find({
+  const result = await User.find({
     ...fields,
   })
     .where('removed', false)

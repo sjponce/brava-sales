@@ -12,7 +12,7 @@ const listAll = require('./listAll');
 const paginatedList = require('./paginatedList');
 
 const createUserController = (userModel) => {
-  let userController = {};
+  const userController = {};
 
   userController.create = (req, res) => create(userModel, req, res);
   userController.updateProfile = (req, res) => updateProfile(userModel, req, res);

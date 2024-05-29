@@ -5,7 +5,7 @@ const updateProfile = async (userModel, req, res) => {
 
   const reqUserName = userModel.toLowerCase();
   const userProfile = req[reqUserName];
-  let updates = req.body.photo
+  const updates = req.body.photo
     ? {
         email: req.body.email,
         name: req.body.name,

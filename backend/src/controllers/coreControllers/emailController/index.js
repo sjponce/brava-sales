@@ -2,7 +2,7 @@ const createCRUDController = require('@/controllers/middlewaresControllers/creat
 const crudController = createCRUDController('Email');
 
 const emailMethods = {
-  create:crudController.create,
+  create: crudController.create,
   read: crudController.read,
   update: crudController.update,
   list: crudController.list,

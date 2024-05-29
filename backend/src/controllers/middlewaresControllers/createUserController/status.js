@@ -4,7 +4,7 @@ const status = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
 
   if (req.query.enabled === true || req.query.enabled === false) {
-    let updates = {
+    const updates = {
       enabled: req.query.enabled,
     };
     // Find the document by id and delete it

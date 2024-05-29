@@ -19,7 +19,7 @@ const search = async (Model, req, res) => {
   }
   // console.log(fields)
 
-  let results = await Model.find({
+  const results = await Model.find({
     ...fields,
   })
 
