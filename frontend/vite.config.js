@@ -8,7 +8,6 @@ delete process.env['ProgramFiles(x86)'];
 
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const proxyUrl = env.VITE_DEV_REMOTE === 'remote' ? env.VITE_BACKEND_SERVER : 'http://localhost:8080/';
 
   const config = {
     plugins: [react(), EnvironmentPlugin('all')],
@@ -20,13 +19,6 @@ export default ({ mode }) => {
     },
     server: {
       port: 3000,
-      proxy: {
-        '/api': {
-          target: proxyUrl,
-          changeOrigin: true,
-          secure: false,
-        },
-      },
     },
     preview: {
       port: 3000,
