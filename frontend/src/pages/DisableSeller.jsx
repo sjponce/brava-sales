@@ -1,28 +1,16 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Button, Box, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { login } from '@/redux/auth/actions';
-import { selectAuth } from '@/redux/auth/selectors';
-import LoginForm from '@/forms/LoginForm';
-import AuthModule from '@/modules/AuthModule';
-import Loading from '@/components/Loading';
+import { Button } from '@mui/material';
 
+const DisableSeller = () => {
+  const DeleteSeller = () => {
+    console.log('Hola');
+  };
 
-function DisableSeller() {
-    return(
-        <div>
-        <p>
-            HOLA MUUNDO
-        </p>
-        <button >
-            Eliminar al vendedor
-        </button>
+  return (
+    <div>
+      <p>HOLA MUUNDO</p>
+      <Button onClick={DeleteSeller}>Eliminar al vendedor</Button>
     </div>
-    )
-    ;
-}
-
+  );
+};
 
 export default DisableSeller;

@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router-dom';
 import { Box, Stack, CssBaseline } from '@mui/material';
 import NavbarMaterial from './navbar/NavbarMaterial';
 import Menu from './menu/Menu';
+import AppRouter from '@/router/AppRouter';
 
 const LayoutMaterial = () => (
   <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -13,29 +13,30 @@ const LayoutMaterial = () => (
           flexDirection: 'row',
           justifyContent: 'space-between',
           height: '100%',
-        }}
-      >
-        <Box sx={{
-          width: { lg: '250px' },
-          scrollbarwidth: 'thin',
-          '&::-webkit-scrollbar': {
-            width: '0.4em',
-            height: '0.2em',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: 'background.paper',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            borderRadius: '5px',
-
-          },
-          '&::-webkit-scrollbar-thumb:hover': {
-            background: '#5858587a',
-          },
-        }}
-        >
-
-          <Box sx={{ marginLeft: { lg: '20px', sm: '10px' }, marginRight: { lg: '15px', sm: '10px' } }}>
+        }}>
+        <Box
+          sx={{
+            width: { lg: '250px' },
+            scrollbarwidth: 'thin',
+            '&::-webkit-scrollbar': {
+              width: '0.4em',
+              height: '0.2em',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'background.paper',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              borderRadius: '5px',
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: '#5858587a',
+            },
+          }}>
+          <Box
+            sx={{
+              marginLeft: { lg: '20px', sm: '10px' },
+              marginRight: { lg: '15px', sm: '10px' },
+            }}>
             <Menu />
           </Box>
         </Box>
@@ -53,7 +54,7 @@ const LayoutMaterial = () => (
             boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .1)',
           }}
         >
-          <Outlet />
+          <AppRouter />
         </Stack>
       </Stack>
     </Stack>

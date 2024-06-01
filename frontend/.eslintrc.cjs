@@ -17,6 +17,8 @@ module.exports = {
     'import/no-unresolved': 'off',
     'no-console': 'off',
     'import/extensions': 'off',
+    'linebreak-style': 'off',
+
   },
   overrides: [
     {
@@ -34,6 +36,7 @@ module.exports = {
         'no-console': 'off',
         'import/extensions': 'off',
         'react/jsx-props-no-spreading': 'off',
+        'linebreak-style': 'off',
       },
     },
   ],

@@ -1,5 +1,3 @@
-import LayoutMaterial from '@/components/Layout/Layout';
-
-const DashboardModule = () => <LayoutMaterial />;
+const DashboardModule = () => <>Dashboard</>;
 
 export default DashboardModule;

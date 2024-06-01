@@ -10,7 +10,6 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'));
 
 const DisableSeller = lazy(() => import('@/pages/DisableSeller'));
 
-
 const routes = {
   expense: [],
   default: [
@@ -40,8 +39,8 @@ const routes = {
     },
     {
       path: 'disableSeller',
-      element: <DisableSeller />
-    }
+      element: <DisableSeller />,
+    },
   ],
 };
 

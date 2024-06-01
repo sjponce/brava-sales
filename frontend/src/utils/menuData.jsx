@@ -30,7 +30,7 @@ export const menuMaterial = [
       {
         id: 3,
         title: 'Vendedores',
-        url: '',
+        url: '/DisableSeller',
         icon: <WorkOutlineRounded />,
       },
       {

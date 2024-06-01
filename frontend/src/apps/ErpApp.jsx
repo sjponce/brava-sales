@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
 import AppRouter from '@/router/AppRouter';
+import LayoutMaterial from '@/components/Layout/LayoutMaterial';
 
 const ErpCrmApp = () => (
   <Box bgcolor="background.default">
-    <AppRouter />
+    <LayoutMaterial outlet={AppRouter} />
   </Box>
 );
 

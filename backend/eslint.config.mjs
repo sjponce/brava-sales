@@ -12,6 +12,8 @@ export default [
       eqeqeq: 'error',
       camelcase: 'error',
       'no-var': 'error',
+      'linebreak-style': 'off',
+
     },
   },
   {
