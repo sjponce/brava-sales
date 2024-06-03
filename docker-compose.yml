@@ -9,17 +9,12 @@ services:
       - "8080:8080"
     environment:
       - NODE_ENV=development
-      - DATABASE=mongodb://mongo:27017/local-brava-salesdb
+      - DATABASE=${DATABASE}
       - PORT=8080
       - NODE_OPTIONS=--openssl-legacy-provider
       - JWT_SECRET=bravaSales
 
     command: sh -c "npm run dev"
-
-    networks:
-      - server-mongo
-    depends_on:
-      - mongo
 
   frontend:
     build: ./frontend
@@ -30,21 +25,5 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - VITE_BACKEND_SERVER=http://localhost:8080/
+      - VITE_BACKEND_SERVER=${BACKEND_URL}
       - NODE_OPTIONS=--openssl-legacy-provider
-
-    depends_on:
-      - backend
-
-  mongo:
-    image: mongo
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - server-mongo
-
-volumes:
-  mongodb_data:
-
-networks:
-  server-mongo:
