@@ -11,7 +11,6 @@ COPY . .
 
 RUN npm install --production
 RUN npm run build
-RUN npm run preview
 
 EXPOSE 3000
 
