@@ -146,15 +146,9 @@ export const request = {
       return errorHandler(error);
     }
   },
-  listAll: async ({ entity, options = {} }) => {
+  listAll: async ({ entity }) => {
     try {
-      let query = '?';
-      Object.keys(options).forEach((key) => {
-        query += `${key}=${options[key]}&`;
-      });
-      query = query.slice(0, -1);
-
-      const response = await axios.get(`${entity}/listAll${query}`);
+      const response = await axios.get(`${entity}/listAll`);
 
       successHandler(response, {
         notifyOnSuccess: false,
@@ -265,4 +259,5 @@ export const request = {
     }
   },
 };
+
 export default request;

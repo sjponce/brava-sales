@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import useOnFetch from '@/hooks/useOnFetch';
-import request from '@/request';
+import { request } from '@/request';
 import ForgetPasswordForm from '@/forms/ForgetPasswordForm';
 import Loading from '@/components/Loading';
 import AuthModule from '@/modules/AuthModule';
