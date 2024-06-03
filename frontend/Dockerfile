@@ -10,7 +10,9 @@ COPY vite.config.js ./
 COPY . .
 
 RUN npm install --production
+RUN npm run build
+RUN npm run preview
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
