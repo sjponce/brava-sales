@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY vite.config.js ./
 COPY . .
-RUN sed -i'' 's/^VITE_BACKEND_SERVER=.*/VITE_BACKEND_SERVER=http://52.14.62.88:8080/' ./frontend/.env
+
 RUN npm install --production
 RUN npm run build
 
