@@ -9,6 +9,7 @@ COPY vite.config.js ./
 
 COPY . .
 
+RUN sed -i 's/^VITE_BACKEND_SERVER=.*/VITE_BACKEND_SERVER=${{ secrets.VITE_BACKEND_SERVER }}/' /frontend/.env  
 RUN npm install --production
 RUN npm run build
 
