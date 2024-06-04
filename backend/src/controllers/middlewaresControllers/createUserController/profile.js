@@ -4,7 +4,7 @@ const profile = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: "couldn't found  admin Profile ",
+      message: "No se encontro el perfil",
     });
   }
   const result = {
@@ -19,7 +19,7 @@ const profile = async (req, res) => {
   return res.status(200).json({
     success: true,
     result,
-    message: 'Successfully found Profile',
+    message: 'se encontro el perfil',
   });
 };
 module.exports = profile;

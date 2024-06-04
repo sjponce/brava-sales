@@ -5,7 +5,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
     return res.status(403).json({
       success: false,
       result: null,
-      message: 'Invalid credentials.',
+      message: 'Credenciales invalidas.',
     });
 
   if (isMatch === true) {
@@ -47,13 +47,13 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
           phone: user.phone,
           photo: user.photo,
         },
-        message: 'Successfully login user',
+        message: 'Usuario autenticado.',
       });
   } else {
     return res.status(403).json({
       success: false,
       result: null,
-      message: 'Invalid credentials.',
+      message: 'Credenciales invalidas.',
     });
   }
 };

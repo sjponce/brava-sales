@@ -9,7 +9,7 @@ const update = async (userModel, req, res) => {
     return res.status(403).send({
       success: false,
       result: null,
-      message: "you can't update user with role owner",
+      message: "No se puede modificar al owner",
     });
   }
 
@@ -26,7 +26,7 @@ const update = async (userModel, req, res) => {
     return res.status(403).send({
       success: false,
       result: null,
-      message: "you can't update other users with role owner",
+      message: "No puedes modificar al owner",
     });
   }
 
@@ -59,7 +59,7 @@ const update = async (userModel, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No document found ',
+      message: 'No se encontro un documento',
     });
   }
   return res.status(200).json({
@@ -73,7 +73,7 @@ const update = async (userModel, req, res) => {
       photo: result.photo,
       role: result.role,
     },
-    message: 'we update this document ',
+    message: 'Se actualizo el documento',
   });
 };
 

@@ -1,15 +1,4 @@
 const search = async (Model, req, res) => {
-  // console.log(req.query.fields)
-  // if (req.query.q === undefined || req.query.q.trim() === '') {
-  //   return res
-  //     .status(202)
-  //     .json({
-  //       success: false,
-  //       result: [],
-  //       message: 'No document found by this request',
-  //     })
-  //     .end();
-  // }
   const fieldsArray = req.query.fields ? req.query.fields.split(',') : ['name'];
 
   const fields = { $or: [] };
@@ -17,7 +6,6 @@ const search = async (Model, req, res) => {
   for (const field of fieldsArray) {
     fields.$or.push({ [field]: { $regex: new RegExp(req.query.q, 'i') } });
   }
-  // console.log(fields)
 
   const results = await Model.find({
     ...fields,
@@ -31,7 +19,7 @@ const search = async (Model, req, res) => {
     return res.status(200).json({
       success: true,
       result: results,
-      message: 'Successfully found all documents',
+      message: 'Se encontro todos los elementos',
     });
   } else {
     return res
@@ -39,7 +27,7 @@ const search = async (Model, req, res) => {
       .json({
         success: false,
         result: [],
-        message: 'No document found by this request',
+        message: 'No se encontro ningun elemento',
       })
       .end();
   }

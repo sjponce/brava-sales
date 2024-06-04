@@ -1,7 +1,7 @@
 const { basename, extname } = require('path');
 const { globSync } = require('glob');
 
-const appModelsFiles = globSync('./src/models/appModels/**/*.js');
+const appModelsFiles = globSync('./src/models/coreModels/**/*.js');
 
 const pattern = './src/models/**/*.js';
 

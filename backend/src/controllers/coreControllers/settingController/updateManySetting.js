@@ -31,14 +31,14 @@ const updateManySetting = async (req, res) => {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'No settings provided ',
+      message: 'No hay settings para actualizar',
     });
   }
   if (settingsHasError) {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'Settings provided has Error',
+      message: 'Hubo un error al actualizar los settings',
     });
   }
   const result = await Model.bulkWrite(updateDataArray);
@@ -47,13 +47,13 @@ const updateManySetting = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No settings found by to update',
+      message: 'No se encontraron settings',
     });
   } else {
     return res.status(200).json({
       success: true,
       result: [],
-      message: 'we update all settings',
+      message: 'Actualizamos todos los settings',
     });
   }
 };

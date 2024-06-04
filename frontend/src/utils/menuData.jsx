@@ -24,19 +24,19 @@ export const menuMaterial = [
       {
         id: 1,
         title: 'Clientes',
-        url: '',
+        url: 'clients',
         icon: <PeopleAltOutlined />,
       },
       {
         id: 3,
         title: 'Vendedores',
-        url: '',
+        url: 'sellers',
         icon: <WorkOutlineRounded />,
       },
       {
         id: 4,
         title: 'Productos',
-        url: '',
+        url: 'products',
         icon: <SellOutlined />,
       },
     ],
@@ -48,20 +48,20 @@ export const menuMaterial = [
       {
         id: 1,
         title: 'Viajes',
-        url: 'inputs',
+        url: 'travels',
         icon: <AirportShuttleOutlined />,
       },
 
       {
         id: 2,
         title: 'Pedidos',
-        url: 'outputs',
+        url: 'orders',
         icon: <ShoppingBagOutlined />,
       },
       {
         id: 3,
         title: 'Promociones',
-        url: 'outputs',
+        url: 'offers',
         icon: <LocalAtmRounded />,
       },
     ],
@@ -73,13 +73,13 @@ export const menuMaterial = [
       {
         id: 1,
         title: 'Informes',
-        url: '/',
+        url: 'reports',
         icon: <FeedOutlined />,
       },
       {
         id: 2,
         title: 'Estadísticas',
-        url: '/',
+        url: 'stats',
         icon: <InsertChartOutlined />,
       },
 
