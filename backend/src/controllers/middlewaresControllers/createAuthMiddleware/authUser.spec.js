@@ -34,7 +34,7 @@ describe('authUser', () => {
     };
   });
 
-  it('should return a 403 status code with an "Invalid credentials." message when the password does not match the database password', async () => {
+  it('should return a 403 status code with an "Credenciales invalidas." message when the password does not match the database password', async () => {
     databasePassword.validPassword.mockReturnValue(false);
 
     await authUser(req, res, { user, databasePassword, password, UserPasswordModel });
@@ -43,7 +43,7 @@ describe('authUser', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'Invalid credentials.',
+      message: 'Credenciales invalidas.',
     });
   });
 
@@ -66,7 +66,7 @@ describe('authUser', () => {
         phone: user.phone,
         photo: user.photo,
       },
-      message: 'Successfully login user',
+      message: 'Usuario autenticado.',
     });
 
     jwt.sign.mockRestore();

@@ -9,13 +9,13 @@ const errorHandler = (error) => {
     });
     // Code to execute when there is internet connection
     notification.error({
-      message: 'No internet connection',
-      description: 'Cannot connect to the Internet, Check your internet network',
+      message: 'No hay internet',
+      description: 'No se pudo conectar con el servidor, Verifique su conexion a internet',
     });
     return {
       success: false,
       result: null,
-      message: 'Cannot connect to the server, Check your internet network',
+      message: 'No se pudo conectar con el servidor, Verifique su conexion a internet',
     };
   }
 
@@ -28,13 +28,13 @@ const errorHandler = (error) => {
     });
     // Code to execute when there is no internet connection
     notification.error({
-      message: 'Problem connecting to server',
-      description: 'Cannot connect to the server, Try again later',
+      message: 'No hay internet',
+      description: 'No se pudo conectar con el servidor, Verifique su conexion a internet',
     });
     return {
       success: false,
       result: null,
-      message: 'Cannot connect to the server, Contact your Account administrator',
+      message: 'No se pudo conectar con el servidor, Verifique su conexion a internet',
     };
   }
 
@@ -59,7 +59,7 @@ const errorHandler = (error) => {
       maxCount: 2,
     });
     notification.error({
-      message: `Request error ${status}`,
+      message: `Error ${status}`,
       description: errorText,
     });
     return response.data;
@@ -72,24 +72,24 @@ const errorHandler = (error) => {
   if (navigator.onLine) {
     // Code to execute when there is internet connection
     notification.error({
-      message: 'Problem connecting to server',
-      description: 'Cannot connect to the server, Try again later',
+      message: 'No se pudo conectar con el servidor',
+      description: 'No se pudo conectar con el servidor, Contacte al administrador del sistema',
     });
     return {
       success: false,
       result: null,
-      message: 'Cannot connect to the server, Contact your Account administrator',
+      message: 'No se pudo conectar con el servidor, Contacte al administrador del sistema',
     };
   }
   // Code to execute when there is no internet connection
   notification.error({
-    message: 'No internet connection',
-    description: 'Cannot connect to the Internet, Check your internet network',
+    message: 'No hay internet',
+    description: 'No se pudo conectar con el servidor, Verifique su conexion a internet',
   });
   return {
     success: false,
     result: null,
-    message: 'Cannot connect to the server, Check your internet network',
+    message: 'No se pudo conectar con el servidor, Verifique su conexion a internet',
   };
 };
 

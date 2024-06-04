@@ -15,7 +15,7 @@ const listBySettingKey = async (req, res) => {
       .json({
         success: false,
         result: [],
-        message: 'Please provide settings you need',
+        message: 'Por favor indique los parametros a buscar',
       })
       .end();
   }
@@ -33,7 +33,7 @@ const listBySettingKey = async (req, res) => {
     return res.status(200).json({
       success: true,
       result: results,
-      message: 'Successfully found all documents',
+      message: 'Se encontro todos los elementos',
     });
   } else {
     return res
@@ -41,7 +41,7 @@ const listBySettingKey = async (req, res) => {
       .json({
         success: false,
         result: [],
-        message: 'No document found by this request',
+        message: 'La coleccion esta vacia',
       })
       .end();
   }

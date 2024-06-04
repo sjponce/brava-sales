@@ -11,7 +11,7 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
       return res.status(401).json({
         success: false,
         result: null,
-        message: 'No authentication token, authorization denied.',
+        message: 'No se encontro el token',
         jwtExpired: true,
       });
 
@@ -21,7 +21,7 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
       return res.status(401).json({
         success: false,
         result: null,
-        message: 'Token verification failed, authorization denied.',
+        message: 'No se pudo verificar el token, acceso denegado.',
         jwtExpired: true,
       });
 
@@ -37,7 +37,7 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
       return res.status(401).json({
         success: false,
         result: null,
-        message: "User doens't Exist, authorization denied.",
+        message: "El usuario no existe, acceso denegado.",
         jwtExpired: true,
       });
 
@@ -46,7 +46,7 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
       return res.status(401).json({
         success: false,
         result: null,
-        message: 'User is already logout try to login, authorization denied.',
+        message: 'El usuario no esta logueado.',
         jwtExpired: true,
       });
     else {

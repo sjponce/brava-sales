@@ -17,13 +17,13 @@ const summary = async (Model, req, res) => {
     return res.status(200).json({
       success: true,
       result: { countFilter, countAllDocs },
-      message: 'Successfully count all documents',
+      message: 'Se encontro todos los elementos',
     });
   } else {
     return res.status(203).json({
       success: false,
       result: [],
-      message: 'Collection is Empty',
+      message: 'La coleccion esta vacia',
     });
   }
 };

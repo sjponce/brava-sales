@@ -48,14 +48,14 @@ const paginatedList = async (Model, req, res) => {
       success: true,
       result,
       pagination,
-      message: 'Successfully found all documents',
+      message: 'Se encontro todos los elementos',
     });
   } else {
     return res.status(203).json({
       success: true,
       result: [],
       pagination,
-      message: 'Collection is Empty',
+      message: 'La coleccion esta vacia',
     });
   }
 };

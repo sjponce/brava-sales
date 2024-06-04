@@ -7,7 +7,7 @@ const filter = async (userModel, req, res) => {
     return res.status(403).json({
       success: false,
       result: null,
-      message: 'filter not provided correctly',
+      message: 'El filtro no se especifico',
     });
   }
   const result = await User.find({ removed: false })
@@ -17,7 +17,7 @@ const filter = async (userModel, req, res) => {
   return res.status(200).json({
     success: true,
     result,
-    message: 'Successfully found all documents  ',
+    message: 'se encontro el documento',
   });
 };
 

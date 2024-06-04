@@ -30,7 +30,7 @@ const updateProfile = async (userModel, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No profile found by this id: ' + userProfile._id,
+      message: 'No se encontro: ' + userProfile._id,
     });
   }
   return res.status(200).json({
@@ -44,7 +44,7 @@ const updateProfile = async (userModel, req, res) => {
       photo: result?.photo,
       role: result?.role,
     },
-    message: 'we update this profile by this id: ' + userProfile._id,
+    message: 'Actualizamos: ' + userProfile._id,
   });
 };
 

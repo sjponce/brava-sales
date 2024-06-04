@@ -24,7 +24,7 @@ const logout = async (req, res, { userModel }) => {
     .json({
       success: true,
       result: {},
-      message: 'Successfully logout',
+      message: 'Sesion cerrada',
     });
 };
 

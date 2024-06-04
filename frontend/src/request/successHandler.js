@@ -14,7 +14,7 @@ const successHandler = (response, options = { notifyOnSuccess: false, notifyOnFa
         maxCount: 2,
       });
       notification.success({
-        message: 'Request success',
+        message: 'OK',
         description: successText,
       });
     }
@@ -28,7 +28,7 @@ const successHandler = (response, options = { notifyOnSuccess: false, notifyOnFa
         maxCount: 2,
       });
       notification.error({
-        message: `Request error ${status}`,
+        message: `Error ${status}`,
         description: errorText,
       });
     }
