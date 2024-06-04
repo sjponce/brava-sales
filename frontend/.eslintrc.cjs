@@ -17,6 +17,7 @@ module.exports = {
     'import/no-unresolved': 'off',
     'no-console': 'off',
     'import/extensions': 'off',
+    'linebreak-style': 'off',
   },
   overrides: [
     {
