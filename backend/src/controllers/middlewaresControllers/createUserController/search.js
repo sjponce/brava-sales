@@ -3,21 +3,6 @@ const mongoose = require('mongoose');
 const search = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
 
-  // console.log(req.query.fields)
-
-  // console.log(fields)
-
-  // if (req.query.q === undefined || req.query.q === '' || req.query.q === ' ') {
-  //   return res
-  //     .status(202)
-  //     .json({
-  //       success: false,
-  //       result: [],
-  //       message: 'No document found by this request',
-  //     })
-  //     .end();
-  // }
-
   const fieldsArray = req.query.fields ? req.query.fields.split(',') : ['name', 'surname', 'email'];
 
   const fields = { $or: [] };
@@ -37,13 +22,13 @@ const search = async (userModel, req, res) => {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Successfully found all documents',
+      message: 'Se encontraron todos los elementos',
     });
   } else {
     return res.status(202).json({
       success: false,
       result: [],
-      message: 'No document found by this request',
+      message: 'No se encontraron elementos',
     });
   }
 };

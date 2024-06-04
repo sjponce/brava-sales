@@ -17,7 +17,7 @@ const remove = async (userModel, req, res) => {
     return res.status(403).json({
       success: false,
       result: null,
-      message: "can't remove a user with role 'admin'",
+      message: "No se puede eliminar el usuario admin o el owner",
     });
   }
   // Find the document by id and delete it
@@ -33,13 +33,13 @@ const remove = async (userModel, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No document found ',
+      message: 'No se encontro un documento',
     });
   } else {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Successfully Deleted the document ',
+      message: 'Se elimino el documento ',
     });
   }
 };

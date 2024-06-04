@@ -26,13 +26,13 @@ const listAll = async (Model, req, res) => {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Successfully found all documents',
+      message: 'Se encontro todos los elementos',
     });
   } else {
     return res.status(203).json({
       success: false,
       result: [],
-      message: 'Collection is Empty',
+      message: 'La coleccion esta vacia',
     });
   }
 };

@@ -17,13 +17,13 @@ const listAll = async (userModel, req, res) => {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Successfully found all documents',
+      message: 'se encontro los documentos',
     });
   } else {
     return res.status(203).json({
       success: false,
       result: [],
-      message: 'Collection is Empty',
+      message: 'la coleccion esta vacia',
     });
   }
 };

@@ -10,7 +10,7 @@ const readBySettingKey = async (req, res) => {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'No settingKey provided ',
+      message: 'Por favor indique los parametros a buscar',
     });
   }
 
@@ -23,14 +23,14 @@ const readBySettingKey = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No document found by this settingKey: ' + settingKey,
+      message: 'No se encontro un documento: ' + settingKey,
     });
   } else {
     // Return success resposne
     return res.status(200).json({
       success: true,
       result,
-      message: 'we found this document by this settingKey: ' + settingKey,
+      message: 'Se encontro el documento: ' + settingKey,
     });
   }
 };

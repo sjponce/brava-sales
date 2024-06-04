@@ -9,7 +9,7 @@ const updateBySettingKey = async (req, res) => {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'No settingKey provided ',
+      message: 'No hay una key de configuracion',
     });
   }
   const { settingValue } = req.body;
@@ -18,7 +18,7 @@ const updateBySettingKey = async (req, res) => {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'No settingValue provided ',
+      message: 'No hay un valor de configuracion',
     });
   }
   const result = await Model.findOneAndUpdate(
@@ -35,13 +35,13 @@ const updateBySettingKey = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No document found by this settingKey: ' + settingKey,
+      message: 'No hay un documento: ' + settingKey,
     });
   } else {
     return res.status(200).json({
       success: true,
       result,
-      message: 'we update this document by this settingKey: ' + settingKey,
+      message: 'Actualizamos este documento: ' + settingKey,
     });
   }
 };

@@ -13,7 +13,7 @@ exports.catchErrors = (fn) => {
         return res.status(400).json({
           success: false,
           result: null,
-          message: 'Required fields are not supplied',
+          message: 'faltan campos requeridos',
           controller: fn.name,
           error: error,
         });
@@ -38,7 +38,7 @@ exports.catchErrors = (fn) => {
 exports.notFound = (req, res) => {
   return res.status(404).json({
     success: false,
-    message: "Api url doesn't exist ",
+    message: "La ruta no existe ",
   });
 };
 

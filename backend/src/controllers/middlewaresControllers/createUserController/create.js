@@ -10,14 +10,14 @@ const create = async (userModel, req, res) => {
     return res.status(400).json({
       success: false,
       result: null,
-      message: "Email or password fields they don't have been entered.",
+      message: "Faltan campos obligatorios",
     });
 
   if (req.body.role === 'owner') {
     return res.status(403).send({
       success: false,
       result: null,
-      message: "you can't create user with role owner",
+      message: "No puedes crear un usuario con el role de owner",
     });
   }
 
@@ -29,14 +29,14 @@ const create = async (userModel, req, res) => {
     return res.status(400).json({
       success: false,
       result: null,
-      message: 'An account with this email already exists.',
+      message: 'El email ya esta registrado.',
     });
 
   if (password.length < 8)
     return res.status(400).json({
       success: false,
       result: null,
-      message: 'The password needs to be at least 8 characters long.',
+      message: 'La contraseña debe tener al menos 8 caracteres.',
     });
 
   const salt = uniqueId();
@@ -57,7 +57,7 @@ const create = async (userModel, req, res) => {
     return res.status(403).json({
       success: false,
       result: null,
-      message: "document couldn't save correctly",
+      message: "El documento no pudo ser guardado",
     });
   }
   const UserPasswordData = {
@@ -74,7 +74,7 @@ const create = async (userModel, req, res) => {
     return res.status(403).json({
       success: false,
       result: null,
-      message: "document couldn't save correctly",
+      message: "El documento no pudo ser guardado",
     });
   }
 
@@ -89,7 +89,7 @@ const create = async (userModel, req, res) => {
       photo: result.photo,
       role: result.role,
     },
-    message: 'User document save correctly',
+    message: 'Usuario creado.',
   });
 };
 module.exports = create;

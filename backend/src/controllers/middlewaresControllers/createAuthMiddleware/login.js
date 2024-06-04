@@ -34,7 +34,7 @@ const login = async (req, res, { userModel }) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No account with this email has been registered.',
+      message: 'No hay una cuenta con este mail creada.',
     });
 
   const databasePassword = await UserPasswordModel.findOne({
@@ -46,7 +46,7 @@ const login = async (req, res, { userModel }) => {
     return res.status(409).json({
       success: false,
       result: null,
-      message: 'Your account is disabled, contact your account adminstrator',
+      message: 'El usuario no esta habilitado.',
     });
 
   //  authUser if your has correct password
