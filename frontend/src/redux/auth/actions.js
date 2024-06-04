@@ -101,31 +101,15 @@ export const logout = () => async (dispatch) => {
   dispatch({
     type: actionTypes.LOGOUT_SUCCESS,
   });
-  const result = window.localStorage.getItem('auth');
-  const tmpAuth = JSON.parse(result);
-  const settings = window.localStorage.getItem('settings');
-  const tmpSettings = JSON.parse(settings);
   window.localStorage.removeItem('auth');
   window.localStorage.removeItem('settings');
   window.localStorage.setItem('isLogout', JSON.stringify({ isLogout: true }));
   const data = await authService.logout();
-  if (data.success === false) {
-    const authState = {
-      current: tmpAuth,
-      isLoggedIn: true,
-      isLoading: false,
-      isSuccess: true,
-    };
-    window.localStorage.setItem('auth', JSON.stringify(authState));
-    window.localStorage.setItem('settings', JSON.stringify(tmpSettings));
-    window.localStorage.removeItem('isLogout');
-    dispatch({
-      type: actionTypes.LOGOUT_FAILED,
-      payload: data.result,
-    });
-  } else {
-    // on lgout success
-  }
+
+  dispatch({
+    type: actionTypes.LOGOUT_FAILED,
+    payload: data.result,
+  });
 };
 
 export const updateProfile = ({ entity, jsonData }) => async (dispatch) => {
