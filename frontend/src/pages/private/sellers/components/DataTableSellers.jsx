@@ -1,13 +1,14 @@
-/* eslint-disable no-underscore-dangle */
 import { DeleteRounded, EditRounded } from '@mui/icons-material';
 import { Avatar, Box, IconButton } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
-import { request } from '@/request';
+import crud from '@/redux/crud/actions';
+import { set } from 'react-hook-form';
 
 const DataTableSellers = () => {
-  const [rows, setRows] = useState([]);
+  const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: 0,
@@ -25,19 +26,26 @@ const DataTableSellers = () => {
     setDialogOpen(true);
   };
 
-  const updateTable = async () => {
-    const response = await request.listAll({ entity: 'user' });
-    if (response) {
-      const updatedRows = response.result.map((row) => ({
-        ...row,
-        id: row._id,
-      }));
-      setRows(updatedRows);
-    }
+  const handleDialogCancel = () => {
+    setDialogOpen(false);
   };
 
+  const handleDialogAccept = () => {
+    setDialogOpen(false);
+  };
+
+  const sellerState = useSelector((store) => store.crud.listAll);
+  const [rows, setRows] = useState([]);
+
   useEffect(() => {
-    updateTable();
+    if (!sellerState.result) return;
+    const newRows = sellerState.result.items.result.map((item) => ({ ...item, id: item._id }));
+    setRows(newRows);
+  }, [sellerState]);
+
+  useEffect(() => {
+    dispatch(crud.listAll({ entity: 'user' }));
+    console.log(sellerState);
   }, []);
 
   const columns = [
@@ -89,11 +97,12 @@ const DataTableSellers = () => {
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { id, name, role } = params.row;
-        const isDisabled = role === 'ADMIN';
+        const { id, name } = params.row;
+        const userState = useSelector((store) => store.auth.current);
+        const isDisabled = userState.role !== 'ADMIN';
         return (
           <div className="actions">
-            <IconButton size="small">
+            <IconButton disabled={isDisabled} size="small">
               <EditRounded />
             </IconButton>
             <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
@@ -104,14 +113,6 @@ const DataTableSellers = () => {
       },
     },
   ];
-
-  const handleDialogCancel = () => {
-    setDialogOpen(false);
-  };
-
-  const handleDialogAccept = async () => {
-    setDialogOpen(false);
-  };
 
   return (
     <Box display="flex" height="100%">
