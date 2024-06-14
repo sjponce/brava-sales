@@ -25,8 +25,7 @@ const Sellers = () => {
         justifyContent="space-between"
         width="100%"
         borderRadius={2}
-        marginBottom="20px"
-      >
+        marginBottom="20px">
         <Typography variant="h4">Vendedores</Typography>
         <Button
           onClick={handleClickOpen}
@@ -34,15 +33,14 @@ const Sellers = () => {
           variant="text"
           size="large"
           color="primary"
-          startIcon={<AddCircle />}
-        >
+          startIcon={<AddCircle />}>
           <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
             Nuevo vendedor
           </Typography>
         </Button>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
-        <AddSellerDialog />
+      <Dialog maxWidth="lg" open={open} onClose={handleClose}>
+        <AddSellerDialog idSeller="" />
       </Dialog>
       <DataTableSellers />
     </Box>

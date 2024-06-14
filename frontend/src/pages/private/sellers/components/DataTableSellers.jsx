@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import crud from '@/redux/crud/actions';
-import { set } from 'react-hook-form';
 
 const DataTableSellers = () => {
   const dispatch = useDispatch();
@@ -38,14 +37,13 @@ const DataTableSellers = () => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (!sellerState.result) return;
+    if (!sellerState?.result) return;
     const newRows = sellerState.result.items.result.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [sellerState]);
 
   useEffect(() => {
     dispatch(crud.listAll({ entity: 'user' }));
-    console.log(sellerState);
   }, []);
 
   const columns = [

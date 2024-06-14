@@ -1,57 +1,69 @@
-import { Box } from '@mui/material';
+import { Box, DialogContent, DialogTitle } from '@mui/material';
 import { Button, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import Loading from '@/components/Loading';
+import { useDispatch, useSelector } from 'react-redux';
 import AddSellerForm from '@/forms/AddSellerForm';
-import { request } from '@/request';
+import { selectCreatedItem } from '@/redux/crud/selectors';
+import crud from '@/redux/crud/actions';
 
 const AddSellerDialog = ({ idSeller }) => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-
+  const isUpdate = !!idSeller.length;
   const onSubmit = async (data) => {
-    const response = await request.create({ entity: 'user', data });
-    if (response) {
-      const updatedRows = response.result.map((row) => ({
-        ...row,
-        id: row._id,
-      }));
-      setRows(updatedRows);
-    }
+    dispatch(
+      crud.create({
+        entity: 'user',
+        jsonData: {
+          ...data,
+          /* password: 'admin123',
+          email: 'johntravolta@demo.com',
+          nombre: 'John',
+          apellido: 'Travolta',
+          telefono: '66666666',
+          role: 'SELLER',
+          enabled: true,
+          photo:
+            'https://www.pngitem.com/pimgs/m/153-1537758_user-icon-png-transparent-png-user-icon-png-transparent.png', */
+        },
+      }),
+    );
   };
-
-  useEffect(() => {
-    if (isSuccess) navigate('/');
-  }, [isSuccess]);
+  const { isLoading } = useSelector(selectCreatedItem);
   return (
-    <Box>
-      <Loading isLoading={isLoading} />
-      <Box component="form" onSubmit={handleSubmit(onSubmit)} name="normal_login">
-        <AddSellerForm />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={isLoading}
-          size="large"
-          fullWidth
-          sx={{ mt: 1 }}
-        >
-          <Typography variant="button">Iniciar sesión</Typography>
-        </Button>
-      </Box>
-    </Box>
+    <>
+      <DialogTitle>Crear nuevo vendedor</DialogTitle>
+      <DialogContent>
+        {/* TODO: fix css */}
+        <Box sx={{ width: '100%' }}>
+          <Box
+            component="form"
+            sx={{ width: '100%' }}
+            onSubmit={handleSubmit(onSubmit)}
+            name="add_seller">
+            <AddSellerForm register={register} />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isLoading}
+              size="large"
+              sx={{ mt: 1 }}>
+              <Typography variant="button">
+                {isUpdate ? 'Modificar ' : 'Crear '}
+                usuario
+              </Typography>
+            </Button>
+          </Box>
+        </Box>
+      </DialogContent>
+    </>
   );
 };
 
 AddSellerDialog.propTypes = {
-  idSeller: PropTypes.string,
-};
-
-AddSellerDialog.defaultProps = {
-  idSeller: '',
+  idSeller: PropTypes.string.isRequired,
 };
 
 export default AddSellerDialog;
