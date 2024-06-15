@@ -30,11 +30,17 @@ const DataTableSellers = () => {
   };
 
   const handleDialogAccept = () => {
+    dispatch(crud.delete({ entity: 'user', id: selectedRow.id }));
     setDialogOpen(false);
   };
 
   const sellerState = useSelector((store) => store.crud.listAll);
+  const deleteState = useSelector((store) => store.crud.delete);
   const [rows, setRows] = useState([]);
+  const updateTable = () => {
+    if (sellerState?.isLoading) return;
+    dispatch(crud.listAll({ entity: 'user' }));
+  };
 
   useEffect(() => {
     if (!sellerState?.result) return;
@@ -43,7 +49,11 @@ const DataTableSellers = () => {
   }, [sellerState]);
 
   useEffect(() => {
-    dispatch(crud.listAll({ entity: 'user' }));
+    updateTable();
+  }, [deleteState]);
+
+  useEffect(() => {
+    updateTable();
   }, []);
 
   const columns = [
@@ -97,7 +107,7 @@ const DataTableSellers = () => {
       renderCell: (params) => {
         const { id, name } = params.row;
         const userState = useSelector((store) => store.auth.current);
-        const isDisabled = userState.role !== 'ADMIN';
+        const isDisabled = userState.role !== 'ADMIN' || sellerState.isLoading;
         return (
           <div className="actions">
             <IconButton disabled={isDisabled} size="small">
