@@ -39,9 +39,7 @@ const Sellers = () => {
           </Typography>
         </Button>
       </Box>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose}>
-        <AddSellerDialog idSeller="" />
-      </Dialog>
+      <AddSellerDialog isOpen={open} onCancel={handleClose} idSeller="" />
       <DataTableSellers />
     </Box>
   );

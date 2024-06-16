@@ -1,4 +1,4 @@
-import { Box, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from '@mui/material';
 import { Button, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
@@ -6,64 +6,85 @@ import { useDispatch, useSelector } from 'react-redux';
 import AddSellerForm from '@/forms/AddSellerForm';
 import { selectCreatedItem } from '@/redux/crud/selectors';
 import crud from '@/redux/crud/actions';
-
-const AddSellerDialog = ({ idSeller }) => {
+import EmailIcon from '@mui/icons-material/Email';
+const AddSellerDialog = ({ idSeller, isOpen, onCancel }) => {
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState } = useForm();
   const isUpdate = !!idSeller.length;
-  const onSubmit = async (data) => {
-    dispatch(
-      crud.create({
-        entity: 'user',
-        jsonData: {
-          ...data,
-          /* password: 'admin123',
-          email: 'johntravolta@demo.com',
-          nombre: 'John',
-          apellido: 'Travolta',
-          telefono: '66666666',
-          role: 'SELLER',
-          enabled: true,
-          photo:
-            'https://www.pngitem.com/pimgs/m/153-1537758_user-icon-png-transparent-png-user-icon-png-transparent.png', */
-        },
-      }),
-    );
-  };
   const { isLoading } = useSelector(selectCreatedItem);
+
+  const onSubmit = (data) => {
+    console.log('Form Data:', data);
+    if (formState.isValid) {
+      dispatch(
+        crud.create({
+          entity: 'user',
+          jsonData: {
+            ...data,
+          },
+        })
+      );
+      onCancel();
+    }
+  };
   return (
-    <>
+    <Dialog open={isOpen} onClose={onCancel}>
       <DialogTitle>Crear nuevo vendedor</DialogTitle>
       <DialogContent>
-        {/* TODO: fix css */}
-        <Box sx={{ width: '100%' }}>
-          <Box
-            component="form"
-            sx={{ width: '100%' }}
-            onSubmit={handleSubmit(onSubmit)}
-            name="add_seller">
-            <AddSellerForm register={register} />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={isLoading}
-              size="large"
-              sx={{ mt: 1 }}>
-              <Typography variant="button">
-                {isUpdate ? 'Modificar ' : 'Crear '}
-                usuario
-              </Typography>
-            </Button>
-          </Box>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} id='form-add-seller'>
+          <AddSellerForm register={register} />
+          {/* <TextField
+            label="Correo electrónico"
+            name="email"
+            type="email"
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon color="disabled" />
+                </InputAdornment>
+              ),
+            }}
+            {...register('email', { required: true })}
+            variant="outlined"
+            size="large"
+            fullWidth
+            sx={{ mr: 3, minWidth: 200 }}
+          /> */}
         </Box>
       </DialogContent>
-    </>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+          size="large"
+          type="submit"
+          form='form-add-seller'
+          sx={{ mt: 1 }}>
+          <Typography variant="button">
+            {isUpdate ? 'Modificar ' : 'Crear '}
+            usuario
+          </Typography>
+        </Button>
+        <Button
+          type="button"
+          variant="outlined"
+          color="secondary"
+          size="large"
+          sx={{ mt: 1 }}
+          onClick={onCancel}>
+          <Typography variant="button">Atras</Typography>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
 AddSellerDialog.propTypes = {
   idSeller: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default AddSellerDialog;

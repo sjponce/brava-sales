@@ -7,6 +7,8 @@ import DataTable from '@/components/dataTable/DataTable';
 import crud from '@/redux/crud/actions';
 
 const DataTableSellers = () => {
+  const sellerState = useSelector((store) => store.crud);
+  const [rows, setRows] = useState([]);
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
@@ -34,27 +36,20 @@ const DataTableSellers = () => {
     setDialogOpen(false);
   };
 
-  const sellerState = useSelector((store) => store.crud.listAll);
-  const deleteState = useSelector((store) => store.crud.delete);
-  const [rows, setRows] = useState([]);
   const updateTable = () => {
-    if (sellerState?.isLoading) return;
+    if (sellerState.listAll?.isLoading) return;
     dispatch(crud.listAll({ entity: 'user' }));
   };
 
   useEffect(() => {
-    if (!sellerState?.result) return;
-    const newRows = sellerState.result.items.result.map((item) => ({ ...item, id: item._id }));
+    updateTable();
+  }, [sellerState.delete, sellerState.create]);
+
+  useEffect(() => {
+    if (!sellerState.listAll?.result) return;
+    const newRows = sellerState.listAll.result.items.result.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
-  }, [sellerState]);
-
-  useEffect(() => {
-    updateTable();
-  }, [deleteState]);
-
-  useEffect(() => {
-    updateTable();
-  }, []);
+  }, [sellerState.listAll]);
 
   const columns = [
     {
@@ -107,7 +102,7 @@ const DataTableSellers = () => {
       renderCell: (params) => {
         const { id, name } = params.row;
         const userState = useSelector((store) => store.auth.current);
-        const isDisabled = userState.role !== 'ADMIN' || sellerState.isLoading;
+        const isDisabled = userState.role !== 'ADMIN' || sellerState.listAll.isLoading;
         return (
           <div className="actions">
             <IconButton disabled={isDisabled} size="small">
