@@ -104,12 +104,7 @@ export const logout = () => async (dispatch) => {
   window.localStorage.removeItem('auth');
   window.localStorage.removeItem('settings');
   window.localStorage.setItem('isLogout', JSON.stringify({ isLogout: true }));
-  const data = await authService.logout();
-
-  dispatch({
-    type: actionTypes.LOGOUT_FAILED,
-    payload: data.result,
-  });
+  await authService.logout();
 };
 
 export const updateProfile = ({ entity, jsonData }) => async (dispatch) => {
