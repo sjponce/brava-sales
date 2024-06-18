@@ -7,7 +7,7 @@ import { menuMaterialUser, menuMaterial } from '../../../utils/menuData';
 const Menu = () => {
   const switchMenu = () => {
     const userState = useSelector((store) => store.auth.current);
-    return userState.role === 'ADMIN' ? menuMaterial : menuMaterialUser;
+    return userState.role === 'admin' ? menuMaterial : menuMaterialUser;
   };
 
   return (

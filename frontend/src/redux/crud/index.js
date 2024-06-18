@@ -1,2 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
-export { default as reducer } from './reducer';
+import crudReducer from './reducer';
+
+export default crudReducer;

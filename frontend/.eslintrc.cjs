@@ -35,6 +35,8 @@ module.exports = {
         'no-console': 'off',
         'import/extensions': 'off',
         'react/jsx-props-no-spreading': 'off',
+        'no-underscore-dangle': 'off',
+        'react/jsx-closing-bracket-location': 'off',
       },
     },
   ],
