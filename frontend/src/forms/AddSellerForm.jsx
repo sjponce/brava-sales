@@ -10,7 +10,6 @@ const AddSellerForm = ({
   register, setValue, watch, roleOptions,
 }) => {
   const [uploadedImg, setUploadedImg] = useState(watch('photo'));
-  console.log(watch('role'));
   const handleImageChange = async (event) => {
     if (event.target.files && event.target.files[0]) {
       const image = event.target.files[0];
@@ -112,7 +111,7 @@ const AddSellerForm = ({
             options={roleOptions}
             fullWidth
             isOptionEqualToValue={(option, value) => option === value || value === ''}
-            defaultValue={roleOptions.find((option) => option.value === watch('role')).label ?? ''}
+            defaultValue={roleOptions.find((option) => option.value === watch('role'))?.label ?? ''}
             renderInput={(params) => (
               <TextField
                 {...params}
