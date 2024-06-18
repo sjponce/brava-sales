@@ -80,7 +80,13 @@ const DataTableSellers = () => {
       field: 'name',
       headerName: 'Nombre',
       width: 150,
-      renderCell: (params) => `${params.row.name || ''} ${params.row.surname || ''}`,
+      renderCell: (params) => `${params.row.name || ''}`,
+    },
+    {
+      field: 'surname',
+      headerName: 'Apellido',
+      width: 150,
+      renderCell: (params) => `${params.row.surname || ''}`,
     },
     {
       field: 'email',
