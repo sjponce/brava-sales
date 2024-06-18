@@ -19,6 +19,10 @@ const SytledModal = styled(Modal)({
 const AddSellerModal = ({
   idSeller, open, handlerOpen,
 }) => {
+  const roleOptions = [
+    { label: 'Administrador', value: 'admin' },
+    { label: 'Vendedor', value: 'seller' },
+  ];
   const dispatch = useDispatch();
   const sellerData = useSelector(selectCurrentItem);
   const {
@@ -34,6 +38,7 @@ const AddSellerModal = ({
           entity: 'user',
           jsonData: {
             ...data,
+            role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
         }),
       );
@@ -63,6 +68,7 @@ const AddSellerModal = ({
           id: idSeller,
           jsonData: {
             ...data,
+            role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
         }),
       );
@@ -102,7 +108,11 @@ const AddSellerModal = ({
         </Box>
         <Divider />
         <Box component="form" onSubmit={handleSubmit(onSubmit)} name="add_seller">
-          <AddSellerForm register={register} setValue={setValue} watch={watch} />
+          <AddSellerForm
+            register={register}
+            setValue={setValue}
+            watch={watch}
+            roleOptions={roleOptions} />
           <Button
             type="submit"
             variant="contained"

@@ -6,9 +6,11 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
-const AddSellerForm = ({ register, setValue, watch }) => {
+const AddSellerForm = ({
+  register, setValue, watch, roleOptions,
+}) => {
   const [uploadedImg, setUploadedImg] = useState(watch('photo'));
-
+  console.log(watch('role'));
   const handleImageChange = async (event) => {
     if (event.target.files && event.target.files[0]) {
       const image = event.target.files[0];
@@ -107,10 +109,10 @@ const AddSellerForm = ({ register, setValue, watch }) => {
         />
         <Box display="flex" alignItems="center" justifyContent="center" gap={3}>
           <Autocomplete
-            options={['ADMIN', 'SELLER']}
+            options={roleOptions}
             fullWidth
-            defaultValue={watch('role')}
             isOptionEqualToValue={(option, value) => option === value || value === ''}
+            defaultValue={roleOptions.find((option) => option.value === watch('role')).label ?? ''}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -149,6 +151,10 @@ AddSellerForm.propTypes = {
   register: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
   watch: PropTypes.func.isRequired,
+  roleOptions: PropTypes.arrayOf(PropTypes.shape({
+    value: PropTypes.string,
+    label: PropTypes.string,
+  })).isRequired,
 };
 
 export default AddSellerForm;

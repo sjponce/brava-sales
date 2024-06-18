@@ -28,7 +28,7 @@ const Sellers = () => {
         <Typography variant="h4">Vendedores</Typography>
         <Button
           onClick={handleClickOpen}
-          disabled={userState.role !== 'ADMIN'}
+          disabled={userState.role !== 'admin'}
           variant="text"
           size="large"
           color="primary"

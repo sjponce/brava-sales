@@ -91,7 +91,7 @@ const DataTableSellers = () => {
       field: 'role',
       headerName: 'Rol',
       width: 110,
-      renderCell: (params) => `${params.row.role === 'ADMIN' ? 'Administrador' : 'Vendedor'}`,
+      renderCell: (params) => `${params.row.role === 'admin' ? 'Administrador' : 'Vendedor'}`,
     },
     {
       field: 'phone',
@@ -117,7 +117,7 @@ const DataTableSellers = () => {
       renderCell: (params) => {
         const { id, name } = params.row;
         const userState = useSelector((store) => store.auth.current);
-        const isDisabled = userState.role !== 'ADMIN' || sellerState.isLoading;
+        const isDisabled = userState.role !== 'admin' || sellerState.isLoading;
         return (
           <div className="actions">
             <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
