@@ -1,109 +1,154 @@
 import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  InputAdornment,
-  InputLabel,
-  Switch,
-  TextField,
+  Autocomplete, Box, IconButton, TextField, Typography, Tooltip,
 } from '@mui/material';
-import React from 'react';
-import EmailIcon from '@mui/icons-material/Email';
+import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-material';
+import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
+import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
-const AddSellerForm = ({ register }) => (
-  <Box display="flex" flexDirection="column" justifyContent="center" sx={{ width: '100%', height: '100%' }}>
-    <TextField
-      label="Correo electrónico"
-      name="email"
-      type="email"
-      required
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <EmailIcon color="disabled" />
-          </InputAdornment>
-        ),
-      }}
-      {...register('email', { required: true })}
-      variant="outlined"
-      size="large"
-      fullWidth
-      sx={{ mr: 3, minWidth: 200 }}
-    />
-    <TextField
-      label="Nombre"
-      name="name"
-      required
-      {...register('name', { required: true })}
-      variant="outlined"
-      size="large"
-      fullWidth
-      sx={{ mr: 3, minWidth: 200 }}
-    />
-    <TextField
-      label="Apellido"
-      name="apellido"
-      required
-      {...register('surname', { required: true })}
-      variant="outlined"
-      size="large"
-      fullWidth
-      sx={{ mr: 3, minWidth: 200 }}
-    />
-    <TextField
-      label="Rol"
-      name="role"
-      required
-      {...register('role', { required: true })}
-      variant="outlined"
-      size="large"
-      fullWidth
-      sx={{ mr: 3, minWidth: 200 }}
-    />
-    {/* TODO: Use phone validator */}
-    <TextField
-      label="Telefono"
-      name="phone"
-      required
-      {...register('phone', { required: true })}
-      variant="outlined"
-      size="large"
-      fullWidth
-      sx={{ mr: 3, minWidth: 200 }}
-    />
-    {/* TODO: Upload photo */}
-    <TextField
-      label="Foto"
-      name="photo"
-      required
-      {...register('photo')}
-      variant="outlined"
-      size="large"
-      fullWidth
-      sx={{ mr: 3, minWidth: 200 }}
-    />
-    <InputLabel id="role-label">Rol</InputLabel>
-    {/* TODO: Add select instead of textfield */}
-    {/* <Select labelId="role-label" id="role-select" label="Rol">
-        <MenuItem value="ADMIN">Administrador</MenuItem>
-        <MenuItem value="SELLER">Vendedor</MenuItem>
-      </Select> */}
-    <FormControl {...register('disabled', { required: true })} component="fieldset">
-      <FormLabel component="legend">Activo</FormLabel>
-      <FormGroup aria-label="position" row>
-        <FormControlLabel
-          control={<Switch color="primary" />}
+const AddSellerForm = ({ register, setValue, watch }) => {
+  const [uploadedImg, setUploadedImg] = useState(watch('photo'));
+
+  const handleImageChange = async (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const image = event.target.files[0];
+      const imageUrl = await uploadImageToImgbb(image);
+      setValue('photo', imageUrl);
+      setUploadedImg(true);
+    }
+  };
+
+  const handlePhoneInputChange = (event) => {
+    const filteredValue = event.target.value.replace(/[^0-9]/g, '');
+    setValue('phone', filteredValue);
+  };
+
+  const handleRemoveImage = (event) => {
+    event.preventDefault();
+    setUploadedImg(false);
+    setValue('photo', '');
+    const fileInput = document.getElementById('raised-button-file');
+    if (fileInput) fileInput.value = '';
+  };
+
+  return (
+    <>
+      <Box display="flex" flexDirection="column" border={1} borderColor="background.paper" borderRadius={2.5} p={1} mt={2}>
+        <Typography variant="overline" textAlign="center">
+          Datos de la cuenta
+        </Typography>
+        <Box display="flex" gap={2}>
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            size="small"
+            required
+            margin="normal"
+            fullWidth
+            {...register('email', { required: true })}
+            variant="outlined"
+          />
+          <TextField
+            label="Contraseña"
+            name="password"
+            type="password"
+            size="small"
+            margin="normal"
+            fullWidth
+            required
+            {...register('password', { required: true })}
+            variant="outlined"
+            inputProps={{
+              minLength: 8,
+            }}
+          />
+        </Box>
+      </Box>
+      <Box display="flex" flexDirection="column" border={1} borderColor="background.paper" borderRadius={2.5} p={1} mt={2} mb={2}>
+        <Typography variant="overline" textAlign="center">
+          Datos del vendedor
+        </Typography>
+        <Box display="flex" gap={2}>
+          <TextField
+            label="Nombre"
+            name="name"
+            size="small"
+            required
+            margin="normal"
+            {...register('name', { required: true })}
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            label="Apellido"
+            name="surname"
+            size="small"
+            required
+            margin="normal"
+            {...register('surname', { required: true })}
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <TextField
+          label="Teléfono"
+          name="phone"
+          margin="normal"
+          size="small"
+          variant="outlined"
+          fullWidth
+          onChange={handlePhoneInputChange}
+          inputProps={{
+            minLength: 9,
+            maxLength: 11,
+          }}
+          {...register('phone')}
         />
-      </FormGroup>
-    </FormControl>
-  </Box>
-);
+        <Box display="flex" alignItems="center" justifyContent="center" gap={3}>
+          <Autocomplete
+            options={['ADMIN', 'SELLER']}
+            fullWidth
+            defaultValue={watch('role')}
+            isOptionEqualToValue={(option, value) => option === value || value === ''}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Rol"
+                name="role"
+                size="small"
+                required
+                margin="normal"
+                {...register('role', { required: true })}
+                variant="outlined"
+                fullWidth
+              />
+            )}
+          />
+          <label htmlFor="raised-button-file">
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="raised-button-file"
+              type="file"
+              onChange={handleImageChange}
+            />
+            <Tooltip title={uploadedImg ? 'Eliminar imagen de perfil' : 'Agregar imagen de perfil'}>
+              <IconButton component="span" onClick={uploadedImg ? handleRemoveImage : undefined}>
+                {uploadedImg ? <HideImageOutlined /> : <AddPhotoAlternateOutlined />}
+              </IconButton>
+            </Tooltip>
+          </label>
+        </Box>
+      </Box>
+    </>
+  );
+};
 
 AddSellerForm.propTypes = {
   register: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
+  watch: PropTypes.func.isRequired,
 };
 
 export default AddSellerForm;

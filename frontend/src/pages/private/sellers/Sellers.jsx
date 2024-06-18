@@ -1,10 +1,9 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
-import Dialog from '@mui/material/Dialog';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import DataTableSellers from './components/DataTableSellers';
-import AddSellerDialog from './components/AddSellerDialog';
+import AddSellerModal from './components/AddSellerModal';
 
 const Sellers = () => {
   const [open, setOpen] = useState(false);
@@ -39,9 +38,7 @@ const Sellers = () => {
           </Typography>
         </Button>
       </Box>
-      <Dialog maxWidth="lg" open={open} onClose={handleClose}>
-        <AddSellerDialog idSeller="" />
-      </Dialog>
+      <AddSellerModal open={open} handlerOpen={handleClose} idSeller="" />
       <DataTableSellers />
     </Box>
   );

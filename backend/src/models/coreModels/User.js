@@ -9,7 +9,7 @@ const UserSchema = new Schema(
         },
     enabled: {
         type: Boolean,
-        default: false,
+        default: true,
         },
     email: {
       type: String,
@@ -27,6 +27,14 @@ const UserSchema = new Schema(
     photo: {
         type: String,
         },
+    name: {
+      type: String,
+      required: true,
+    },
+    surname: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
       default: 'SELLER',
