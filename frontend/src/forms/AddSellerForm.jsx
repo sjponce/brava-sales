@@ -132,6 +132,7 @@ const AddSellerForm = ({
               style={{ display: 'none' }}
               id="raised-button-file"
               type="file"
+              data-testid="raised-button-file"
               onChange={handleImageChange}
             />
             <Tooltip title={uploadedImg ? 'Eliminar imagen de perfil' : 'Agregar imagen de perfil'}>
