@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Email from '@mui/icons-material/Email';
 import ForgetPasswordForm from './ForgetPasswordForm';
 
 describe('ForgetPasswordForm', () => {

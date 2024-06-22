@@ -2,8 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import LoginForm from './LoginForm';
-var screen;
-fdescribe('LoginForm', () => {
+
+describe('LoginForm', () => {
   const mockRegister = jest.fn();
   beforeEach(() => {
     mockRegister.mockClear();
