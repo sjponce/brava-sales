@@ -15,7 +15,7 @@ const userExceptions = {
   update: {
     emailExists: async (Model, req) => {
       const existingUser = await Model.findOne({ email: req.body.email, removed: false });
-      if (existingUser) {
+      if (existingUser && existingUser._id.toString() !== req.params.id) {
         return {
           success: false,
           result: null,

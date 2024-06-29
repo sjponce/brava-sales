@@ -1,8 +1,9 @@
 const modelExceptions = require("./modelExceptions");
+const translate = require('../../../utils/translateModel');
 
 const update = async (Model, req, res) => {
   // Checking if there are any exceptions for creation
-  const createExceptionFunctions = Object.values(modelExceptions[Model.modelName]?.create || {});
+  const createExceptionFunctions = Object.values(modelExceptions[Model.modelName]?.update || {});
 
   for (const exceptionFunction of createExceptionFunctions) {
     const exceptionResult = await exceptionFunction(Model, req);
@@ -21,13 +22,13 @@ const update = async (Model, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro un documento',
+      message: `No se encontro el ${translate(Model.modelName)}`,
     });
   } else {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se actualizo el documento',
+      message: `Se actualizo el ${translate(Model.modelName)}`,
     });
   }
 };
