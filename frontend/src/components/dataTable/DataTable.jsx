@@ -37,7 +37,6 @@ const DataTable = ({
       disableColumnFilter={!filter}
       disableColumnSelector
       disableColumnMenu
-      loading={rows.length === 0}
       sx={{
         minHeight: 450,
         backgroundColor: 'info.main',
