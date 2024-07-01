@@ -9,6 +9,8 @@ const coreAuthRouter = require('./routes/coreRoutes/coreAuth');
 
 const erpApiRouter = require('./routes/appRoutes/appApi');
 
+const stockApiRouter = require('./routes/appRoutes/stockApi');
+
 const errorHandlers = require('./handlers/errorHandlers');
 
 const userAuth = require('./controllers/coreControllers/userAuth');
@@ -36,6 +38,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', coreAuthRouter);
+app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
 
 app.get('/test', (req, res) => {
