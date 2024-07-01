@@ -23,7 +23,7 @@ const login = async (req, res, { userModel }) => {
       success: false,
       result: null,
       error: error,
-      message: 'Invalid/Missing credentials.',
+      message: 'Credenciales inválidas.',
       errorMessage: error.message,
     });
   }
