@@ -1,5 +1,5 @@
 const listAll = require('./listAll');
-const { callWithAuth } = require('./authStock');
+const { callWithAuth } = require('./callWithAuth');
 
 const createStockMiddleware = () => {
   const stockMethods = {
