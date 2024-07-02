@@ -1,14 +1,22 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import DataTableSellers from './components/DataTableSellers';
+import AddSellerModal from './components/AddSellerModal';
 
-// eslint-disable-next-line arrow-body-style
 const Sellers = () => {
-  // const { ModalMaterial, handlerOpen } = AddMaterial()
-  // const [update, setUpdate] = useState(false);
-  // const updateSellers = () => {
-  //   setUpdate(!update);
-  // };
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const userState = useSelector((store) => store.auth.current);
+
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box
@@ -16,16 +24,21 @@ const Sellers = () => {
         justifyContent="space-between"
         width="100%"
         borderRadius={2}
-        marginBottom="20px"
-      >
+        marginBottom="20px">
         <Typography variant="h4">Vendedores</Typography>
-        <Button variant="text" size="large" color="primary" startIcon={<AddCircle />}>
+        <Button
+          onClick={handleClickOpen}
+          disabled={userState.role !== 'admin'}
+          variant="text"
+          size="large"
+          color="primary"
+          startIcon={<AddCircle />}>
           <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
             Nuevo vendedor
           </Typography>
         </Button>
       </Box>
-      {/* <ModalMaterial updateSellers={updateSellers} /> */}
+      <AddSellerModal open={open} handlerOpen={handleClose} idSeller="" />
       <DataTableSellers />
     </Box>
   );

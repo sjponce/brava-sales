@@ -8,3 +8,4 @@ notes.md
 *.pdf
 
 vscode/
+.env

@@ -3,9 +3,7 @@
 const roles = {
   owner: ['create', 'read', 'update', 'delete', 'download', 'upload'],
   admin: ['admin', 'create', 'read', 'update', 'delete', 'download', 'upload'],
-  manager: ['create', 'read', 'update', 'delete', 'download', 'upload'],
-  employee: ['create', 'read', 'update', 'download', 'upload'],
-  staff: ['create', 'read', 'update', 'download', 'upload'],
+  seller: ['create', 'read', 'update', 'download', 'upload'],
   createOnly: ['create', 'read', 'download', 'upload'],
   readOnly: ['read', 'download'],
 };

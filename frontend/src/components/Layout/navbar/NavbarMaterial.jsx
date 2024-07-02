@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toggleTheme } from '@/redux/themeReducer';
+import CustomDialog from '@/components/customDialog/CustomDialog.component';
 
 const StyledToolbar = styled(Toolbar)({
   paddingRight: '20px',
@@ -40,6 +41,7 @@ const Logo = styled(Box)(() => ({
 const NavbarMaterial = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
@@ -89,9 +91,16 @@ const NavbarMaterial = () => {
           MenuListProps={{ 'aria-labelledby': 'basic-button' }}
         >
           <MenuItem onClick={handleClose}>Perfil</MenuItem>
-          <MenuItem onClick={() => navigate('/logout')}>Cerrar sesión</MenuItem>
+          <MenuItem onClick={() => setDialogOpen(true)}>Cerrar sesión</MenuItem>
         </Menu>
       </StyledToolbar>
+      <CustomDialog
+        title="Cerrar sesión"
+        text="¿Estás seguro de que deseas cerrar sesión?"
+        isOpen={dialogOpen}
+        onCancel={() => setDialogOpen(false)}
+        onAccept={() => navigate('/logout')}
+      />
     </Stack>
   );
 };
