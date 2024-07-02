@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Close } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AddSellerForm from '@/forms/AddSellerForm';
 import { selectCreatedItem, selectCurrentItem } from '@/redux/crud/selectors';
 import crud from '@/redux/crud/actions';
+import CustomDialog from '@/components/customDialog/CustomDialog.component';
 
 const SytledModal = styled(Modal)({
   display: 'flex',
@@ -28,6 +29,7 @@ const AddSellerModal = ({
   const {
     register, handleSubmit, setValue, watch,
   } = useForm();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const isUpdate = !!idSeller.length;
 
@@ -77,12 +79,22 @@ const AddSellerModal = ({
     }
   };
 
+  const preSubmit = (e) => {
+    e.preventDefault();
+    setDialogOpen(true);
+  };
+
+  const handleDialogCancel = () => {
+    setDialogOpen(false);
+  };
+
   const onSubmit = async (data) => {
     if (isUpdate) {
       updateSeller(data);
     } else {
       createSeller(data);
     }
+    setDialogOpen(false);
     handlerOpen(false);
   };
 
@@ -107,7 +119,7 @@ const AddSellerModal = ({
           </IconButton>
         </Box>
         <Divider />
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} name="add_seller">
+        <Box component="form" name="add_seller" onSubmit={preSubmit}>
           <AddSellerForm
             register={register}
             setValue={setValue}
@@ -125,6 +137,13 @@ const AddSellerModal = ({
               vendedor
             </Typography>
           </Button>
+          <CustomDialog
+            title={`${isUpdate ? 'Editar' : 'Crear nuevo'} vendedor`}
+            text="Esta accion no se puede deshacer, ¿Desea continuar?"
+            isOpen={dialogOpen}
+            onAccept={handleSubmit(onSubmit)}
+            onCancel={handleDialogCancel}
+          />
         </Box>
       </Box>
     </SytledModal>

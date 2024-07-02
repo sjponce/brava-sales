@@ -19,9 +19,14 @@ const AddSellerForm = ({
     }
   };
 
-  const handlePhoneInputChange = (event) => {
+  const handlePhoneChange = (event) => {
     const filteredValue = event.target.value.replace(/[^0-9]/g, '');
     setValue('phone', filteredValue);
+  };
+
+  const handleDataInput = (event) => {
+    const filteredValue = event.target.value.replace(/[^a-zA-Z\s]/g, '');
+    setValue(event.target.name, filteredValue);
   };
 
   const handleRemoveImage = (event) => {
@@ -76,8 +81,9 @@ const AddSellerForm = ({
             name="name"
             size="small"
             required
+            onChange={handleDataInput}
             margin="normal"
-            {...register('name', { required: true })}
+            value={watch('name')}
             variant="outlined"
             fullWidth
           />
@@ -86,8 +92,9 @@ const AddSellerForm = ({
             name="surname"
             size="small"
             required
+            onChange={handleDataInput}
+            value={watch('surname')}
             margin="normal"
-            {...register('surname', { required: true })}
             variant="outlined"
             fullWidth
           />
@@ -99,12 +106,12 @@ const AddSellerForm = ({
           size="small"
           variant="outlined"
           fullWidth
-          onChange={handlePhoneInputChange}
+          value={watch('phone')}
+          onChange={handlePhoneChange}
           inputProps={{
             minLength: 9,
             maxLength: 11,
           }}
-          {...register('phone')}
         />
         <Box display="flex" alignItems="center" justifyContent="center" gap={3}>
           <Autocomplete
