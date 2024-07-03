@@ -10,7 +10,7 @@ const DataTable = ({
   <Box
     className="dataTable"
     sx={{
-      display: 'table', tableLayout: 'fixed', width: '100%', height: '100%',
+      display: 'flex', tableLayout: 'fixed', width: '100%', overflowY: 'auto', height: '70vh',
     }}
   >
     <DataGrid

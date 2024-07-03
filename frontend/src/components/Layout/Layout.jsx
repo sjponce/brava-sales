@@ -47,8 +47,8 @@ const LayoutMaterial = () => (
             padding: '20px',
             backgroundColor: 'background.paper',
             borderRadius: 2.5,
-            marginTop: 1.5,
-            marginBottom: 1.5,
+            marginTop: 1,
+            marginBottom: 2.5,
             marginRight: 1.5,
             boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .1)',
           }}
