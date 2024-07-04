@@ -9,7 +9,7 @@ import Loading from '@/components/Loading';
 
 const DataTableClients = () => {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
+  const [setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
