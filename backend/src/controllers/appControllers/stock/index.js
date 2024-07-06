@@ -1,7 +1,7 @@
 const listAll = require('./listAll');
 const { callWithAuth } = require('./callWithAuth');
-const { update } = require('./update');
-const { remove } = require('./remove');
+const update = require('./update');
+const remove = require('./remove');
 
 const createStockMiddleware = () => {
   const stockMethods = {

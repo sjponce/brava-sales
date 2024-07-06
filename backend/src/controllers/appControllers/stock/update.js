@@ -2,7 +2,7 @@ const update = async (req, res, axiosInstance) => {
   try {
     const apiUrl = `${process.env.STOCK_API}/product`;
 
-    const response = await axiosInstance.put(apiUrl, req.body);
+    const response = await axiosInstance.put(apiUrl, {...req.body, id: req.params.id});
 
     return res.status(200).json({
       success: true,
