@@ -21,8 +21,9 @@ export const stockRequest = {
     }
   },
   update: async ({ entity, id, jsonData }) => {
+    console.log('jsonData', jsonData);
     try {
-      const response = await axios.patch(`${entity}/update/${id}`, jsonData);
+      const response = await axios.put(`${entity}/update/${id}`, jsonData);
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,
@@ -34,7 +35,7 @@ export const stockRequest = {
   },
   delete: async ({ entity, id }) => {
     try {
-      const response = await axios.delete(`${entity}/delete/${id}`);
+      const response = await axios.delete(`${entity}/remove/${id}`);
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,

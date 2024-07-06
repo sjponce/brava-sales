@@ -10,7 +10,8 @@ import Loading from '@/components/Loading';
 
 const DataTableProducts = () => {
   const dispatch = useDispatch();
-  const [openDetails, setOpenDetails] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
@@ -19,8 +20,16 @@ const DataTableProducts = () => {
 
   const handleDetails = async (id) => {
     setSelectedRow({ ...selectedRow, id });
-    // await dispatch(stock.read({ entity: 'stock', id }));
-    setOpenDetails(true);
+    await dispatch(stock.read({ entity: 'stock', id }));
+    setIsUpdate(false);
+    setOpenModal(true);
+  };
+
+  const handleEdit = async (id) => {
+    setSelectedRow({ ...selectedRow, id });
+    await dispatch(stock.read({ entity: 'stock', id }));
+    setIsUpdate(true);
+    setOpenModal(true);
   };
 
   const handleDisable = (id, name) => {
@@ -32,14 +41,15 @@ const DataTableProducts = () => {
     setDialogOpen(false);
   };
 
-  const handleDialogAccept = () => {
-    dispatch(stock.delete({ entity: 'stock', id: selectedRow.id }));
+  const handleDialogAccept = async () => {
+    await dispatch(stock.delete({ entity: 'stock', id: selectedRow.id }));
     setDialogOpen(false);
   };
 
   const productState = useSelector((store) => store.stock.listAll);
-  // const updateProductState = useSelector((store) => store.stock.update);
-  // const deleteProductState = useSelector((store) => store.stock.delete);
+  const readProductState = useSelector((store) => store.stock.read);
+  const deleteProductState = useSelector((store) => store.stock.delete);
+  const updateProductState = useSelector((store) => store.stock.update);
 
   const [rows, setRows] = useState([]);
 
@@ -56,7 +66,7 @@ const DataTableProducts = () => {
 
   useEffect(() => {
     updateTable();
-  }, []);
+  }, [deleteProductState, updateProductState]);
 
   const columns = [
     {
@@ -118,7 +128,7 @@ const DataTableProducts = () => {
             <IconButton size="small" onClick={() => handleDetails(id)}>
               <Visibility />
             </IconButton>
-            <IconButton disabled={isDisabled} size="small">
+            <IconButton disabled={isDisabled} size="small" onClick={() => handleEdit(id)}>
               <EditRounded />
             </IconButton>
             <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
@@ -142,9 +152,18 @@ const DataTableProducts = () => {
       />
       <ModalProductDetails
         productId={selectedRow.id}
-        handlerOpen={setOpenDetails}
-        open={openDetails} />
-      <Loading isLoading={productState?.isLoading || false} />
+        handlerOpen={setOpenModal}
+        open={openModal}
+        isUpdate={isUpdate}
+      />
+      <Loading
+        isLoading={
+        productState?.isLoading
+        || readProductState?.isLoading
+        || deleteProductState?.isLoading
+        || false
+      }
+      />
     </Box>
   );
 };

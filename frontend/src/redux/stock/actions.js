@@ -120,7 +120,7 @@ const stock = {
     },
   update:
     ({
-      entity, id, jsonData, withUpload = false,
+      entity, id, jsonData,
     }) => async (dispatch) => {
       dispatch({
         type: actionTypes.REQUEST_LOADING,
@@ -128,13 +128,7 @@ const stock = {
         payload: null,
       });
 
-      let data = null;
-
-      if (withUpload) {
-        data = await stockRequest.updateAndUpload({ entity, id, jsonData });
-      } else {
-        data = await stockRequest.update({ entity, id, jsonData });
-      }
+      const data = await stockRequest.update({ entity, id, jsonData });
 
       if (data.success === true) {
         dispatch({
@@ -150,6 +144,30 @@ const stock = {
         dispatch({
           type: actionTypes.REQUEST_FAILED,
           keyState: 'update',
+          payload: null,
+        });
+      }
+    },
+  delete:
+    ({ entity, id }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'delete',
+        payload: null,
+      });
+
+      const data = await stockRequest.delete({ entity, id });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'delete',
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'delete',
           payload: null,
         });
       }
