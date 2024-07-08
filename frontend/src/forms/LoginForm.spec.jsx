@@ -23,8 +23,8 @@ describe('LoginForm', () => {
   });
 
   test('test_render_password_input_field', () => {
-    const { getByTestId } = render(<LoginForm register={mockRegister} />);
-    const passwordInput = getByTestId('password').querySelector('input');
+    const { getByLabelText } = render(<LoginForm register={mockRegister} />);
+    const passwordInput = getByLabelText(/Contraseña/i);
     expect(passwordInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
     expect(passwordInput).toHaveAttribute('type', 'password');
