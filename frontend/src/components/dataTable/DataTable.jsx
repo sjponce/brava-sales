@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/prop-types */
 import './dataTable.scss';
 import { DataGrid, GridToolbar, esES } from '@mui/x-data-grid';
 import { Box } from '@mui/material';

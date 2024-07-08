@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import styled from '@emotion/styled';
 import {
   Box,
@@ -134,7 +133,7 @@ const ModalProductDetails = ({
           )}
         </Box>
         <CustomDialog
-          title={`${isUpdate ? 'Editar' : 'Crear nuevo'} vendedor`}
+          title="Editar producto"
           text="Esta accion no se puede deshacer, ¿Desea continuar?"
           isOpen={dialogOpen}
           onAccept={handleSubmit(onSubmit)}

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Autocomplete,
   Box,
@@ -14,8 +13,9 @@ import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-materia
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 import tags from '@/utils/tags';
 
-// eslint-disable-next-line max-len
-const tagsList = Object.entries(tags).flatMap(([category, tagItem]) => tagItem.map((tag) => ({ category, tag })));
+const tagsList = Object
+  .entries(tags)
+  .flatMap(([category, tagItem]) => tagItem.map((tag) => ({ category, tag })));
 
 const EditProductForm = ({ register, setValue, watch }) => {
   const handleImageChange = async (event) => {
