@@ -35,7 +35,6 @@ const AddSellerModal = ({
 
   const createSeller = async (data) => {
     try {
-      console.log('/////////////////////////////////////////////////');
       dispatch(
         crud.create({
           entity: 'user',
@@ -65,8 +64,6 @@ const AddSellerModal = ({
 
   const updateSeller = async (data) => {
     try {
-      console.log('+++++++++++++++++++++++++++++++++++++++++');
-
       dispatch(
         crud.update({
           entity: 'user',

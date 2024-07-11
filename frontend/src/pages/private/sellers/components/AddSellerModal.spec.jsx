@@ -1,11 +1,32 @@
-import {
-  render, screen, fireEvent, waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import AddSellerModal from './AddSellerModal';
+import { request } from '@/request';
+import preview from 'jest-preview';
+import { useForm } from 'react-hook-form';
 
 const mockStore = configureStore([]);
+
+jest.mock('react-hook-form', () => ({
+  ...jest.requireActual('react-hook-form'),
+  useForm: () =>
+    jest.requireActual('react-hook-form').useForm({
+      defaultValues: {
+        name: 'John',
+        surname: 'Doe',
+        email: 'john.doe@example.com',
+        password: 'password123',
+        phone: '1234567890',
+        role: 'seller',
+      },
+    }),
+}));
+
+const mockCreate = jest.fn().mockResolvedValue({
+  message: 'Se creo el documento',
+  success: true,
+});
 
 describe('AddSellerModal', () => {
   let store;
@@ -13,8 +34,29 @@ describe('AddSellerModal', () => {
     store = mockStore({
       crud: {
         create: { isLoading: false },
+        update: { isLoading: false },
         current: { result: {} },
       },
+    });
+    jest.spyOn(request, 'create').mockImplementation(mockCreate);
+
+    useForm.mockClear();
+
+    useForm.mockReturnValue({
+      register: jest.fn(),
+      handleSubmit: jest.fn(),
+      formState: {
+        errors: {
+          // Provide a custom errors object to prevent test failures
+          name: {},
+          surname: {},
+          email: {},
+          password: {},
+          phone: {},
+          role: {},
+        },
+      },
+      getValues: jest.fn().mockReturnValue(formValues),
     });
   });
 
@@ -51,10 +93,7 @@ describe('AddSellerModal', () => {
       expect(
         screen.getByText(/esta accion no se puede deshacer, ¿desea continuar\?/i)
       ).toBeInTheDocument();
-      expect(
-        screen.getByText(/crear nuevo vendedor/i)
-      ).toBeInTheDocument();
-
+      expect(screen.getByText(/crear nuevo vendedor/i)).toBeInTheDocument();
     });
   });
 });

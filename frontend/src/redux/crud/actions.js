@@ -70,9 +70,7 @@ const crud = {
         keyState: 'listAll',
         payload: null,
       });
-
       const data = await request.listAll({ entity });
-
       if (data.success === true) {
         const result = {
           items: data,
