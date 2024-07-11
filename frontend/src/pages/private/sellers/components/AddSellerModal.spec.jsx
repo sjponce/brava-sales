@@ -3,8 +3,6 @@ import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import AddSellerModal from './AddSellerModal';
 import { request } from '@/request';
-import preview from 'jest-preview';
-import { useForm } from 'react-hook-form';
 
 const mockStore = configureStore([]);
 
@@ -39,30 +37,10 @@ describe('AddSellerModal', () => {
       },
     });
     jest.spyOn(request, 'create').mockImplementation(mockCreate);
-
-    useForm.mockClear();
-
-    useForm.mockReturnValue({
-      register: jest.fn(),
-      handleSubmit: jest.fn(),
-      formState: {
-        errors: {
-          // Provide a custom errors object to prevent test failures
-          name: {},
-          surname: {},
-          email: {},
-          password: {},
-          phone: {},
-          role: {},
-        },
-      },
-      getValues: jest.fn().mockReturnValue(formValues),
+  }),
+    afterEach(() => {
+      jest.clearAllMocks();
     });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
 
   test('test_display_confirmation_dialog_before_submission', async () => {
     render(
