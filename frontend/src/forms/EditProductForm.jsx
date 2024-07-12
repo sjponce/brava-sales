@@ -11,11 +11,7 @@ import {
 } from '@mui/material';
 import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-material';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
-import tags from '@/utils/tags';
-
-const tagsList = Object
-  .entries(tags)
-  .flatMap(([category, tagItem]) => tagItem.map((tag) => ({ category, tag })));
+import tagsArray from '@/utils/tags';
 
 const EditProductForm = ({ register, setValue, watch }) => {
   const handleImageChange = async (event) => {
@@ -129,22 +125,24 @@ const EditProductForm = ({ register, setValue, watch }) => {
         multiple
         fullWidth
         id="tags-standard"
-        options={tagsList}
-        groupBy={(option) => option.category}
-        getOptionLabel={(option) => option.tag}
-        defaultValue={[tagsList[0], tagsList[7]]}
+        options={tagsArray}
+        getOptionLabel={(option) => option?.name || ''}
+        groupBy={(option) => option?.category}
+        defaultValue={watch('tags') || []}
+        filterSelectedOptions
+        isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
           <TextField {...params} variant="outlined" label="Tags" margin="normal" />
         )}
         renderTags={(value, getTagProps) => value.map((option, index) => {
           const { key, ...otherProps } = getTagProps({ index });
-          return <Chip key={key} label={`${option.tag}`} {...otherProps} />;
+          return <Chip key={key} label={`${option.name}`} {...otherProps} />;
         })}
         renderOption={(props, option) => {
           const { key, ...otherProps } = props;
           return (
             <Box component="li" key={key} {...otherProps}>
-              <Typography variant="subtitle1">{option.tag}</Typography>
+              <Typography variant="subtitle1">{option.name}</Typography>
             </Box>
           );
         }}

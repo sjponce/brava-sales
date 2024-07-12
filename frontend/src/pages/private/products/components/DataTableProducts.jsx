@@ -78,7 +78,7 @@ const DataTableProducts = () => {
         return (
           <Box display="flex" width="100%" onClick={() => handleDetails(id)} alignItems="center">
             <img
-              src={params.value ? params?.value : '/noImage.png'}
+              src={params?.value ? params.value : '/noImage.png'}
               alt=""
               style={{
                 width: '100%',

@@ -8,10 +8,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import tags from '@/utils/tags';
-
-const tagsList = Object.entries(tags).flatMap(([category, tagItem]) => (
-  tagItem.map((tag) => ({ category, tag }))));
+import tagsArray from '@/utils/tags';
 
 const ProductDetailsForm = ({ watch }) => {
   const [expandedImage, setExpandedImage] = useState('');
@@ -111,21 +108,22 @@ const ProductDetailsForm = ({ watch }) => {
           multiple
           fullWidth
           id="tags-standard"
-          options={tagsList}
+          options={tagsArray}
           groupBy={(option) => option.category}
-          getOptionLabel={(option) => option.tag}
-          defaultValue={[tagsList[0], tagsList[7]]}
+          getOptionLabel={(option) => option.name}
+          defaultValue={watch('tags') || []}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
           readOnly
           renderInput={(params) => (
-            <TextField {...params} variant="outlined" label="Tags" margin="normal" />
+            <TextField {...params} variant="outlined" label="Tags" margin="normal" disabled />
           )}
           renderTags={(value, getTagProps) => value.map((option, index) => {
             const { key, ...otherProps } = getTagProps({ index });
-            return <Chip key={key} label={`${option.tag}`} {...otherProps} />;
+            return <Chip key={key} label={`${option.name}`} {...otherProps} />;
           })}
           renderOption={(props, option) => (
             <Box component="li" {...props}>
-              <Typography variant="subtitle1">{option.tag}</Typography>
+              <Typography variant="subtitle1">{option.name}</Typography>
             </Box>
           )}
         />

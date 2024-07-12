@@ -63,6 +63,8 @@ const ModalProductDetails = ({
       setValue('imageUrl', productData.result.imageUrl);
       setValue('stock', productData.result.stock);
       setValue('productVariation', productData.result.productVariation);
+      // Hay que remplazarlo por los tags reales de la DB
+      setValue('tags', [{ id: 1, name: 'Zapatos', category: 'TIPO' }, { id: 7, name: 'Cuero', category: 'MATERIAL' }]);
     }
   }, [productData]);
 
