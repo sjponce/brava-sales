@@ -67,6 +67,7 @@ const CustomerSchema = new Schema(
       },
     },
   },
+  { timestamps: true },
 );
 
 module.exports = mongoose.model('Customer', CustomerSchema);
