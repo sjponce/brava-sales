@@ -7,7 +7,7 @@ import DataTable from '@/components/dataTable/DataTable';
 import crud from '@/redux/crud/actions';
 import Loading from '@/components/Loading';
 
-const DataTableClients = () => {
+const DataTableCustomers = () => {
   const dispatch = useDispatch();
   const [setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -30,7 +30,7 @@ const DataTableClients = () => {
   };
 
   const handleDialogAccept = () => {
-    dispatch(crud.delete({ entity: 'user', id: selectedRow.id }));
+    dispatch(crud.delete({ entity: 'customer', id: selectedRow.id }));
     setDialogOpen(false);
   };
 
@@ -45,20 +45,19 @@ const DataTableClients = () => {
   useEffect(() => {
     if (!clientState?.result) return;
     const newRows = clientState.result.items.result
-      .filter((item) => item.role === 'Client')
       .map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [clientState]);
 
   const handleEdit = async (id) => {
     setSelectedRow({ ...selectedRow, id });
-    await dispatch(crud.read({ entity: 'user', id }));
+    await dispatch(crud.read({ entity: 'customer', id }));
     handleOpen(true);
   };
 
   const updateTable = () => {
     if (clientState?.isLoading) return;
-    dispatch(crud.listAll({ entity: 'user' }));
+    dispatch(crud.listAll({ entity: 'customer' }));
   };
 
   useEffect(() => {
@@ -68,14 +67,9 @@ const DataTableClients = () => {
   const columns = [
     {
       field: 'name',
-      headerName: 'Nombre completo',
+      headerName: 'Nombre/Razón Social',
       width: 200,
       renderCell: (params) => `${params.row.name || ''}`,
-    },
-    {
-      field: 'razonSocial',
-      headerName: 'Razón Social',
-      width: 150,
     },
     {
       field: 'email',
@@ -88,17 +82,17 @@ const DataTableClients = () => {
       width: 150,
     },
     {
-      field: 'tipoDocumento',
+      field: 'documentType',
       headerName: 'Tipo de documento',
       width: 150,
     },
     {
-      field: 'numeroDocumento',
+      field: 'documentNumber',
       headerName: 'Número Documento',
       width: 150,
     },
     {
-      field: 'condicionIVA',
+      field: 'ivaCondition',
       headerName: 'Condición IVA',
       width: 150,
     },
@@ -107,13 +101,18 @@ const DataTableClients = () => {
       headerName: 'Dirección',
       width: 300,
       renderCell: (params) => {
-        const address = params.value;
-        if (Array.isArray(address)) {
-          // Suponiendo que quieres mostrar los primeros 3 elementos del array
-          return `${address[0]} ${address[1]}, ${address[5]}`;
-        }
-        return '';
+        const { address } = params.row;
+        return `${address?.street || ''} ${address?.streetNumber || ''}, ${address?.city || ''}, ${address?.state || ''}`;
       },
+    },
+    {
+      field: 'enabled',
+      headerName: 'Activo',
+      width: 100,
+      sortable: false,
+      type: 'boolean',
+      editable: false,
+      getValueGetter: (params) => !params.row.enabled,
     },
     {
       field: 'actions',
@@ -122,7 +121,7 @@ const DataTableClients = () => {
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { id, fullName } = params.row;
+        const { id, name } = params.row;
         const userState = useSelector((store) => store.auth.current);
         const isDisabled = userState.role !== 'admin' || clientState.isLoading;
         return (
@@ -130,7 +129,7 @@ const DataTableClients = () => {
             <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, fullName)} size="small">
+            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
               <DeleteRounded />
             </IconButton>
           </div>
@@ -154,4 +153,4 @@ const DataTableClients = () => {
   );
 };
 
-export default DataTableClients;
+export default DataTableCustomers;

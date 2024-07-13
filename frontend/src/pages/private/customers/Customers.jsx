@@ -1,9 +1,9 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
-import DataTableSellers from './components/DataTableClients';
+import DataTableSellers from './components/DataTableCustomers';
 
-const Clients = () => {
+const Customers = () => {
   const userState = useSelector((store) => store.auth.current);
 
   return (
@@ -31,4 +31,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Customers;

@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Sellers from '@/pages/private/sellers/Sellers';
 import Home from '@/pages/private/home/Home';
-import Clients from '@/pages/private/clients/Clients';
+import Customers from '@/pages/private/customers/Customers';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
 // const NotFound = lazy(() => import('@/pages/NotFound.jsx'));
@@ -47,7 +47,7 @@ const routes = {
         },
         {
           path: '/clients',
-          element: <Clients />,
+          element: <Customers />,
         },
       ],
     },
