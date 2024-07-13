@@ -45,6 +45,8 @@
     "@babel/preset-react": "^7.24.1",
     "@biomejs/biome": "1.7.3",
     "@jest/globals": "^29.7.0",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
     "babel-jest": "^29.7.0",
@@ -68,12 +70,31 @@
     "@rollup/rollup-linux-x64-gnu": "4.6.1"
   },
   "jest": {
-    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "testMatch": [
+      "<rootDir>/src/**/*.spec.{js,jsx}"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
     "transform": {
       "^.+\\.(js|jsx)$": "babel-jest"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!@babel/runtime)"
+    ],
+    "testEnvironment": "jsdom",
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom"
     ]
   }
 }

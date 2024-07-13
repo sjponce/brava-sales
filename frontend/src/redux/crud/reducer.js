@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as actionTypes from './types';
 
 const INITIAL_KEY_STATE = {
@@ -32,6 +31,7 @@ const INITIAL_STATE = {
   search: { ...INITIAL_KEY_STATE, result: [] },
 };
 
+// eslint-disable-next-line default-param-last
 const crudReducer = (state = INITIAL_STATE, action) => {
   const { payload, keyState } = action;
   switch (action.type) {

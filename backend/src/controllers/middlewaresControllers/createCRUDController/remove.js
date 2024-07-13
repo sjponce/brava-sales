@@ -1,3 +1,5 @@
+const translate = require('../../../utils/translateModel');
+
 const remove = async (Model, req, res) => {
   // Find the document by id and delete it
   const updates = {
@@ -16,13 +18,13 @@ const remove = async (Model, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro un documento',
+      message: `No se encontro el ${translate(Model.modelName)}`,
     });
   } else {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se elimino el documento',
+      message: `Se elimino el ${translate(Model.modelName)}`,
     });
   }
 };

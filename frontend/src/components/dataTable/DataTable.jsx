@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/prop-types */
 import './dataTable.scss';
 import { DataGrid, GridToolbar, esES } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
@@ -10,7 +8,7 @@ const DataTable = ({
   <Box
     className="dataTable"
     sx={{
-      display: 'table', tableLayout: 'fixed', width: '100%', height: '100%',
+      display: 'flex', tableLayout: 'fixed', width: '100%', overflowY: 'auto', height: '70vh',
     }}
   >
     <DataGrid
@@ -37,7 +35,6 @@ const DataTable = ({
       disableColumnFilter={!filter}
       disableColumnSelector
       disableColumnMenu
-      loading={rows.length === 0}
       sx={{
         minHeight: 450,
         backgroundColor: 'info.main',

@@ -33,6 +33,8 @@ const LoginForm = ({ register }) => (
       sx={{ mb: 3 }}
     />
     <TextField
+      id="password"
+      data-testid="password"
       label="Contraseña"
       type="password"
       name="password"

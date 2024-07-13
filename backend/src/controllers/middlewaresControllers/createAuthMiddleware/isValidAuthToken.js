@@ -14,16 +14,7 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
         message: 'No se encontro el token',
         jwtExpired: true,
       });
-
     const verified = jwt.verify(token, process.env[jwtSecret]);
-
-    if (!verified)
-      return res.status(401).json({
-        success: false,
-        result: null,
-        message: 'No se pudo verificar el token, acceso denegado.',
-        jwtExpired: true,
-      });
 
     const userPasswordPromise = UserPassword.findOne({
       user: verified.id,
@@ -37,12 +28,12 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
       return res.status(401).json({
         success: false,
         result: null,
-        message: "El usuario no existe, acceso denegado.",
+        message: 'El usuario no existe, acceso denegado.',
         jwtExpired: true,
       });
 
     const { loggedSessions } = userPassword;
-    if (!loggedSessions.includes(token))
+    if (!loggedSessions.includes(token)) 
       return res.status(401).json({
         success: false,
         result: null,

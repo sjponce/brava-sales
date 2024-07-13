@@ -25,9 +25,13 @@ const routerApp = (entity, controller) => {
   }
 };
 
-routesList.forEach(({ entity, controllerName }) => {
-  const controller = appControllers[controllerName];
-  routerApp(entity, controller);
-});
+const setupRoutes = async () => {
+  routesList.forEach(({ entity, controllerName }) => {
+    const controller = appControllers[controllerName];
+    routerApp(entity, controller);
+  });
+};
+
+setupRoutes();
 
 module.exports = router;
