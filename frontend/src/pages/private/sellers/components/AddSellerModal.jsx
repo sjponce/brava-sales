@@ -133,8 +133,7 @@ const AddSellerModal = ({
             size="large"
             fullWidth>
             <Typography variant="button">
-              {isUpdate ? 'Modificar ' : 'Crear '}
-              vendedor
+              {isUpdate ? 'Guardar cambios ' : 'Crear nuevo'}
             </Typography>
           </Button>
           <CustomDialog
