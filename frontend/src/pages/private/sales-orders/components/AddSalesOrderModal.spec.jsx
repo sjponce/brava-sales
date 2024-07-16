@@ -1,0 +1,77 @@
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+import AddSalesOrderModal from './AddSalesOrderModal';
+import { request } from '@/request';
+
+const mockStore = configureStore([]);
+
+jest.mock('react-hook-form', () => ({
+  ...jest.requireActual('react-hook-form'),
+  useForm: () =>
+    jest.requireActual('react-hook-form').useForm({
+      defaultValues: {
+        name: 'John',
+        surname: 'Doe',
+        email: 'john.doe@example.com',
+        password: 'password123',
+        phone: '1234567890',
+        role: 'seller',
+      },
+    }),
+}));
+
+const mockCreate = jest.fn().mockResolvedValue({
+  message: 'Se creo el documento',
+  success: true,
+});
+
+describe('AddSalesOrderModal', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      crud: {
+        create: { isLoading: false },
+        update: { isLoading: false },
+        current: { result: {} },
+      },
+    });
+    jest.spyOn(request, 'create').mockImplementation(mockCreate);
+  }),
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+  test('test_display_confirmation_dialog_before_submission', async () => {
+    render(
+      <Provider store={store}>
+        <AddSalesOrderModal idSalesOrder="" open={true} handlerOpen={jest.fn()} />
+      </Provider>
+    );
+
+    fireEvent.submit(screen.getByText(/crear vendedor/i).closest('form'));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/esta accion no se puede deshacer, ¿desea continuar\?/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  test('test_display_confirmation_dialog_for_create', async () => {
+    render(
+      <Provider store={store}>
+        <AddSalesOrderModal idSalesOrder="" open={true} handlerOpen={jest.fn()} />
+      </Provider>
+    );
+
+    fireEvent.submit(screen.getByText(/crear vendedor/i).closest('form'));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/esta accion no se puede deshacer, ¿desea continuar\?/i)
+      ).toBeInTheDocument();
+      expect(screen.getByText(/crear nuevo vendedor/i)).toBeInTheDocument();
+    });
+  });
+});

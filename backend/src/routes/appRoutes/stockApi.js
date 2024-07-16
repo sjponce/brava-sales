@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { catchErrors } = require('@/handlers/errorHandlers');
-const createStockMiddleware = require('@/controllers/appControllers/stock');
+const createStockMiddleware = require('@/controllers/coreControllers/stock');
 
 const setupRoutes = async () => {
   const stockMiddleware = createStockMiddleware();
