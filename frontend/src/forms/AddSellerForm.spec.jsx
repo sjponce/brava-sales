@@ -22,7 +22,7 @@ describe('AddSellerForm', () => {
     uploadImageToImgbb.mockResolvedValue(imageUrl);
     mockWatch.mockReturnValue('');
 
-    const { getByTestId } = render(
+    const { container } = render(
       <AddSellerForm
         register={mockRegister}
         setValue={mockSetValue}
@@ -31,7 +31,7 @@ describe('AddSellerForm', () => {
       />,
     );
 
-    const fileInput = getByTestId('raised-button-file');
+    const fileInput = container.querySelector('input[type="file"]');
     const file = new File(['dummy content'], 'example.png', { type: 'image/png' });
 
     fireEvent.change(fileInput, { target: { files: [file] } });

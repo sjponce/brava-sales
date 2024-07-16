@@ -34,7 +34,6 @@ const LoginForm = ({ register }) => (
     />
     <TextField
       id="password"
-      data-testid="password"
       label="Contraseña"
       type="password"
       name="password"
