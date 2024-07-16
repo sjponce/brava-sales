@@ -49,7 +49,7 @@ describe('AddSellerModal', () => {
       </Provider>
     );
 
-    fireEvent.submit(screen.getByText(/crear vendedor/i).closest('form'));
+    fireEvent.submit(screen.getByText(/crear nuevo/i).closest('form'));
 
     await waitFor(() => {
       expect(
@@ -65,7 +65,7 @@ describe('AddSellerModal', () => {
       </Provider>
     );
 
-    fireEvent.submit(screen.getByText(/crear vendedor/i).closest('form'));
+    fireEvent.submit(screen.getByText(/crear nuevo/i).closest('form'));
 
     await waitFor(() => {
       expect(
