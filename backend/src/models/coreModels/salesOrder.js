@@ -12,7 +12,7 @@ const SalesOrderSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    items: [{
+    products: [{
       product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',

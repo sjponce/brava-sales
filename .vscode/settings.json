@@ -1,0 +1,11 @@
+{
+  "eslint.workingDirectories": ["./backend", "./frontend"],
+  "eslint.validate": [
+    "vue",
+    "html",
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact"
+  ]
+}

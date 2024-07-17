@@ -55,7 +55,7 @@ export const menuMaterial = [
       {
         id: 2,
         title: 'Pedidos',
-        url: 'orders',
+        url: 'sales-orders',
         icon: <ShoppingBagOutlined />,
       },
       {

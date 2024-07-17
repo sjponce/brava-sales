@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const InstallmentSchema = new Schema(
   {
-    salesOrderNumber: {
-      type: String,
+    salesOrder: {
+      type: Schema.Types.ObjectId,
       required: true,
       ref: 'SalesOrder'
     },
