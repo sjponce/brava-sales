@@ -34,7 +34,7 @@ const SalesOrders = () => {
           color="primary"
           startIcon={<AddCircle />}>
           <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nuevo vendedor
+            Nueva Orden de Venta
           </Typography>
         </Button>
       </Box>

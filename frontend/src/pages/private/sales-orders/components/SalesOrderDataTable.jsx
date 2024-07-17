@@ -1,12 +1,13 @@
-import { DeleteRounded, EditRounded } from '@mui/icons-material';
-import { Avatar, Box, IconButton } from '@mui/material';
+import { Visibility } from '@mui/icons-material';
+import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
-import crud from '@/redux/crud/actions';
+import sales from '@/redux/sales/actions';
 import AddSalesOrderModal from './AddSalesOrderModal';
 import Loading from '@/components/Loading';
+import formatDate from '@/utils/formatDate';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
@@ -21,9 +22,8 @@ const SalesOrderDataTable = () => {
     setOpen(value);
   };
 
-  const handleDisable = (id, name) => {
-    setSelectedRow({ ...selectedRow, id, name });
-    setDialogOpen(true);
+  const handleDetails = async (id) => {
+    console.log(id);
   };
 
   const handleDialogCancel = () => {
@@ -31,15 +31,15 @@ const SalesOrderDataTable = () => {
   };
 
   const handleDialogAccept = () => {
-    dispatch(crud.delete({ entity: 'user', id: selectedRow.id }));
+    dispatch(sales.delete({ entity: 'sales', id: selectedRow.id }));
     setDialogOpen(false);
   };
 
-  const salesOrderState = useSelector((store) => store.crud.listAll);
-  const readSalesOrderState = useSelector((store) => store.crud.read);
-  const createSalesOrderState = useSelector((store) => store.crud.create);
-  const updateSalesOrderState = useSelector((store) => store.crud.update);
-  const deleteSalesOrderState = useSelector((store) => store.crud.delete);
+  const salesOrderState = useSelector((store) => store.sales.listAll);
+  const readSalesOrderState = useSelector((store) => store.sales.read);
+  const createSalesOrderState = useSelector((store) => store.sales.create);
+  const updateSalesOrderState = useSelector((store) => store.sales.update);
+  const deleteSalesOrderState = useSelector((store) => store.sales.delete);
 
   const [rows, setRows] = useState([]);
 
@@ -49,15 +49,9 @@ const SalesOrderDataTable = () => {
     setRows(newRows);
   }, [salesOrderState]);
 
-  const handleEdit = async (id) => {
-    setSelectedRow({ ...selectedRow, id });
-    await dispatch(crud.read({ entity: 'user', id }));
-    handleOpen(true);
-  };
-
   const updateTable = () => {
     if (salesOrderState?.isLoading) return;
-    dispatch(crud.listAll({ entity: 'user' }));
+    dispatch(sales.listAll({ entity: 'sales' }));
   };
 
   useEffect(() => {
@@ -66,53 +60,29 @@ const SalesOrderDataTable = () => {
 
   const columns = [
     {
-      field: 'photo',
-      headerName: 'Foto',
-      sortable: false,
-      width: 50,
-      renderCell: (params) => (
-        <Box display="flex" flexDirection="column" justifyContent="center" height="100%">
-          <Avatar src={params.value} sx={{ width: 30, height: 30 }} />
-        </Box>
-      ),
-    },
-    {
-      field: 'name',
-      headerName: 'Nombre',
+      field: 'salesOrderCode',
+      headerName: 'Código',
+      sortable: true,
       width: 150,
-      renderCell: (params) => `${params.row.name || ''}`,
+      renderCell: (params) => `${params.row.salesOrderCode || ''}`,
     },
     {
-      field: 'surname',
-      headerName: 'Apellido',
+      field: 'customer',
+      headerName: 'Cliente',
       width: 150,
-      renderCell: (params) => `${params.row.surname || ''}`,
+      renderCell: (params) => `${params.row.customer || ''}`,
     },
     {
-      field: 'email',
-      headerName: 'Email',
+      field: 'orderDate',
+      headerName: 'Fecha del pedido',
+      width: 150,
+      renderCell: (params) => `${formatDate(params.row.orderDate)}`,
+    },
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 200,
-    },
-    {
-      field: 'role',
-      headerName: 'Rol',
-      width: 110,
-      renderCell: (params) => `${params.row.role === 'admin' ? 'Administrador' : 'Vendedor'}`,
-    },
-    {
-      field: 'phone',
-      headerName: 'Teléfono',
-      sortable: false,
-      width: 100,
-    },
-    {
-      field: 'enabled',
-      headerName: 'Activo',
-      width: 100,
-      sortable: false,
-      type: 'boolean',
-      editable: false,
-      getValueGetter: (params) => !params.row.enabled,
+      renderCell: (params) => `${params.row.status || ''}`,
     },
     {
       field: 'actions',
@@ -121,16 +91,11 @@ const SalesOrderDataTable = () => {
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { id, name } = params.row;
-        const userState = useSelector((store) => store.auth.current);
-        const isDisabled = userState.role !== 'admin' || salesOrderState.isLoading;
+        const { id } = params.row;
         return (
           <div className="actions">
-            <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
-              <EditRounded />
-            </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
-              <DeleteRounded />
+            <IconButton size="small" onClick={() => handleDetails(id)}>
+              <Visibility />
             </IconButton>
           </div>
         );

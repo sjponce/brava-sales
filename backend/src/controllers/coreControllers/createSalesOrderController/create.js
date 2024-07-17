@@ -12,17 +12,26 @@ const getLatestPrice = async (productId) => {
   return latestPrice ? latestPrice.price : 0;
 };
 
+const getNextSalesOrderCode = async () => {
+  const latestSalesOrder = await SalesOrder.findOne().sort({ salesOrderCode: -1 }).exec();
+  const latestCode = latestSalesOrder?.salesOrderCode ?? 'OV-000';
+  const latestNumber = parseInt(latestCode.split('-')[1]);
+  const nextNumber = latestNumber + 1;
+  return `OV-${nextNumber.toString().padStart(3, '0')}`;
+};
+
 const create = async (req, res) => {
   try {
     // Creating a new document in the collection
     const salesOrderData = req.body;
     const installmentPeriod = 30;
     const products = salesOrderData.products;
+    const nextSalesOrderCode = await getNextSalesOrderCode();
 
     // Calculate total amount based on latest prices
     let totalAmount = 0;
     for (const product of products) {
-      const latestPrice = await getLatestPrice(product.productId);
+      const latestPrice = await getLatestPrice(product.product);
       product.price = latestPrice;
       totalAmount += latestPrice * product.quantity;
     }
@@ -33,7 +42,9 @@ const create = async (req, res) => {
         message: 'No se encontraron productos para la orden de venta',
       });
     }
+
     const salesOrder = await new SalesOrder({
+      salesOrderCode: nextSalesOrderCode,
       customer: salesOrderData.customer,
       orderDate: salesOrderData.orderDate,
       status: 'Pending',
@@ -53,6 +64,7 @@ const create = async (req, res) => {
       installmentDueDate.setDate(installmentDueDate.getDate() + (i + 1) * installmentPeriod);
 
       await new Installment({
+        salesOrderCode: salesOrder.salesOrderCode,
         salesOrder: salesOrder._id,
         installmentNumber: i + 1,
         dueDate: installmentDueDate,

@@ -3,16 +3,12 @@ const create = require('./create');
 const { getLatestPrice } = require('./create');
 
 jest.mock('mongoose', () => {
-  const mSalesOrder = function () {
-    this.save = jest
-      .fn()
-      .mockResolvedValue({
-        message: 'La Orden de venta se creo correctamente',
-        result: { salesOrder: { result: { salesOrder: { totalAmount: 800 } }, success: true } },
-        success: true,
-      });
-  };
-  const mInstallment = function () {
+  const mSaveOrder = jest.fn().mockResolvedValue({
+    message: 'La Orden de venta se creo correctamente',
+    result: { salesOrder: { result: { salesOrder: { totalAmount: 800 } }, success: true } },
+    success: true,
+  });
+  const mSaveInstallment = function () {
     this.save = jest.fn().mockResolvedValue({});
   };
   const mPriceHistory = {
@@ -22,13 +18,28 @@ jest.mock('mongoose', () => {
       limit: jest.fn().mockReturnThis(),
     }),
   };
+
+  const SalesOrderModel = function () {
+    return { save: mSaveOrder };
+  };
+
+  SalesOrderModel.findOne = jest.fn().mockReturnValue({
+    exec: jest.fn(),
+    sort: jest.fn().mockReturnThis(),
+    limit: jest.fn().mockReturnThis(),
+  });
+
+  const InstallmentModel = function () {
+    return { save: mSaveInstallment };
+  };
+
   return {
     model: jest.fn().mockImplementation((modelName) => {
       if (modelName === 'SalesOrder') {
-        return mSalesOrder;
+        return SalesOrderModel;
       }
       if (modelName === 'Installment') {
-        return mInstallment;
+        return InstallmentModel;
       }
       if (modelName === 'PriceHistory') {
         return mPriceHistory;
@@ -55,8 +66,8 @@ describe('create', () => {
         orderDate: new Date(),
         shippingAddress: '123 Street',
         products: [
-          { productId: 'product1', quantity: 2 },
-          { productId: 'product2', quantity: 3 },
+          { product: 'product1', quantity: 2 },
+          { product: 'product2', quantity: 3 },
         ],
         installmentsCount: 2,
       },
@@ -83,7 +94,7 @@ describe('create', () => {
     expect(res.json).toHaveBeenCalled();
   });
 
-   test('test_create_sales_order_without_products', async () => {
+  test('test_create_sales_order_without_products', async () => {
     req.body.products = [];
 
     await create(req, res);
@@ -98,8 +109,8 @@ describe('create', () => {
 
   test('test_create_sales_order_with_empty_amounts', async () => {
     req.body.products = [
-      { productId: 'product1', quantity: 0 },
-      { productId: 'product2', quantity: 0 },
+      { product: 'product1', quantity: 0 },
+      { product: 'product2', quantity: 0 },
     ];
 
     await create(req, res);

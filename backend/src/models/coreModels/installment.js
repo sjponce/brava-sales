@@ -8,6 +8,16 @@ const InstallmentSchema = new Schema(
       required: true,
       ref: 'SalesOrder'
     },
+    salesOrderCode: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function(v) {
+          return /^OV-\d+$/.test(v);
+        },
+        message: props => `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`
+      }
+    },
     installmentNumber: {
       type: Number,
       required: true
