@@ -2,9 +2,11 @@ import { Autocomplete, Box, TextField } from '@mui/material';
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
+import { Typography } from 'antd';
 
 const AddSalesOrderForm = ({ setValue }) => {
   const customers = useSelector((store) => store.crud.listAll);
+  const [selectedCustomer, setSelectedCustomer] = React.useState(null);
 
   return (
     <>
@@ -23,18 +25,25 @@ const AddSalesOrderForm = ({ setValue }) => {
             sx={{ maxWidth: '300px', width: '100%' }}
             onChange={(event, newValue) => {
               if (newValue) {
-                console.log(newValue);
+                setSelectedCustomer(newValue);
                 setValue('customer', newValue._id);
                 setValue('shippingAddress.street', newValue.address?.street || '');
-                setValue(
-                  'shippingAddress.streetNumber',
-                  newValue.address?.streetNumber || '',
-                );
+                setValue('shippingAddress.streetNumber', newValue.address?.streetNumber || '');
                 setValue('shippingAddress.floor', newValue.address?.floor || '');
                 setValue('shippingAddress.apartment', newValue.address?.apartment || '');
                 setValue('shippingAddress.city', newValue.address?.city || '');
                 setValue('shippingAddress.state', newValue.address?.state || '');
                 setValue('shippingAddress.zipCode', newValue.address?.zipCode || '');
+              } else {
+                setSelectedCustomer(null);
+                setValue('customer', '');
+                setValue('shippingAddress.street', '');
+                setValue('shippingAddress.streetNumber', '');
+                setValue('shippingAddress.floor', '');
+                setValue('shippingAddress.apartment', '');
+                setValue('shippingAddress.city', '');
+                setValue('shippingAddress.state', '');
+                setValue('shippingAddress.zipCode', '');
               }
             }}
             options={customers.result.items.result}
@@ -45,6 +54,31 @@ const AddSalesOrderForm = ({ setValue }) => {
               <TextField {...params} required variant="outlined" label="Cliente" margin="normal" />
             )}
           />
+          {selectedCustomer && (
+            <Box alignSelf="end">
+              <Typography>
+                Documento:
+                {' '}
+                {selectedCustomer.documentType}
+                {' '}
+                {selectedCustomer.documentNumber}
+              </Typography>
+              <Typography>
+                email:
+                {' '}
+                {selectedCustomer.email}
+              </Typography>
+              <Typography>
+                Address:
+                {' '}
+                {selectedCustomer.address?.zipCode}
+                {' '}
+                {selectedCustomer.address?.street}
+                {' '}
+                {selectedCustomer.address?.streetNumber}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
       <Box />

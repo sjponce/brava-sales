@@ -22,7 +22,7 @@ const StyledModal = styled(Modal)({
 const AddSalesOrderModal = ({ open, handlerOpen }) => {
   const dispatch = useDispatch();
   const {
-    register, handleSubmit, setValue, watch, control, isValid,
+    register, handleSubmit, setValue, watch, control,
   } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [productError, setProductError] = useState(null);

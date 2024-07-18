@@ -55,7 +55,7 @@ const ModifiableProductTable = ({
             <TableCell>Talle</TableCell>
             <TableCell>Precio unitario</TableCell>
             <TableCell>Precio agrupado</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell> </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -141,7 +141,7 @@ const ModifiableProductTable = ({
           variant="contained"
           color="primary"
           size="small">
-          Add Row
+          Agregar
         </Button>
       </Box>
     </TableContainer>
