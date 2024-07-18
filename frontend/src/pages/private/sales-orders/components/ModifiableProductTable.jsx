@@ -14,11 +14,11 @@ import {
   MenuItem,
   Select,
   Box,
+  Typography,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { useFieldArray } from 'react-hook-form';
-import { Typography } from 'antd';
 
 const ModifiableProductTable = ({
   setValue, watch, control, register,

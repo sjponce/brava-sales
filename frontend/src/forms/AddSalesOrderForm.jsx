@@ -1,8 +1,7 @@
-import { Autocomplete, Box, TextField } from '@mui/material';
+import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Typography } from 'antd';
 
 const AddSalesOrderForm = ({ setValue }) => {
   const customers = useSelector((store) => store.crud.listAll);
