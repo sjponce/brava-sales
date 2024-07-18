@@ -11,7 +11,7 @@ import { selectCreatedItem, selectCurrentItem } from '@/redux/crud/selectors';
 import crud from '@/redux/crud/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 
-const SytledModal = styled(Modal)({
+const StyledModal = styled(Modal)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -101,7 +101,7 @@ const AddSellerModal = ({
   const { isLoading } = useSelector(selectCreatedItem);
 
   return (
-    <SytledModal open={open}>
+    <StyledModal open={open}>
       <Box
         width={{ xs: '100%', sm: 800 }}
         height="auto"
@@ -145,7 +145,7 @@ const AddSellerModal = ({
           />
         </Box>
       </Box>
-    </SytledModal>
+    </StyledModal>
   );
 };
 
