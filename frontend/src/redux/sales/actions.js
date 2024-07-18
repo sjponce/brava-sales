@@ -1,5 +1,5 @@
-import salesRequest from '@/request/salesRequest';
 import * as actionTypes from './types';
+import { salesRequest } from '@/request/salesRequest';
 
 const sales = {
   resetState:
@@ -90,6 +90,39 @@ const sales = {
         });
       }
     },
+  create:
+    ({ entity, jsonData, withUpload = false }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'create',
+        payload: null,
+      });
+      let data = null;
+      if (withUpload) {
+        data = await salesRequest.createAndUpload({ entity, jsonData });
+      } else {
+        data = await salesRequest.create({ entity, jsonData });
+      }
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'create',
+          payload: data.result,
+        });
+
+        dispatch({
+          type: actionTypes.CURRENT_ITEM,
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'create',
+          payload: null,
+        });
+      }
+    },
   read:
     ({ entity, id }) => async (dispatch) => {
       dispatch({
@@ -120,7 +153,7 @@ const sales = {
     },
   update:
     ({
-      entity, id, jsonData,
+      entity, id, jsonData, withUpload = false,
     }) => async (dispatch) => {
       dispatch({
         type: actionTypes.REQUEST_LOADING,
@@ -128,7 +161,13 @@ const sales = {
         payload: null,
       });
 
-      const data = await salesRequest.update({ entity, id, jsonData });
+      let data = null;
+
+      if (withUpload) {
+        data = await salesRequest.updateAndUpload({ entity, id, jsonData });
+      } else {
+        data = await salesRequest.update({ entity, id, jsonData });
+      }
 
       if (data.success === true) {
         dispatch({
@@ -148,8 +187,13 @@ const sales = {
         });
       }
     },
+
   delete:
     ({ entity, id }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.RESET_ACTION,
+        keyState: 'delete',
+      });
       dispatch({
         type: actionTypes.REQUEST_LOADING,
         keyState: 'delete',
@@ -168,6 +212,31 @@ const sales = {
         dispatch({
           type: actionTypes.REQUEST_FAILED,
           keyState: 'delete',
+          payload: null,
+        });
+      }
+    },
+
+  search:
+    ({ entity, options = {} }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'search',
+        payload: null,
+      });
+
+      const data = await salesRequest.search({ entity, options });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'search',
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'search',
           payload: null,
         });
       }

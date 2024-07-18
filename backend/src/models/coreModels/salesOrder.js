@@ -7,11 +7,12 @@ const SalesOrderSchema = new Schema(
       type: String,
       required: true,
       validate: {
-        validator: function(v) {
+        validator: function (v) {
           return /^OV-\d+$/.test(v);
         },
-        message: props => `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`
-      }
+        message: (props) =>
+          `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`,
+      },
     },
     customer: {
       type: Schema.Types.ObjectId,
@@ -22,27 +23,31 @@ const SalesOrderSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    products: [{
-      product: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true,
+    products: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        sizes: [
+          {
+            type: Number,
+            ref: 'Size',
+            required: true,
+          },
+        ],
       },
-      quantity: {
-        type: Number,
-        required: true,
-        min: 1,
-      },
-      price: {
-        type: Number,
-        required: true,
-      },
-      sizes: [{
-        type: Number,
-        ref: 'Size',
-        required: true,
-      }]
-    }],
+    ],
     totalAmount: {
       type: Number,
       required: true,
@@ -58,11 +63,32 @@ const SalesOrderSchema = new Schema(
       default: 'Unpaid',
     },
     shippingAddress: {
-      street: String,
-      city: String,
-      state: String,
-      zipCode: String,
-      country: String,
+      street: {
+        type: String,
+        required: true,
+      },
+      streetNumber: {
+        type: Number,
+        required: true,
+      },
+      floor: {
+        type: String,
+      },
+      apartment: {
+        type: String,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      zipCode: {
+        type: String,
+        required: true,
+      },
     },
     removed: {
       type: Boolean,

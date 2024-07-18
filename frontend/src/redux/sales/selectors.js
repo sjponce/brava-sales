@@ -10,9 +10,18 @@ export const selectListAllItems = createSelector([selectSales], (sales) => sales
 
 export const selectItemById = (itemId) => createSelector(
   selectListItems,
-  (list) => list.result.items.find((item) => item.id === itemId),
+  (list) => list.result.items.find(
+    // eslint-disable-next-line no-underscore-dangle
+    (item) => item._id === itemId,
+  ),
 );
+
+export const selectCreatedItem = createSelector([selectSales], (sales) => sales.create);
 
 export const selectUpdatedItem = createSelector([selectSales], (sales) => sales.update);
 
 export const selectReadItem = createSelector([selectSales], (sales) => sales.read);
+
+export const selectDeletedItem = createSelector([selectSales], (sales) => sales.delete);
+
+export const selectSearchedItems = createSelector([selectSales], (sales) => sales.search);

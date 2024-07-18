@@ -7,6 +7,7 @@ jest.mock('mongoose', () => {
   const mQuery = {
     exec: jest.fn().mockReturnThis(),
     sort: jest.fn().mockReturnThis(),
+    populate: jest.fn().mockReturnThis(),
   };
   const mModel = {
     findOne: jest.fn().mockReturnValue(mQuery),
@@ -50,22 +51,6 @@ describe('listAll', () => {
     });
   });
 
-
-  test('test_listAll_unexpected_error', async () => {
-    const errorMessage = 'Unexpected Error';
-    SalesOrder.findOne().exec.mockRejectedValue(new Error(errorMessage));
-
-    await listAll(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({
-      success: false,
-      result: null,
-      message: 'Ocurrio un error buscando las ordenedes de venta',
-      error: errorMessage,
-    });
-  });
-
   test('test_listAll_with_valid_id_and_installments', async () => {
     const mockSalesOrderId = '123456789';
     const mockSalesOrder = { _id: mockSalesOrderId, name: 'Order 1' };
@@ -75,11 +60,15 @@ describe('listAll', () => {
     ];
   
     SalesOrder.findOne = jest.fn().mockReturnValue({
-      exec: jest.fn().mockResolvedValue({...mockSalesOrder, toObject: jest.fn().mockReturnValue({ _id: mockSalesOrderId, name: 'Order 1' })})
+      exec: jest.fn().mockResolvedValue({...mockSalesOrder, toObject: jest.fn().mockReturnValue({ _id: mockSalesOrderId, name: 'Order 1' })}),
+      populate: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockReturnThis(),
     });
   
     Installment.find = jest.fn().mockReturnValue({
-      exec: jest.fn().mockResolvedValue(mockInstallments)
+      exec: jest.fn().mockResolvedValue(mockInstallments),
+      populate: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockReturnThis(),
     });
   
     req.params = { id: mockSalesOrderId };
@@ -93,6 +82,21 @@ describe('listAll', () => {
       success: true,
       result: { ...mockSalesOrder, installments: mockInstallments },
       message: 'Se encontraron las ordenes de venta',
+    });
+  });
+
+  test('test_listAll_unexpected_error', async () => {
+    const errorMessage = 'Unexpected Error';
+    SalesOrder.find().exec.mockRejectedValue(new Error(errorMessage));
+
+    await listAll(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'Ocurrio un error buscando las ordenedes de venta',
+      error: errorMessage,
     });
   });
 });

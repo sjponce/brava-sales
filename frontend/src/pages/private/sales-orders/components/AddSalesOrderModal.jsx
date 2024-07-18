@@ -3,13 +3,15 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import AddSalesOrderForm from '@/forms/AddSalesOrderForm';
-import { selectCreatedItem, selectCurrentItem } from '@/redux/crud/selectors';
-import crud from '@/redux/crud/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import sales from '@/redux/sales/actions';
+import crud from '@/redux/crud/actions';
+import ModifiableProductTable from './ModifiableProductTable';
+import stock from '@/redux/stock/actions';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -17,60 +19,39 @@ const StyledModal = styled(Modal)({
   justifyContent: 'center',
 });
 
-const AddSalesOrderModal = ({
-  idSalesOrder, open, handlerOpen,
-}) => {
-  const roleOptions = [
-    { label: 'Administrador', value: 'admin' },
-    { label: 'Vendedor', value: 'seller' },
-  ];
+const AddSalesOrderModal = ({ open, handlerOpen }) => {
   const dispatch = useDispatch();
-  const salesOrderData = useSelector(selectCurrentItem);
   const {
-    register, handleSubmit, setValue, watch,
+    register, handleSubmit, setValue, watch, control, isValid,
   } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [productError, setProductError] = useState(null);
 
-  const isUpdate = !!idSalesOrder.length;
+  const validateProducts = (products) => {
+    if (!products || products.length === 0) {
+      return 'Al menos se necesita un producto';
+    }
+    let errorMessage = null;
+    products.forEach((product, index) => {
+      if (!errorMessage) {
+        if (!product.price) {
+          errorMessage = `El precio es requerido para el producto ${index + 1}`;
+        } else if (!product.sizes?.length) {
+          errorMessage = `El talle es requerido para el producto ${index + 1}`;
+        }
+      }
+    });
+
+    return errorMessage;
+  };
 
   const createSalesOrder = async (data) => {
     try {
       dispatch(
-        crud.create({
-          entity: 'user',
+        sales.create({
+          entity: 'sales',
           jsonData: {
             ...data,
-            role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
-          },
-        }),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (isUpdate) {
-      setValue('id', salesOrderData.result._id);
-      setValue('email', salesOrderData.result.email);
-      setValue('password', salesOrderData.result.password);
-      setValue('name', salesOrderData.result.name);
-      setValue('surname', salesOrderData.result.surname);
-      setValue('phone', salesOrderData.result.phone);
-      setValue('photo', salesOrderData.result.photo);
-      setValue('role', salesOrderData.result.role);
-    }
-  }, [salesOrderData]);
-
-  const updateSalesOrder = async (data) => {
-    try {
-      dispatch(
-        crud.update({
-          entity: 'user',
-          id: idSalesOrder,
-          jsonData: {
-            ...data,
-            role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
         }),
       );
@@ -81,7 +62,14 @@ const AddSalesOrderModal = ({
 
   const preSubmit = (e) => {
     e.preventDefault();
-    setDialogOpen(true);
+    const formData = watch();
+    const productsValidation = validateProducts(formData.products);
+    if (productsValidation) {
+      setProductError(productsValidation);
+    } else {
+      setProductError(null);
+      setDialogOpen(true);
+    }
   };
 
   const handleDialogCancel = () => {
@@ -89,16 +77,15 @@ const AddSalesOrderModal = ({
   };
 
   const onSubmit = async (data) => {
-    if (isUpdate) {
-      updateSalesOrder(data);
-    } else {
-      createSalesOrder(data);
-    }
+    createSalesOrder(data);
     setDialogOpen(false);
     handlerOpen(false);
   };
 
-  const { isLoading } = useSelector(selectCreatedItem);
+  useEffect(() => {
+    dispatch(crud.listAll({ entity: 'customer' }));
+    dispatch(stock.listAll({ entity: 'stock' }));
+  }, []);
 
   return (
     <StyledModal open={open}>
@@ -112,7 +99,7 @@ const AddSalesOrderModal = ({
         flexDirection="column">
         <Box alignItems="center" display="flex" mb={2} justifyContent="space-between">
           <Typography variant="h4" color="primary">
-            {isUpdate ? 'Editar vendedor ' : 'Crear vendendor'}
+            Crear orden de venta
           </Typography>
           <IconButton onClick={() => handlerOpen(false)}>
             <Close />
@@ -120,25 +107,28 @@ const AddSalesOrderModal = ({
         </Box>
         <Divider />
         <Box component="form" name="add_sales_order" onSubmit={preSubmit}>
-          <AddSalesOrderForm
-            register={register}
-            setValue={setValue}
-            watch={watch}
-            roleOptions={roleOptions} />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={isLoading}
-            size="large"
-            fullWidth>
-            <Typography variant="button">
-              {isUpdate ? 'Modificar ' : 'Crear '}
-              vendedor
+          <AddSalesOrderForm register={register} setValue={setValue} watch={watch} />
+          <Typography variant="overline" textAlign="center">
+            Productos
+          </Typography>
+          <Box mb={2}>
+            <ModifiableProductTable
+              register={register}
+              control={control}
+              watch={watch}
+              setValue={setValue}
+            />
+          </Box>
+          {productError && (
+            <Typography variant="body2" color="error" sx={{ mt: 2, mb: 2 }}>
+              {productError}
             </Typography>
+          )}
+          <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+            <Typography variant="button">Crear orden de venta</Typography>
           </Button>
           <CustomDialog
-            title={`${isUpdate ? 'Editar' : 'Crear nuevo'} vendedor`}
+            title="Crear orden de venta"
             text="Esta accion no se puede deshacer, ¿Desea continuar?"
             isOpen={dialogOpen}
             onAccept={handleSubmit(onSubmit)}
@@ -151,7 +141,6 @@ const AddSalesOrderModal = ({
 };
 
 AddSalesOrderModal.propTypes = {
-  idSalesOrder: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handlerOpen: PropTypes.func.isRequired,
 };

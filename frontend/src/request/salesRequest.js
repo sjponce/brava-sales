@@ -8,9 +8,37 @@ axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 export const salesRequest = {
+  create: async ({ entity, jsonData }) => {
+    try {
+      const response = await axios.post(`${entity}`, jsonData);
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  createAndUpload: async ({ entity, jsonData }) => {
+    try {
+      const response = await axios.post(`${entity}/create`, jsonData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
   read: async ({ entity, id }) => {
     try {
-      const response = await axios.get(`${entity}/${id}`);
+      const response = await axios.get(`${entity}/read/${id}`);
       successHandler(response, {
         notifyOnSuccess: false,
         notifyOnFailed: true,
@@ -21,9 +49,8 @@ export const salesRequest = {
     }
   },
   update: async ({ entity, id, jsonData }) => {
-    console.log('jsonData', jsonData);
     try {
-      const response = await axios.put(`${entity}/update/${id}`, jsonData);
+      const response = await axios.patch(`${entity}/update/${id}`, jsonData);
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,
@@ -33,9 +60,26 @@ export const salesRequest = {
       return errorHandler(error);
     }
   },
+  updateAndUpload: async ({ entity, id, jsonData }) => {
+    try {
+      const response = await axios.patch(`${entity}/update/${id}`, jsonData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
   delete: async ({ entity, id }) => {
     try {
-      const response = await axios.delete(`${entity}/remove/${id}`);
+      const response = await axios.delete(`${entity}/delete/${id}`);
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,
@@ -145,6 +189,7 @@ export const salesRequest = {
       return errorHandler(error);
     }
   },
+
   upload: async ({ entity, id, jsonData }) => {
     try {
       const response = await axios.patch(`${entity}/upload/${id}`, jsonData, {
@@ -166,6 +211,52 @@ export const salesRequest = {
     const { CancelToken } = axios;
     const source = CancelToken.source();
     return source;
+  },
+
+  summary: async ({ entity, options = {} }) => {
+    try {
+      let query = '?';
+      Object.keys(options).forEach((key) => {
+        query += `${key}=${options[key]}&`;
+      });
+      query = query.slice(0, -1);
+      const response = await axios.get(`${entity}/summary${query}`);
+
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
+      });
+
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
+  mail: async ({ entity, jsonData }) => {
+    try {
+      const response = await axios.post(`${entity}/mail/`, jsonData);
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
+  convert: async ({ entity, id }) => {
+    try {
+      const response = await axios.get(`${entity}/convert/${id}`);
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
   },
 };
 

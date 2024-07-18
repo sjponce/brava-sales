@@ -25,6 +25,7 @@ const create = async (req, res) => {
     // Creating a new document in the collection
     const salesOrderData = req.body;
     const installmentPeriod = 30;
+    const installmentsCount = salesOrderData.installmentsCount ?? 1;
     const products = salesOrderData.products;
     const nextSalesOrderCode = await getNextSalesOrderCode();
 
@@ -57,10 +58,10 @@ const create = async (req, res) => {
     }).save();
 
     // Creating new installments for the sales order
-    const installmentTotalAmount = salesOrder.totalAmount / salesOrderData.installmentsCount;
+    const installmentTotalAmount = salesOrder.totalAmount / installmentsCount;
 
-    for (let i = 0; i < salesOrderData.installmentsCount; i++) {
-      const installmentDueDate = new Date(salesOrderData.orderDate);
+    for (let i = 0; i < installmentsCount; i++) {
+      const installmentDueDate = new Date(salesOrder.orderDate);
       installmentDueDate.setDate(installmentDueDate.getDate() + (i + 1) * installmentPeriod);
 
       await new Installment({

@@ -8,12 +8,13 @@ import sales from '@/redux/sales/actions';
 import AddSalesOrderModal from './AddSalesOrderModal';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
+import translateStatus from '@/utils/translateSalesStatus';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState({
+  const [selectedRow] = useState({
     id: '',
     name: '',
   });
@@ -70,7 +71,7 @@ const SalesOrderDataTable = () => {
       field: 'customer',
       headerName: 'Cliente',
       width: 150,
-      renderCell: (params) => `${params.row.customer || ''}`,
+      renderCell: (params) => `${params.row.customer?.name || ''}`,
     },
     {
       field: 'orderDate',
@@ -82,7 +83,7 @@ const SalesOrderDataTable = () => {
       field: 'status',
       headerName: 'Estado',
       width: 200,
-      renderCell: (params) => `${params.row.status || ''}`,
+      renderCell: (params) => `${translateStatus(params.row.status) || ''}`,
     },
     {
       field: 'actions',
