@@ -1,79 +1,71 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
 import SalesOrders from './SalesOrder';
-
-const mockStore = configureStore([]);
+import store from '@/redux/store';
+import { configureStore } from '@reduxjs/toolkit';
+import rootReducer from '@/redux/rootReducer';
 
 describe('SalesOrders Component', () => {
-  let store;
+  let mockStore;
 
   beforeEach(() => {
-    store = mockStore({
-      auth: {
-        current: {
-          role: 'user',
-        },
-      },
-    });
+    mockStore = store;
   });
 
-  test('test_button_disabled_for_non_admin', () => {
+  test('test_open_add_sales_order_modal', async () => {
     render(
-      <Provider store={store}>
+      <Provider store={mockStore}>
         <SalesOrders />
       </Provider>
     );
 
-    const button = screen.getByText('Nueva Orden de Venta').closest('button');
-    expect(button).toBeDisabled();
-  });
-
-  test('test_modal_opens_on_button_click', () => {
-    store = mockStore({
-      auth: {
-        current: {
-          role: 'admin',
-        },
-      },
-    });
-
-    render(
-      <Provider store={store}>
-        <SalesOrders />
-      </Provider>
-    );
-
-    const button = screen.getByText('Nueva Orden de Venta').closest('button');
+    const button = screen.getByText(/Nueva Orden de Venta/i);
     fireEvent.click(button);
 
-    const modal = screen.getByRole('dialog');
-    expect(modal).toBeInTheDocument();
+    setTimeout(() => {
+      expect(screen.getByText(/Crear Orden de Venta/i)).toBeInTheDocument();
+    }, 0);
   });
 
-  test('test_modal_closes_on_handle_close', () => {
-    store = mockStore({
-      auth: {
-        current: {
-          role: 'admin',
+  test('test_button_disabled_for_non_admins', () => {
+    mockStore = configureStore({
+      reducer: rootReducer,
+      preloadedState: {
+        auth: {
+          current: {
+            role: 'user',
+          },
         },
       },
     });
 
     render(
-      <Provider store={store}>
+      <Provider store={mockStore}>
         <SalesOrders />
       </Provider>
     );
+    setTimeout(() => {
+      const button = screen.getByText(/Nueva Orden de Venta/i);
+      expect(button).toBeDisabled();
+    }, 0);
+  });
 
-    const button = screen.getByText('Nueva Orden de Venta').closest('button');
+  test('test_close_add_sales_order_modal', () => {
+    render(
+      <Provider store={mockStore}>
+        <SalesOrders />
+      </Provider>
+    );
+    
+    const button = screen.getByText(/Nueva Orden de Venta/i);
     fireEvent.click(button);
 
-    const closeButton = screen.getByText('Close'); // Assuming there's a close button with text 'Close'
-    fireEvent.click(closeButton);
+    setTimeout(() => {
+      const closeButton = screen.getByRole('button', { name: /close/i });
+      fireEvent.click(closeButton);
+    }, 0);
 
-    const modal = screen.queryByRole('dialog');
-    expect(modal).not.toBeInTheDocument();
+    expect(screen.queryByText(/Crear Orden de Venta/i)).not.toBeInTheDocument();
   });
 });

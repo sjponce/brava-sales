@@ -101,7 +101,7 @@ const AddSalesOrderModal = ({ open, handlerOpen }) => {
           <Typography variant="h4" color="primary">
             Crear orden de venta
           </Typography>
-          <IconButton onClick={() => handlerOpen(false)}>
+          <IconButton data-test-id="CloseIcon" onClick={() => handlerOpen(false)}>
             <Close />
           </IconButton>
         </Box>

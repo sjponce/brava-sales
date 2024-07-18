@@ -122,7 +122,7 @@ const ModifiableProductTable = ({
                   * (watch(`products.${index}.quantity`) || 0)}
               </TableCell>
               <TableCell>
-                <IconButton onClick={() => handleDeleteRow(index)}>
+                <IconButton data-test-id="DeleteIcon" onClick={() => handleDeleteRow(index)}>
                   <Delete />
                 </IconButton>
               </TableCell>
