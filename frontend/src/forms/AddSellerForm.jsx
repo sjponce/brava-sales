@@ -7,9 +7,9 @@ import { PropTypes } from 'prop-types';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
 const AddSellerForm = ({
-  register, setValue, watch, roleOptions,
+  register, setValue, watch, roleOptions, isUpdate,
 }) => {
-  const [uploadedImg, setUploadedImg] = useState(watch('photo'));
+  const [uploadedImg, setUploadedImg] = useState(watch('photo') || '');
   const handleImageChange = async (event) => {
     if (event.target.files && event.target.files[0]) {
       const image = event.target.files[0];
@@ -62,8 +62,9 @@ const AddSellerForm = ({
             size="small"
             margin="normal"
             fullWidth
-            required
-            {...register('password', { required: true })}
+            disabled={isUpdate}
+            required={!isUpdate}
+            {...register('password', { required: !isUpdate })}
             variant="outlined"
             inputProps={{
               minLength: 8,
@@ -83,7 +84,7 @@ const AddSellerForm = ({
             required
             onChange={handleDataInput}
             margin="normal"
-            value={watch('name')}
+            value={watch('name') || ''}
             variant="outlined"
             fullWidth
           />
@@ -93,7 +94,7 @@ const AddSellerForm = ({
             size="small"
             required
             onChange={handleDataInput}
-            value={watch('surname')}
+            value={watch('surname') || ''}
             margin="normal"
             variant="outlined"
             fullWidth
@@ -106,7 +107,7 @@ const AddSellerForm = ({
           size="small"
           variant="outlined"
           fullWidth
-          value={watch('phone')}
+          value={watch('phone') || ''}
           onChange={handlePhoneChange}
           inputProps={{
             minLength: 9,

@@ -1,6 +1,7 @@
 import * as actionTypes from './types';
 
 const INITIAL_STATE = {
+  result: null,
   current: {},
   isLoggedIn: false,
   isLoading: false,
@@ -41,6 +42,27 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         current: action.payload,
         isLoggedIn: true,
+        isLoading: false,
+        isSuccess: true,
+      };
+
+    case actionTypes.LOADING_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+        isSuccess: false,
+      };
+
+    case actionTypes.FAILED_REQUEST:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    case actionTypes.SUCCESS_REQUEST:
+      return {
+        ...state,
+        result: action.payload,
         isLoading: false,
         isSuccess: true,
       };

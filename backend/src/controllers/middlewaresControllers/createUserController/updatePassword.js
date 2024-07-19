@@ -4,10 +4,7 @@ const { generate: uniqueId } = require('shortid');
 
 const updatePassword = async (userModel, req, res) => {
   const UserPassword = mongoose.model(userModel + 'Password');
-
-  const reqUserName = userModel.toLowerCase();
-  const userProfile = req[reqUserName];
-
+  
   const { password } = req.body;
 
   if (password.length < 8)
@@ -47,7 +44,7 @@ const updatePassword = async (userModel, req, res) => {
   return res.status(200).json({
     success: true,
     result: {},
-    message: 'se actualizo la contraseña de: ' + userProfile._id,
+    message: 'Se actualizo la contraseña ',
   });
 };
 

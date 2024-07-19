@@ -187,7 +187,6 @@ const crud = {
         });
       }
     },
-
   delete:
     ({ entity, id }) => async (dispatch) => {
       dispatch({
@@ -216,7 +215,25 @@ const crud = {
         });
       }
     },
-
+  disable: ({ entity, id }) => async (dispatch) => {
+    dispatch({
+      type: actionTypes.RESET_ACTION,
+      keyState: 'disable',
+    });
+    dispatch({
+      type: actionTypes.REQUEST_LOADING,
+      keyState: 'disable',
+      payload: null,
+    });
+    const data = await request.disable({ entity, id });
+    if (data.success === true) {
+      dispatch({
+        type: actionTypes.REQUEST_SUCCESS,
+        keyState: 'disable',
+        payload: data.result,
+      });
+    }
+  },
   search:
     ({ entity, options = {} }) => async (dispatch) => {
       dispatch({

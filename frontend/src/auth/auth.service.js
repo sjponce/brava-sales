@@ -26,9 +26,47 @@ export const login = async ({ loginData }) => {
   }
 };
 
+export const updatePassword = async ({ userId, passwordData }) => {
+  try {
+    const response = await axios.patch(`${API_BASE_URL}user/updatepassword/${userId}`, passwordData);
+
+    const { status, data } = response;
+
+    successHandler(
+      { data, status },
+      {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      },
+    );
+    return data;
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
+
 export const register = async ({ registerData }) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}register`, registerData);
+    const response = await axios.post(`${API_BASE_URL}user/create`, registerData);
+
+    const { status, data } = response;
+
+    successHandler(
+      { data, status },
+      {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      },
+    );
+    return data;
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
+
+export const update = async ({ userId, updateData }) => {
+  try {
+    const response = await axios.patch(`${API_BASE_URL}user/update/${userId}`, updateData);
 
     const { status, data } = response;
 
@@ -64,24 +102,6 @@ export const verify = async ({ userId, emailToken }) => {
   }
 };
 
-export const resetPassword = async ({ resetPasswordData }) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}resetpassword`, resetPasswordData);
-
-    const { status, data } = response;
-
-    successHandler(
-      { data, status },
-      {
-        notifyOnSuccess: true,
-        notifyOnFailed: true,
-      },
-    );
-    return data;
-  } catch (error) {
-    return errorHandler(error);
-  }
-};
 export const logout = async () => {
   axios.defaults.withCredentials = true;
   try {

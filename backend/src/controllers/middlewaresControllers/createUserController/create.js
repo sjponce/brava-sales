@@ -5,19 +5,20 @@ const { generate: uniqueId } = require('shortid');
 const create = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const UserPassword = mongoose.model(userModel + 'Password');
-  const { email, password, enabled, name, surname, role } = req.body;
-  if (!email || !password)
+  const Seller = mongoose.model('Seller');
+  const { email, password, enabled, role, name, surname, photo, phone } = req.body;
+  if (!email || !password || !role || !name || !surname)
     return res.status(400).json({
       success: false,
       result: null,
-      message: "Faltan campos obligatorios",
+      message: 'Faltan campos obligatorios',
     });
 
   if (req.body.role === 'owner') {
     return res.status(403).send({
       success: false,
       result: null,
-      message: "No puedes crear un usuario con el role de owner",
+      message: 'No puedes crear un usuario con el role de owner',
     });
   }
 
@@ -43,53 +44,63 @@ const create = async (userModel, req, res) => {
 
   const passwordHash = bcrypt.hashSync(salt + password);
 
-  req.body.removed = false;
-
-  const result = await new User({
+  const resultUser = await new User({
     email,
     enabled,
-    name,
-    surname,
     role,
   }).save();
 
-  if (!result) {
+  if (!resultUser) {
     return res.status(403).json({
       success: false,
       result: null,
-      message: "El documento no pudo ser guardado",
+      message: 'El usuario no pudo ser guardado',
     });
   }
+
   const UserPasswordData = {
     password: passwordHash,
     salt: salt,
-    user: result._id,
+    user: resultUser._id,
     emailVerified: true,
   };
+
   const resultPassword = await new UserPassword(UserPasswordData).save();
 
   if (!resultPassword) {
-    await User.deleteOne({ _id: result._id }).exec();
+    await User.deleteOne({ _id: resultUser._id }).exec();
 
     return res.status(403).json({
       success: false,
       result: null,
-      message: "El documento no pudo ser guardado",
+      message: 'El password no pudo ser guardado',
+    });
+  }
+
+  const resultSeller = await new Seller({
+    name,
+    surname,
+    user: resultUser._id,
+    phone,
+    photo,
+  }).save();
+
+  if (!resultSeller) {
+    await User.deleteOne({ _id: resultUser._id }).exec();
+    await UserPassword.deleteOne({ user: resultUser._id }).exec();
+
+    return res.status(403).json({
+      success: false,
+      result: null,
+      message: 'El vendedor no pudo ser guardado',
     });
   }
 
   return res.status(200).send({
     success: true,
-    result: {
-      _id: result._id,
-      enabled: result.enabled,
-      email: result.email,
-      name: result.name,
-      surname: result.surname,
-      photo: result.photo,
-      role: result.role,
-    },
-    message: 'Usuario creado.',
+    result: { resultSeller },
+    message: 'Usuario y vendedor creado',
   });
 };
+
 module.exports = create;

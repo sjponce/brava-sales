@@ -8,7 +8,7 @@ import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import AddSellerForm from '@/forms/AddSellerForm';
 import { selectCreatedItem, selectCurrentItem } from '@/redux/crud/selectors';
-import crud from '@/redux/crud/actions';
+import { registerUser, updateUser } from '@/redux/auth/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 
 const SytledModal = styled(Modal)({
@@ -27,7 +27,7 @@ const AddSellerModal = ({
   const dispatch = useDispatch();
   const sellerData = useSelector(selectCurrentItem);
   const {
-    register, handleSubmit, setValue, watch,
+    register, handleSubmit, setValue, watch, reset,
   } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -36,9 +36,8 @@ const AddSellerModal = ({
   const createSeller = async (data) => {
     try {
       dispatch(
-        crud.create({
-          entity: 'user',
-          jsonData: {
+        registerUser({
+          registerData: {
             ...data,
             role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
@@ -52,23 +51,21 @@ const AddSellerModal = ({
   useEffect(() => {
     if (isUpdate) {
       setValue('id', sellerData.result._id);
-      setValue('email', sellerData.result.email);
-      setValue('password', sellerData.result.password);
+      setValue('email', sellerData.result.user.email);
       setValue('name', sellerData.result.name);
       setValue('surname', sellerData.result.surname);
       setValue('phone', sellerData.result.phone);
       setValue('photo', sellerData.result.photo);
-      setValue('role', sellerData.result.role);
+      setValue('role', sellerData.result.user.role);
     }
   }, [sellerData]);
 
   const updateSeller = async (data) => {
     try {
       dispatch(
-        crud.update({
-          entity: 'user',
-          id: idSeller,
-          jsonData: {
+        updateUser({
+          userId: sellerData.result.user._id,
+          updateData: {
             ...data,
             role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
@@ -90,11 +87,18 @@ const AddSellerModal = ({
 
   const onSubmit = async (data) => {
     if (isUpdate) {
+      console.log(data);
       updateSeller(data);
     } else {
       createSeller(data);
     }
+    reset();
     setDialogOpen(false);
+    handlerOpen(false);
+  };
+
+  const handleClose = () => {
+    reset();
     handlerOpen(false);
   };
 
@@ -114,7 +118,7 @@ const AddSellerModal = ({
           <Typography variant="h4" color="primary">
             {isUpdate ? 'Editar vendedor ' : 'Crear vendendor'}
           </Typography>
-          <IconButton onClick={() => handlerOpen(false)}>
+          <IconButton onClick={() => handleClose()}>
             <Close />
           </IconButton>
         </Box>
@@ -124,7 +128,9 @@ const AddSellerModal = ({
             register={register}
             setValue={setValue}
             watch={watch}
-            roleOptions={roleOptions} />
+            roleOptions={roleOptions}
+            isUpdate={isUpdate}
+            />
           <Button
             type="submit"
             variant="contained"

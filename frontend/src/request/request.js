@@ -90,6 +90,19 @@ export const request = {
     }
   },
 
+  disable: async ({ entity, id }) => {
+    try {
+      const response = await axios.patch(`${entity}/disable/${id}`);
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
   filter: async ({ entity, options = {} }) => {
     try {
       const filter = options.filter ? `filter=${options.filter}` : '';
