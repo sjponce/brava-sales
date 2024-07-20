@@ -4,7 +4,7 @@ const listAll = async (req, res, axiosInstance) => {
     const apiUrl = `${process.env.STOCK_API}/product${id ? `/${id}` : ''}`;
   
     const response = await axiosInstance.get(apiUrl);
-    // TODO: Mocked the _id for sales to wrok for now
+    // TODO(Santiago Ponce 18/07): Mocked the _id for sales to work for now waiting for PGG82-170
     Object.keys(response.data).forEach((key) => {
       response.data[key]._id = '668884e329090074476f8aee';
     });
