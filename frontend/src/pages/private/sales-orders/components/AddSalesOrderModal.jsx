@@ -34,12 +34,12 @@ const AddSalesOrderModal = ({ open, handlerOpen }) => {
     let errorMessage = null;
     products.forEach((product, index) => {
       if (!errorMessage) {
-        if (!product.price || product.price > 0) {
+        if (!product.price || product.price <= 0) {
           errorMessage = `El precio es requerido para el producto ${index + 1}`;
         } else if (!product.sizes?.length) {
           errorMessage = `El talle es requerido para el producto ${index + 1}`;
-        } else if (!product.quantity || product.quantity > 0) {
-          errorMessage = `La cantidad del producto ${index + 1} no puede ser 0`;
+        } else if (!product.quantity || product.quantity <= 0) {
+          errorMessage = `La cantidad del producto ${index + 1} tiene que ser mayor a 0`;
         }
       }
     });

@@ -30,7 +30,7 @@ const ModifiableProductTable = ({
   });
 
   const handleAddRow = () => {
-    append({ product: '', quantity: 0, price: 0 });
+    append({ product: '', quantity: 1, price: 0 });
   };
 
   const handleDeleteRow = (index) => {
@@ -98,6 +98,7 @@ const ModifiableProductTable = ({
                   style={{ width: '80px' }}
                   size="small"
                   type="number"
+                  inputProps={{ min: 1 }}
                   margin="normal"
                   variant="outlined"
                 />
