@@ -1,9 +1,19 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import DataTableSellers from './components/DataTableCustomers';
+import AddCustomerModal from './components/AddCustomerModal';
+import DataTableCustomers from './components/DataTableCustomers';
 
 const Customers = () => {
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const userState = useSelector((store) => store.auth.current);
 
   return (
@@ -16,6 +26,7 @@ const Customers = () => {
         marginBottom="20px">
         <Typography variant="h4">Clientes</Typography>
         <Button
+          onClick={handleClickOpen}
           disabled={userState.role !== 'admin'}
           variant="text"
           size="large"
@@ -26,7 +37,8 @@ const Customers = () => {
           </Typography>
         </Button>
       </Box>
-      <DataTableSellers />
+      <AddCustomerModal open={open} handlerOpen={handleClose} idSeller="" />
+      <DataTableCustomers />
     </Box>
   );
 };

@@ -27,16 +27,15 @@ const CustomerSchema = new Schema(
     },
     ivaCondition: {
         type: String,
-        enum: ['Responsable Inscripto', 'Monotributista','Consumidor final'],
+        enum: ['Responsable Inscripto', 'Monotributista','Consumidor final', 'Exento'],
     },
     name: {
       type: String,
       required: true,
     },
-    role: {
-      type: String,
-      default: 'seller',
-      enum: ['admin', 'seller'],
+    number: {
+      type: Number,
+      required: true,
     },
     address: {
       street: {

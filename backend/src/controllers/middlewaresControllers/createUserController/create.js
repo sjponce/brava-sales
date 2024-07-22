@@ -1,14 +1,42 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const axios = require('axios');
-const traslate = require('../../../utils/translateModel');
 const { generate: uniqueId } = require('shortid');
+const { ROLE_ENUM } = require('@/middlewares/permission');
+const Seller = mongoose.model('Seller');
+const Customer = mongoose.model('Customer');
+
+const createRoleSpecificEntity = async (userData, resultUser) => {
+  const entityData = { ...userData };
+  delete entityData.password;
+
+  let result;
+  switch (userData.role) {
+    case ROLE_ENUM.SELLER || ROLE_ENUM.ADMIN:
+      result = await new Seller({
+        user: resultUser._id,
+        ...userData,
+      }).save();
+      break;
+    case ROLE_ENUM.CUSTOMER:
+      result = await new Customer({
+        user: resultUser._id,
+        ...userData,
+      }).save();
+      break;
+  }
+
+  if (!result) {
+    return false;
+  }
+  return true;
+};
 
 const create = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const UserPassword = mongoose.model(userModel + 'Password');
-  const { email, password, enabled, role, ...modelData } = req.body;
-  if (!email || !password || !role)
+
+  const { email, password, enabled, role, name, surname } = req.body;
+  if (!email || !password || !role || !name || !surname)
     return res.status(400).json({
       success: false,
       result: null,
@@ -20,19 +48,6 @@ const create = async (userModel, req, res) => {
       success: false,
       result: null,
       message: 'No puedes crear un usuario con el role de owner',
-    });
-  }
-
-  let Model = '';
-  if (role === 'customer' || role === 'customer') {
-    Model = 'customer';
-  } else if (role === 'customer') {
-    Model = 'customer';
-  } else {
-    return res.status(400).json({
-      success: false,
-      result: null,
-      message: 'El rol no es valido',
     });
   }
 
@@ -91,39 +106,21 @@ const create = async (userModel, req, res) => {
     });
   }
 
-  try {
-    const cookie = `token=${req.cookies.token}`;
-
-    const resultModel = await axios.post(
-      `${process.env.BASE_API}/${Model}/create`,
-      {
-        ...modelData,
-        user: resultUser._id,
-      },
-      {
-        headers: {
-          cookie,
-        },
-      }
-    );
-
-    return res.status(200).send({
-      success: true,
-      result: resultModel.data.result,
-      message: `Usuario y ${traslate(Model)} creado correctamente`,
-    });
-  } catch (error) {
+  const entityCreated = await createRoleSpecificEntity(req.body, resultUser);
+  if (!entityCreated) {
     await User.deleteOne({ _id: resultUser._id }).exec();
     await UserPassword.deleteOne({ user: resultUser._id }).exec();
-
-    console.error('Error creating seller:', error);
     return res.status(403).json({
       success: false,
       result: null,
-      message: 'El vendedor no pudo ser guardado',
-      error: error.message,
+      message: `The ${req.body.role} could not be saved`,
     });
   }
+  return res.status(200).send({
+    success: true,
+    result: { resultUser, entityCreated },
+    message: 'Usuario y vendedor creado',
+  });
 };
 
 module.exports = create;

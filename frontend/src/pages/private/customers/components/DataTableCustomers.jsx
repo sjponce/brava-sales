@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import crud from '@/redux/crud/actions';
+import AddCustomerModal from './AddCustomerModal';
 import Loading from '@/components/Loading';
 
 const DataTableCustomers = () => {
   const dispatch = useDispatch();
-  const [setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
@@ -97,7 +98,7 @@ const DataTableCustomers = () => {
       width: 150,
     },
     {
-      field: 'direccion',
+      field: 'address',
       headerName: 'Dirección',
       width: 300,
       renderCell: (params) => {
@@ -148,7 +149,12 @@ const DataTableCustomers = () => {
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
+<<<<<<< HEAD
       <Loading isLoading={customerState?.isLoading || readCustomerState?.isLoading} />
+=======
+      <AddCustomerModal idSeller={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
+      <Loading isLoading={clientState?.isLoading || readClientState?.isLoading} />
+>>>>>>> 89759f9474f6986b35636cd9a945df652af2d278
     </Box>
   );
 };
