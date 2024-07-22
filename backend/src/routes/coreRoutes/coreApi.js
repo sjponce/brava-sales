@@ -10,7 +10,7 @@ const userController = require('@/controllers/coreControllers/userController');
 
 router.route('/user/read/:id').get(catchErrors(userController.read));
 
-router.route('/user/updatepassword/:id').patch(catchErrors(userController.updatePassword));
+router.route('/user/update-password/:id').patch(catchErrors(userController.updatePassword));
 
 router.route('/user/create').post(catchErrors(userController.create));
 

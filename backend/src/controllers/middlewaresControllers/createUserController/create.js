@@ -1,12 +1,41 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { generate: uniqueId } = require('shortid');
+const { ROLE_ENUM } = require('@/middlewares/permission');
+const Seller = mongoose.model('Seller');
+const Customer = mongoose.model('Customer');
+
+const createRoleSpecificEntity = async (userData, resultUser) => {
+  const entityData = { ...userData };
+  delete entityData.password;
+
+  let result;
+  switch (userData.role) {
+    case ROLE_ENUM.SELLER || ROLE_ENUM.ADMIN:
+      result = await new Seller({
+        user: resultUser._id,
+        ...userData,
+      }).save();
+      break;
+    case ROLE_ENUM.CUSTOMER:
+      result = await new Customer({
+        user: resultUser._id,
+        ...userData,
+      }).save();
+      break;
+  }
+
+  if (!result) {
+    return false;
+  }
+  return true;
+};
 
 const create = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const UserPassword = mongoose.model(userModel + 'Password');
-  const Seller = mongoose.model('Seller');
-  const { email, password, enabled, role, name, surname, photo, phone } = req.body;
+
+  const { email, password, enabled, role, name, surname } = req.body;
   if (!email || !password || !role || !name || !surname)
     return res.status(400).json({
       success: false,
@@ -77,28 +106,20 @@ const create = async (userModel, req, res) => {
     });
   }
 
-  const resultSeller = await new Seller({
-    name,
-    surname,
-    user: resultUser._id,
-    phone,
-    photo,
-  }).save();
-
-  if (!resultSeller) {
+  // In the main create function:
+  const entityCreated = await createRoleSpecificEntity(req.body, resultUser);
+  if (!entityCreated) {
     await User.deleteOne({ _id: resultUser._id }).exec();
     await UserPassword.deleteOne({ user: resultUser._id }).exec();
-
     return res.status(403).json({
       success: false,
       result: null,
-      message: 'El vendedor no pudo ser guardado',
+      message: `The ${req.body.role} could not be saved`,
     });
   }
-
   return res.status(200).send({
     success: true,
-    result: { resultSeller },
+    result: { resultUser, entityCreated },
     message: 'Usuario y vendedor creado',
   });
 };
