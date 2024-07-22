@@ -87,7 +87,6 @@ const AddSellerModal = ({
 
   const onSubmit = async (data) => {
     if (isUpdate) {
-      console.log(data);
       updateSeller(data);
     } else {
       createSeller(data);

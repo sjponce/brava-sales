@@ -28,7 +28,7 @@ export const login = async ({ loginData }) => {
 
 export const updatePassword = async ({ userId, passwordData }) => {
   try {
-    const response = await axios.patch(`${API_BASE_URL}user/updatepassword/${userId}`, passwordData);
+    const response = await axios.patch(`${API_BASE_URL}user/update-password/${userId}`, passwordData);
 
     const { status, data } = response;
 
