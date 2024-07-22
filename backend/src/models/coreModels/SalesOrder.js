@@ -11,7 +11,7 @@ const SalesOrderSchema = new Schema(
           return /^OV-\d+$/.test(v);
         },
         message: (props) =>
-          `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`,
+          `${props.value} El ID no es valido.`,
       },
     },
     customer: {
