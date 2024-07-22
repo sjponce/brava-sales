@@ -1,15 +1,11 @@
-import {
-  Autocomplete, Box, IconButton, TextField, Typography, Tooltip,
-} from '@mui/material';
+import { Autocomplete, Box, IconButton, TextField, Typography, Tooltip } from '@mui/material';
 import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
-const AddSellerForm = ({
-  register, setValue, watch, roleOptions,
-}) => {
-  const [uploadedImg, setUploadedImg] = useState(watch('photo'));
+const AddSellerForm = ({ register, setValue, watch, roleOptions, isUpdate }) => {
+  const [uploadedImg, setUploadedImg] = useState(watch('photo') || '');
   const handleImageChange = async (event) => {
     if (event.target.files && event.target.files[0]) {
       const image = event.target.files[0];
@@ -39,7 +35,14 @@ const AddSellerForm = ({
 
   return (
     <>
-      <Box display="flex" flexDirection="column" border={1} borderColor="background.paper" borderRadius={2.5} p={1} mt={2}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        border={1}
+        borderColor="background.paper"
+        borderRadius={2.5}
+        p={1}
+        mt={2}>
         <Typography variant="overline" textAlign="center">
           Datos de la cuenta
         </Typography>
@@ -55,23 +58,33 @@ const AddSellerForm = ({
             {...register('email', { required: true })}
             variant="outlined"
           />
-          <TextField
-            label="Contraseña"
-            name="password"
-            type="password"
-            size="small"
-            margin="normal"
-            fullWidth
-            required
-            {...register('password', { required: true })}
-            variant="outlined"
-            inputProps={{
-              minLength: 8,
-            }}
-          />
+          {!isUpdate && (
+            <TextField
+              label="Contraseña"
+              name="password"
+              type="password"
+              size="small"
+              margin="normal"
+              fullWidth
+              required
+              {...register('password', { required: true })}
+              variant="outlined"
+              inputProps={{
+                minLength: 8,
+              }}
+            />
+          )}
         </Box>
       </Box>
-      <Box display="flex" flexDirection="column" border={1} borderColor="background.paper" borderRadius={2.5} p={1} mt={2} mb={2}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        border={1}
+        borderColor="background.paper"
+        borderRadius={2.5}
+        p={1}
+        mt={2}
+        mb={2}>
         <Typography variant="overline" textAlign="center">
           Datos del vendedor
         </Typography>
@@ -83,7 +96,7 @@ const AddSellerForm = ({
             required
             onChange={handleDataInput}
             margin="normal"
-            value={watch('name')}
+            value={watch('name') || ''}
             variant="outlined"
             fullWidth
           />
@@ -93,7 +106,7 @@ const AddSellerForm = ({
             size="small"
             required
             onChange={handleDataInput}
-            value={watch('surname')}
+            value={watch('surname') || ''}
             margin="normal"
             variant="outlined"
             fullWidth
@@ -106,7 +119,7 @@ const AddSellerForm = ({
           size="small"
           variant="outlined"
           fullWidth
-          value={watch('phone')}
+          value={watch('phone') || ''}
           onChange={handlePhoneChange}
           inputProps={{
             minLength: 9,
@@ -158,10 +171,12 @@ AddSellerForm.propTypes = {
   register: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
   watch: PropTypes.func.isRequired,
-  roleOptions: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.string,
-    label: PropTypes.string,
-  })).isRequired,
+  roleOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    })
+  ).isRequired,
 };
 
 export default AddSellerForm;

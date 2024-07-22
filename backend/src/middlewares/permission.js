@@ -7,6 +7,14 @@ const roles = {
   createOnly: ['create', 'read', 'download', 'upload'],
   readOnly: ['read', 'download'],
 };
+
+exports.ROLE_ENUM = Object.freeze(
+  Object.keys(roles).reduce((acc, role) => {
+    acc[role.toUpperCase()] = role;
+    return acc;
+  }, {})
+);
+
 exports.roles = roles;
 
 exports.hasPermission = (permissionName = 'none') => {

@@ -1,23 +1,53 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { generate: uniqueId } = require('shortid');
+const { ROLE_ENUM } = require('@/middlewares/permission');
+const Seller = mongoose.model('Seller');
+const Customer = mongoose.model('Customer');
+
+const createRoleSpecificEntity = async (userData, resultUser) => {
+  const entityData = { ...userData };
+  delete entityData.password;
+
+  let result;
+  switch (userData.role) {
+    case ROLE_ENUM.SELLER || ROLE_ENUM.ADMIN:
+      result = await new Seller({
+        user: resultUser._id,
+        ...userData,
+      }).save();
+      break;
+    case ROLE_ENUM.CUSTOMER:
+      result = await new Customer({
+        user: resultUser._id,
+        ...userData,
+      }).save();
+      break;
+  }
+
+  if (!result) {
+    return false;
+  }
+  return true;
+};
 
 const create = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const UserPassword = mongoose.model(userModel + 'Password');
-  const { email, password, enabled, name, surname, role } = req.body;
-  if (!email || !password)
+
+  const { email, password, enabled, role, name, surname } = req.body;
+  if (!email || !password || !role || !name || !surname)
     return res.status(400).json({
       success: false,
       result: null,
-      message: "Faltan campos obligatorios",
+      message: 'Faltan campos obligatorios',
     });
 
   if (req.body.role === 'owner') {
     return res.status(403).send({
       success: false,
       result: null,
-      message: "No puedes crear un usuario con el role de owner",
+      message: 'No puedes crear un usuario con el role de owner',
     });
   }
 
@@ -43,53 +73,55 @@ const create = async (userModel, req, res) => {
 
   const passwordHash = bcrypt.hashSync(salt + password);
 
-  req.body.removed = false;
-
-  const result = await new User({
+  const resultUser = await new User({
     email,
     enabled,
-    name,
-    surname,
     role,
   }).save();
 
-  if (!result) {
+  if (!resultUser) {
     return res.status(403).json({
       success: false,
       result: null,
-      message: "El documento no pudo ser guardado",
+      message: 'El usuario no pudo ser guardado',
     });
   }
+
   const UserPasswordData = {
     password: passwordHash,
     salt: salt,
-    user: result._id,
+    user: resultUser._id,
     emailVerified: true,
   };
+
   const resultPassword = await new UserPassword(UserPasswordData).save();
 
   if (!resultPassword) {
-    await User.deleteOne({ _id: result._id }).exec();
+    await User.deleteOne({ _id: resultUser._id }).exec();
 
     return res.status(403).json({
       success: false,
       result: null,
-      message: "El documento no pudo ser guardado",
+      message: 'El password no pudo ser guardado',
     });
   }
 
+  // In the main create function:
+  const entityCreated = await createRoleSpecificEntity(req.body, resultUser);
+  if (!entityCreated) {
+    await User.deleteOne({ _id: resultUser._id }).exec();
+    await UserPassword.deleteOne({ user: resultUser._id }).exec();
+    return res.status(403).json({
+      success: false,
+      result: null,
+      message: `The ${req.body.role} could not be saved`,
+    });
+  }
   return res.status(200).send({
     success: true,
-    result: {
-      _id: result._id,
-      enabled: result.enabled,
-      email: result.email,
-      name: result.name,
-      surname: result.surname,
-      photo: result.photo,
-      role: result.role,
-    },
-    message: 'Usuario creado.',
+    result: { resultUser, entityCreated },
+    message: 'Usuario y vendedor creado',
   });
 };
+
 module.exports = create;

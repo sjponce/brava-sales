@@ -49,8 +49,24 @@ const login = async (req, res, { userModel }) => {
       message: 'El usuario no esta habilitado.',
     });
 
+  if (user.role === 'client')
+    return res.status(409).json({
+      success: false,
+      result: null,
+      message: 'El usuario no es un vendedor.',
+    });
+    
+  const seller = await mongoose.model('Seller').findOne({ user: user._id });
+
+  if (!seller)
+    return res.status(404).json({
+      success: false,
+      result: null,
+      message: 'No existe un vendedor con este usuario',
+    });
+
   //  authUser if your has correct password
-  authUser(req, res, { user, databasePassword, password, UserPasswordModel });
+  authUser(req, res, { user, databasePassword, password, UserPasswordModel, seller });
 };
 
 module.exports = login;

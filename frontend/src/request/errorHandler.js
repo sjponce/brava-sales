@@ -4,7 +4,7 @@ import codeMessage from './codeMessage';
 const errorHandler = (error) => {
   if (!navigator.onLine) {
     notification.config({
-      duration: 15,
+      duration: 10,
       maxCount: 1,
     });
     // Code to execute when there is internet connection
@@ -23,7 +23,7 @@ const errorHandler = (error) => {
 
   if (!response) {
     notification.config({
-      duration: 20,
+      duration: 10,
       maxCount: 1,
     });
     // Code to execute when there is no internet connection
@@ -55,7 +55,7 @@ const errorHandler = (error) => {
     const errorText = message || codeMessage[response.status];
     const { status } = response;
     notification.config({
-      duration: 20,
+      duration: 10,
       maxCount: 2,
     });
     notification.error({
@@ -65,7 +65,7 @@ const errorHandler = (error) => {
     return response.data;
   }
   notification.config({
-    duration: 15,
+    duration: 10,
     maxCount: 1,
   });
 
