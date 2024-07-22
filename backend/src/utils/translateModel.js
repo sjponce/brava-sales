@@ -1,7 +1,7 @@
 // utils/traducirModelo.js
 const translations = {
-    user: 'vendedor',
-    client: 'cliente',
+    user: 'usuario',
+    customer: 'cliente',
     seller: 'vendedor',
   };
   

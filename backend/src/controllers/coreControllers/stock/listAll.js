@@ -129,6 +129,8 @@ const responseMock = {
 
 const listAll = async (req, res) => {
   try {
+    // TODO: Mocked on PFG82-170 since the Stocks server is down
+
     // const apiUrl = `${process.env.STOCK_API}/product/byNameMap`;
     // const response = await axiosInstance.get(apiUrl);
 
@@ -191,7 +193,7 @@ const listAll = async (req, res) => {
 module.exports = listAll;
 
 const getStockData = async () => {
-  // TODO: Replace this with API call
+  // TODO: PFG82-170 Replace this with API call 
   // const apiUrl = `${process.env.STOCK_API}/product/byNameMap`;
 
   return responseMock.data;

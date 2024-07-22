@@ -13,7 +13,7 @@ import AddSellerModal from './AddSellerModal';
 import Loading from '@/components/Loading';
 import UpdatePasswordModal from './UpdatePasswordModal';
 
-const DataTableSellers = () => {
+const SellersDataTable = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [openPass, setOpenPass] = useState(false);
@@ -179,4 +179,4 @@ const DataTableSellers = () => {
   );
 };
 
-export default DataTableSellers;
+export default SellersDataTable;

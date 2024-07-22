@@ -1,20 +1,9 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import SellersDataTable from './components/SellersDataTable';
-import AddSellerModal from './components/AddSellerModal';
+import DataTableSellers from './components/DataTableCustomers';
 
-const Sellers = () => {
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+const Customers = () => {
   const userState = useSelector((store) => store.auth.current);
 
   return (
@@ -25,23 +14,21 @@ const Sellers = () => {
         width="100%"
         borderRadius={2}
         marginBottom="20px">
-        <Typography variant="h4">Vendedores</Typography>
+        <Typography variant="h4">Clientes</Typography>
         <Button
-          onClick={handleClickOpen}
           disabled={userState.role !== 'admin'}
           variant="text"
           size="large"
           color="primary"
           startIcon={<AddCircle />}>
           <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nuevo vendedor
+            Nuevo cliente
           </Typography>
         </Button>
       </Box>
-      <AddSellerModal open={open} handlerOpen={handleClose} idSeller="" />
-      <SellersDataTable />
+      <DataTableSellers />
     </Box>
   );
 };
 
-export default Sellers;
+export default Customers;
