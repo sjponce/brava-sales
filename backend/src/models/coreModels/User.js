@@ -20,7 +20,7 @@ const UserSchema = new Schema(
     role: {
       type: String,
       default: 'seller',
-      enum: ['admin', 'seller', 'client'],
+      enum: ['admin', 'seller', 'customer'],
     },
   },
   { timestamps: true }

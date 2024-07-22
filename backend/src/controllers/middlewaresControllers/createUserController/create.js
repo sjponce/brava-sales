@@ -24,10 +24,10 @@ const create = async (userModel, req, res) => {
   }
 
   let Model = '';
-  if (role === 'seller' || role === 'admin') {
-    Model = 'seller';
-  } else if (role === 'client') {
-    Model = 'client';
+  if (role === 'customer' || role === 'customer') {
+    Model = 'customer';
+  } else if (role === 'customer') {
+    Model = 'customer';
   } else {
     return res.status(400).json({
       success: false,

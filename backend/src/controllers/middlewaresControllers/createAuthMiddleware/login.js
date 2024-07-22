@@ -49,7 +49,7 @@ const login = async (req, res, { userModel }) => {
       message: 'El usuario no esta habilitado.',
     });
 
-  if (user.role === 'client')
+  if (user.role === 'customer')
     return res.status(409).json({
       success: false,
       result: null,
