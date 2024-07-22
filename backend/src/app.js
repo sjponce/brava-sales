@@ -14,6 +14,7 @@ const stockApiRouter = require('./routes/appRoutes/stockApi');
 const errorHandlers = require('./handlers/errorHandlers');
 
 const userAuth = require('./controllers/coreControllers/userAuth');
+const { createDocx } = require('./helpers/documentHelper');
 
 // create our Express app
 const app = express();
@@ -34,7 +35,18 @@ app.use(compression());
 // Here our API Routes
 
 app.get('/', (req, res) => {
-  res.send('Brava sales!!');
+  const document = createDocx('Test', '', {
+    name: 'Santiago',
+    lastName: ['Ponce', 'dos'],
+    data: { email: 'santiago@gmail.com' },
+    phone: { number: '3005555555' },
+    products: [
+      { name: 'Product 1', price: 10.99, quantity: 5 },
+      { name: 'Product 2', price: 15.99, quantity: 3 },
+      { name: 'Product 3', price: 7.99, quantity: 8 },
+    ],
+  });
+  res.send(document);
 });
 
 app.use('/api', coreAuthRouter);
