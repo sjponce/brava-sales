@@ -1,3 +1,4 @@
+const { ROLE_ENUM } = require('@/middlewares/permission');
 const mongoose = require('mongoose');
 
 const disable = async (userModel, req, res) => {
@@ -15,7 +16,7 @@ const disable = async (userModel, req, res) => {
     });
   }
 
-  if (user.role === 'owner') {
+  if (user.role === ROLE_ENUM.OWNER) {
     return res.status(403).json({
       success: false,
       message: "No se puede deshabilitar el usuario owner",

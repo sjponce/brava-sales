@@ -1,3 +1,4 @@
+const { ROLE_ENUM } = require('@/middlewares/permission');
 const mongoose = require('mongoose');
 
 const update = async (userModel, req, res) => {
@@ -13,7 +14,7 @@ const update = async (userModel, req, res) => {
       message: 'Faltan campos obligatorios',
     });
 
-  if (role === 'owner' && req[reqUserName].role !== 'owner') {
+  if (role === ROLE_ENUM.OWNER && req[reqUserName].role !== ROLE_ENUM.OWNER) {
     return res.status(403).send({
       success: false,
       result: null,
@@ -27,8 +28,8 @@ const update = async (userModel, req, res) => {
   }).exec();
 
   if ( 
-    role === 'owner' &&
-    req[reqUserName].role === 'owner' &&
+    role === ROLE_ENUM.OWNER &&
+    req[reqUserName].role === ROLE_ENUM.OWNER &&
     tmpResult._id.toString() !== req[reqUserName]._id.toString()
   ) {
     return res.status(403).send({

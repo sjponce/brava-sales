@@ -43,7 +43,7 @@ const create = async (userModel, req, res) => {
       message: 'Faltan campos obligatorios',
     });
 
-  if (req.body.role === 'owner') {
+  if (req.body.role === ROLE_ENUM.OWNER) {
     return res.status(403).send({
       success: false,
       result: null,
