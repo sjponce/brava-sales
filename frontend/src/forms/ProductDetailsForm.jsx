@@ -49,7 +49,7 @@ const ProductDetailsForm = ({ watch }) => {
             </Box>
             <Box display="flex" flexDirection="column" justifyContent="space-between" mt={2}>
               <Typography variant="h6">
-                {watch('name')}
+                {watch('promotionalName')}
                 {' '}
                 {watch('color')}
               </Typography>
@@ -88,7 +88,7 @@ const ProductDetailsForm = ({ watch }) => {
                       key={detail?.number}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                       <TableCell component="th" scope="row">
-                        {detail?.number}
+                        {detail?.size}
                       </TableCell>
                       <TableCell align="right">{detail?.stock}</TableCell>
                     </TableRow>

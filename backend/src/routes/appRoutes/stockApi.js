@@ -8,9 +8,10 @@ const setupRoutes = async () => {
   const stockMiddleware = createStockMiddleware();
 
   router.route('/stock').get(catchErrors(stockMiddleware.listAll));
-  router.route('/stock/:id?').get(catchErrors(stockMiddleware.listAll));
+  router.route('/stock/').get(catchErrors(stockMiddleware.listAll));
   router.route('/stock/update/:id').put(catchErrors(stockMiddleware.update));
   router.route('/stock/remove/:id').delete(catchErrors(stockMiddleware.remove));
+  router.route('/stock/:id').get(catchErrors(stockMiddleware.read));
 
   // Add more stock routes here
 };
