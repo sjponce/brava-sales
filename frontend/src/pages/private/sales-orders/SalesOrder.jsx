@@ -2,10 +2,10 @@ import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import SellersDataTable from './components/SellersDataTable';
-import AddSellerModal from './components/AddSellerModal';
+import SalesOrdersDataTable from './components/SalesOrderDataTable';
+import AddSalesOrderModal from './components/AddSalesOrderModal';
 
-const Sellers = () => {
+const SalesOrders = () => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -25,7 +25,7 @@ const Sellers = () => {
         width="100%"
         borderRadius={2}
         marginBottom="20px">
-        <Typography variant="h4">Vendedores</Typography>
+        <Typography variant="h4">Ordenes de venta</Typography>
         <Button
           onClick={handleClickOpen}
           disabled={userState.role !== 'admin'}
@@ -34,14 +34,14 @@ const Sellers = () => {
           color="primary"
           startIcon={<AddCircle />}>
           <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nuevo vendedor
+            Nueva Orden de Venta
           </Typography>
         </Button>
       </Box>
-      <AddSellerModal open={open} handlerOpen={handleClose} idSeller="" />
-      <SellersDataTable />
+      <AddSalesOrderModal open={open} handlerOpen={handleClose} idSalesOrder="" />
+      <SalesOrdersDataTable />
     </Box>
   );
 };
 
-export default Sellers;
+export default SalesOrders;

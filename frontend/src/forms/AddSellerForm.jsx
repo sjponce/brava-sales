@@ -1,10 +1,14 @@
-import { Autocomplete, Box, IconButton, TextField, Typography, Tooltip } from '@mui/material';
+import {
+  Autocomplete, Box, IconButton, TextField, Typography, Tooltip,
+} from '@mui/material';
 import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
-const AddSellerForm = ({ register, setValue, watch, roleOptions, isUpdate }) => {
+const AddSellerForm = ({
+  register, setValue, watch, roleOptions, isUpdate,
+}) => {
   const [uploadedImg, setUploadedImg] = useState(watch('photo') || '');
   const handleImageChange = async (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -175,7 +179,7 @@ AddSellerForm.propTypes = {
     PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 

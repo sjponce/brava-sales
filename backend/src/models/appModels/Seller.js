@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const sellerSchema = new mongoose.Schema(
   {
-    enabled: {
-      type: Boolean,
-      default: false,
-    },
     removed: {
       type: Boolean,
       default: false,
+    },
+    enabled: {
+      type: Boolean,
+      default: true,
     },
     name: {
       type: String,

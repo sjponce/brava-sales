@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Sellers from '@/pages/private/sellers/Sellers';
+import SalesOrder from '@/pages/private/sales-orders/SalesOrder';
 import Home from '@/pages/private/home/Home';
 import Customers from '@/pages/private/customers/Customers';
 import Products from '@/pages/private/products/Products';
@@ -47,7 +48,11 @@ const routes = {
           element: <Sellers />,
         },
         {
-          path: '/clients',
+          path: '/sales-orders',
+          element: <SalesOrder />,
+        },
+        {
+          path: '/customers',
           element: <Customers />,
         },
         {

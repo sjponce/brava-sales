@@ -3,6 +3,7 @@ import authReducer from './auth';
 import themeReducer from './themeReducer';
 import crudReducer from './crud';
 import stockReducer from './stock';
+import salesReducer from './sales';
 
 // Combine all reducers.
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   crud: crudReducer,
   theme: themeReducer,
   stock: stockReducer,
+  sales: salesReducer,
 });
 
 export default rootReducer;

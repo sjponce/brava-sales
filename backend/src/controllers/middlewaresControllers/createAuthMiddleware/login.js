@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 const mongoose = require('mongoose');
-
 const authUser = require('./authUser');
+const { ROLE_ENUM } = require('../../../middlewares/permission');
 
 const login = async (req, res, { userModel }) => {
   const UserPasswordModel = mongoose.model(userModel + 'Password');
@@ -49,7 +49,7 @@ const login = async (req, res, { userModel }) => {
       message: 'El usuario no esta habilitado.',
     });
 
-  if (user.role === 'client')
+  if (user.role === ROLE_ENUM.CUSTOMER)
     return res.status(409).json({
       success: false,
       result: null,

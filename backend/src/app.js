@@ -13,6 +13,10 @@ const coreApiRouter = require('./routes/coreRoutes/coreApi');
 
 const stockApiRouter = require('./routes/appRoutes/stockApi');
 
+const salesApiRouter = require('./routes/appRoutes/salesApi');
+
+const appApiRouter = require('./routes/appRoutes/appApi');
+
 const errorHandlers = require('./handlers/errorHandlers');
 
 const userAuth = require('./controllers/coreControllers/userAuth');
@@ -40,7 +44,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', coreAuthRouter);
+app.use('/api', userAuth.isValidAuthToken, appApiRouter);
 app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
+app.use('/api', userAuth.isValidAuthToken, salesApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
 app.use('/api', userAuth.isValidAuthToken, coreApiRouter);
 

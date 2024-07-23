@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import DataTableSellers from './DataTableSellers';
+import SellersDataTable from './SellersDataTable';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
 import { request } from '@/request';
@@ -74,7 +74,7 @@ const initialState = {
 
 jest.mock('axios');
 
-describe('DataTableSellers Component', () => {
+describe('SellersDataTable Component', () => {
   let mockStore;
 
   beforeEach(() => {
@@ -93,7 +93,7 @@ describe('DataTableSellers Component', () => {
   test('test_render_data_table', async () => {
     render(
       <Provider store={mockStore}>
-        <DataTableSellers />
+        <SellersDataTable />
       </Provider>
     );
     await waitFor(() => {
@@ -125,7 +125,7 @@ describe('DataTableSellers Component', () => {
     });
     render(
       <Provider store={mockStore}>
-        <DataTableSellers />
+        <SellersDataTable />
       </Provider>
     );
     await waitFor(() => {

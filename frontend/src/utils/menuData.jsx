@@ -24,7 +24,7 @@ export const menuMaterial = [
       {
         id: 1,
         title: 'Clientes',
-        url: 'clients',
+        url: 'customers',
         icon: <PeopleAltOutlined />,
       },
       {
@@ -55,7 +55,7 @@ export const menuMaterial = [
       {
         id: 2,
         title: 'Pedidos',
-        url: 'orders',
+        url: 'sales-orders',
         icon: <ShoppingBagOutlined />,
       },
       {

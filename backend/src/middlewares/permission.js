@@ -23,8 +23,8 @@ exports.hasPermission = (permissionName = 'none') => {
 
     if (
       roles[currentUserRole]?.includes(permissionName) ||
-      req.admin.role === 'owner' ||
-      req.admin.role === 'admin'
+      req.admin.role === this.ROLE_ENUM.OWNER ||
+      req.admin.role === this.ROLE_ENUM.ADMIN
     ) {
       next();
     } else {
