@@ -122,7 +122,7 @@ const DataTableProducts = () => {
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { _id, name } = params.row;
+        const { _id, promotionalName } = params.row;
         const userState = useSelector((store) => store.auth.current);
         const isDisabled = userState.role !== 'admin';
         return (
@@ -133,7 +133,7 @@ const DataTableProducts = () => {
             <IconButton disabled={isDisabled} size="small" onClick={() => handleEdit(_id)}>
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(_id, name)} size="small">
+            <IconButton disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
               <DeleteRounded />
             </IconButton>
           </div>
