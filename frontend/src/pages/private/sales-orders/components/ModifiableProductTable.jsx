@@ -20,7 +20,9 @@ import { Add, Delete } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { useFieldArray } from 'react-hook-form';
 
-const ModifiableProductTable = ({ setValue, watch, control, register }) => {
+const ModifiableProductTable = ({
+  setValue, watch, control, register,
+}) => {
   const products = useSelector((store) => store.stock.listAll);
   const { fields, append, remove } = useFieldArray({
     control,
@@ -118,8 +120,8 @@ const ModifiableProductTable = ({ setValue, watch, control, register }) => {
               </TableCell>
               <TableCell>{watch(`products.${index}.price`) || 0}</TableCell>
               <TableCell>
-                {(watch(`products.${index}.price`) || 0) *
-                  (watch(`products.${index}.quantity`) || 0)}
+                {(watch(`products.${index}.price`) || 0)
+                  * (watch(`products.${index}.quantity`) || 0)}
               </TableCell>
               <TableCell>
                 <IconButton data-test-id="DeleteIcon" onClick={() => handleDeleteRow(index)}>
@@ -131,7 +133,10 @@ const ModifiableProductTable = ({ setValue, watch, control, register }) => {
         </TableBody>
       </Table>
       <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ padding: 2 }}>
-        <Typography variant="h6">Total: ${totalAmount.toFixed(2)}</Typography>
+        <Typography variant="h6">
+          Total: $
+          {totalAmount.toFixed(2)}
+        </Typography>
         <Button
           onClick={handleAddRow}
           startIcon={<Add />}

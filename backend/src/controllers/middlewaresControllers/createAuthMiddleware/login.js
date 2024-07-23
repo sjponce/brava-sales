@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 const mongoose = require('mongoose');
-const { ROLE_ENUM } = require('@/middlewares/permission');
 const authUser = require('./authUser');
+const { ROLE_ENUM } = require('../../../middlewares/permission');
 
 const login = async (req, res, { userModel }) => {
   const UserPasswordModel = mongoose.model(userModel + 'Password');
