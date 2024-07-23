@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -20,9 +20,7 @@ import { Add, Delete } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { useFieldArray } from 'react-hook-form';
 
-const ModifiableProductTable = ({
-  setValue, watch, control, register,
-}) => {
+const ModifiableProductTable = ({ setValue, watch, control, register }) => {
   const products = useSelector((store) => store.stock.listAll);
   const { fields, append, remove } = useFieldArray({
     control,
@@ -37,7 +35,7 @@ const ModifiableProductTable = ({
     remove(index);
   };
 
-  const sizeRange = Array.from({ length: 8 }, (_, i) => (i + 37).toString());
+  const [rowSizesList, setRowSizesList] = useState({});
 
   const totalAmount = fields.reduce((sum, field, index) => {
     const price = watch(`products.${index}.price`) || 0;
@@ -71,10 +69,11 @@ const ModifiableProductTable = ({
                     if (newValue) {
                       setValue(`products.${index}.product`, newValue._id);
                       setValue(`products.${index}.price`, newValue.price);
+                      setRowSizesList((prev) => ({ ...prev, [index]: newValue.sizes || [] }));
                     }
                   }}
                   options={products.result.items.result}
-                  getOptionLabel={(option) => option?.name || ''}
+                  getOptionLabel={(option) => option?.stockId || ''}
                   filterSelectedOptions
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   renderInput={(params) => (
@@ -110,7 +109,7 @@ const ModifiableProductTable = ({
                   onChange={(event) => setValue(`products.${index}.sizes`, [event.target.value])}
                   required
                   style={{ width: '80px', marginTop: '8px' }}>
-                  {sizeRange.map((size) => (
+                  {(rowSizesList[index] || []).map((size) => (
                     <MenuItem key={size} value={size}>
                       {size}
                     </MenuItem>
@@ -119,8 +118,8 @@ const ModifiableProductTable = ({
               </TableCell>
               <TableCell>{watch(`products.${index}.price`) || 0}</TableCell>
               <TableCell>
-                {(watch(`products.${index}.price`) || 0)
-                  * (watch(`products.${index}.quantity`) || 0)}
+                {(watch(`products.${index}.price`) || 0) *
+                  (watch(`products.${index}.quantity`) || 0)}
               </TableCell>
               <TableCell>
                 <IconButton data-test-id="DeleteIcon" onClick={() => handleDeleteRow(index)}>
@@ -132,10 +131,7 @@ const ModifiableProductTable = ({
         </TableBody>
       </Table>
       <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ padding: 2 }}>
-        <Typography variant="h6">
-          Total: $
-          {totalAmount.toFixed(2)}
-        </Typography>
+        <Typography variant="h6">Total: ${totalAmount.toFixed(2)}</Typography>
         <Button
           onClick={handleAddRow}
           startIcon={<Add />}

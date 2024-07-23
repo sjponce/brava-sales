@@ -104,14 +104,14 @@ const SellersDataTable = () => {
     {
       field: 'email',
       headerName: 'Email',
-      renderCell: (params) => `${params.row.user.email || ''}`,
+      renderCell: (params) => `${params.row.user?.email || ''}`,
       width: 200,
     },
     {
       field: 'role',
       headerName: 'Rol',
       width: 110,
-      renderCell: (params) => `${params.row.user.role === 'admin' ? 'Administrador' : 'Vendedor'}`,
+      renderCell: (params) => `${params.row.user?.role === 'admin' ? 'Administrador' : 'Vendedor'}`,
     },
     {
       field: 'phone',
@@ -148,9 +148,9 @@ const SellersDataTable = () => {
                 <KeyRounded />
               </Tooltip>
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(user._id, name, user.enabled)} size="small">
-              <Tooltip title={`${user.enabled ? 'Deshabilitar' : 'Habilitar'} usuario`}>
-                {user.enabled ? <GppBadRounded /> : <GppGoodRounded />}
+            <IconButton disabled={isDisabled} onClick={() => handleDisable(user._id, name, user?.enabled)} size="small">
+              <Tooltip title={`${user?.enabled ? 'Deshabilitar' : 'Habilitar'} usuario`}>
+                {user?.enabled ? <GppBadRounded /> : <GppGoodRounded />}
               </Tooltip>
             </IconButton>
           </div>

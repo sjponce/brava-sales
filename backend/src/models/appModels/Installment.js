@@ -6,45 +6,46 @@ const InstallmentSchema = new Schema(
     salesOrder: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'SalesOrder'
+      ref: 'SalesOrder',
     },
     salesOrderCode: {
       type: String,
       required: true,
       validate: {
-        validator: function(v) {
+        validator: function (v) {
           return /^OV-\d+$/.test(v);
         },
-        message: props => `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`
-      }
+        message: (props) =>
+          `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`,
+      },
     },
     installmentNumber: {
       type: Number,
-      required: true
+      required: true,
     },
     dueDate: {
       type: Date,
-      required: true
+      required: true,
     },
     amount: {
       type: Number,
-      required: true
+      required: true,
     },
     status: {
       type: String,
       enum: ['Pending', 'Paid', 'Overdue'],
-      default: 'Pending'
+      default: 'Pending',
     },
     paymentDate: Date,
     paymentAmount: Number,
     removed: {
       type: Boolean,
-      default: false
+      default: false,
     },
     enabled: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   { timestamps: true }
 );

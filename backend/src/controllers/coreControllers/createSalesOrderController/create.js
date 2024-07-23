@@ -60,19 +60,26 @@ const create = async (req, res) => {
     // Creating new installments for the sales order
     const installmentTotalAmount = salesOrder.totalAmount / installmentsCount;
 
-    for (let i = 0; i < installmentsCount; i++) {
-      const installmentDueDate = new Date(salesOrder.orderDate);
-      installmentDueDate.setDate(installmentDueDate.getDate() + (i + 1) * installmentPeriod);
+    try {
+      for (let i = 0; i < installmentsCount; i++) {
+        const installmentDueDate = new Date(salesOrder.orderDate);
+        installmentDueDate.setDate(installmentDueDate.getDate() + (i + 1) * installmentPeriod);
 
-      await new Installment({
-        salesOrderCode: salesOrder.salesOrderCode,
-        salesOrder: salesOrder._id,
-        installmentNumber: i + 1,
-        dueDate: installmentDueDate,
-        amount: installmentTotalAmount,
-        status: 'Pending',
-      }).save();
+        await new Installment({
+          salesOrderCode: salesOrder.salesOrderCode,
+          salesOrder: salesOrder._id,
+          installmentNumber: i + 1,
+          dueDate: installmentDueDate,
+          amount: installmentTotalAmount,
+          status: 'Pending',
+        }).save();
+      }
+    } catch (installmentError) {
+      // If installment creation fails, delete the sales order
+      await SalesOrder.findByIdAndDelete(salesOrder._id);
+      throw installmentError; // Re-throw the error to be caught by the outer catch block
     }
+
     // Returning successfull response
     return res.status(200).json({
       success: true,

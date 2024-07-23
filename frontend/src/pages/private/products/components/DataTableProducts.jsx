@@ -54,9 +54,10 @@ const DataTableProducts = () => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (productState?.result) {
-      setRows(productState.result.items.result);
-    }
+    if (!productState?.result) return;
+    const newRows = productState.result.items.result
+      .map((item) => ({ ...item, id: item._id }));
+    setRows(newRows);
   }, [productState]);
 
   const updateTable = async () => {
@@ -74,11 +75,11 @@ const DataTableProducts = () => {
       headerName: 'Foto',
       width: 100,
       renderCell: (params) => {
-        const { _id } = params.row;
+        const { _id, variations } = params.row;
         return (
           <Box display="flex" width="100%" onClick={() => handleDetails(_id)} alignItems="center">
             <img
-              src={params?.variations[0].value ? params.variations[0].value : '/noImage.png'}
+              src={variations?.length ? variations[0].imageUrl : '/noImage.png'}
               alt=""
               style={{
                 width: '100%',
