@@ -16,7 +16,6 @@ const docsApiRouter = require('./routes/appRoutes/docsApi');
 const errorHandlers = require('./handlers/errorHandlers');
 
 const userAuth = require('./controllers/coreControllers/userAuth');
-const { createDocx } = require('./helpers/documentHelper');
 
 // create our Express app
 const app = express();
