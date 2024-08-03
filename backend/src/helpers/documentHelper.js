@@ -24,7 +24,7 @@ function angularParser(tag) {
     };
 }
 
-const createDocx = (templateName, outputPath, data) => {
+const createDocx = (templateName, data) => {
     const content = fs.readFileSync(path.resolve(process.cwd(), 'src', 'templates', `${templateName}.docx`), 'binary');
 
     const zip = new PizZip(content);
@@ -41,10 +41,10 @@ const createDocx = (templateName, outputPath, data) => {
         type: 'nodebuffer',
         compression: 'DEFLATE',
     });
-
-    fs.writeFileSync(path.resolve(process.cwd(), outputPath || `${templateName}_output.docx`), buf);
+    // PFG82-189: Use this line to print the doc locally
+    // fs.writeFileSync(path.resolve(process.cwd(), `${templateName}_output.docx`), buf);
 
     return buf;
-}
+};
 
 module.exports = { createDocx };

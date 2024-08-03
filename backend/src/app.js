@@ -11,6 +11,8 @@ const erpApiRouter = require('./routes/appRoutes/appApi');
 
 const stockApiRouter = require('./routes/appRoutes/stockApi');
 
+const docsApiRouter = require('./routes/appRoutes/docsApi');
+
 const errorHandlers = require('./handlers/errorHandlers');
 
 const userAuth = require('./controllers/coreControllers/userAuth');
@@ -34,26 +36,12 @@ app.use(compression());
 
 // Here our API Routes
 
-app.get('/', (req, res) => {
-  const document = createDocx('Test', '', {
-    name: 'Santiago',
-    lastName: ['Ponce', 'dos'],
-    data: { email: 'santiago@gmail.com' },
-    phone: { number: '3005555555' },
-    products: [
-      { name: 'Product 1', price: 10.99, quantity: 5 },
-      { name: 'Product 2', price: 15.99, quantity: 3 },
-      { name: 'Product 3', price: 7.99, quantity: 8 },
-    ],
-  });
-  res.send(document);
-});
-
 app.use('/api', coreAuthRouter);
 app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
+app.use('/api', userAuth.isValidAuthToken, docsApiRouter);
 
-app.get('/test', (req, res) => {
+app.get('/', (req, res) => {
   res.send('Brava sales!!');
 });
 
