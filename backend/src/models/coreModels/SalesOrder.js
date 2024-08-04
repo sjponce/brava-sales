@@ -30,10 +30,9 @@ const SalesOrderSchema = new Schema(
           ref: 'Product',
           required: true,
         },
-        quantity: {
-          type: Number,
+        color: {
+          type: String,
           required: true,
-          min: 1,
         },
         price: {
           type: Number,
@@ -41,9 +40,15 @@ const SalesOrderSchema = new Schema(
         },
         sizes: [
           {
-            type: Number,
-            ref: 'Size',
-            required: true,
+            size: {
+              type: String,
+              required: true,
+            },
+            quantity: {
+              type: Number,
+              required: true,
+              min: 1,
+            },
           },
         ],
       },
@@ -51,6 +56,25 @@ const SalesOrderSchema = new Schema(
     totalAmount: {
       type: Number,
       required: true,
+    },
+    finalAmount: {
+      type: Number,
+      required: true,
+    },
+    discount: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: function (v) {
+          return v >= 0 && v <= 100;
+        },
+        message: (props) =>
+          `${props.value} El porcentaje debe ser entre 0 y 100.`,
+      },
+    },
+    promotion: {
+      type: Schema.Types.ObjectId,
+      ref: 'Promotion',
     },
     status: {
       type: String,

@@ -1,9 +1,9 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import SalesOrdersDataTable from './components/SalesOrderDataTable';
-import AddSalesOrderModal from './components/AddSalesOrderModal';
+// import AddSalesOrderModal from './components/AddSalesOrderModal';
+import AddOrderSalesModal from './components/AddSalesOrderModal';
 
 const SalesOrders = () => {
   const [open, setOpen] = useState(false);
@@ -14,8 +14,6 @@ const SalesOrders = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const userState = useSelector((store) => store.auth.current);
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
@@ -28,7 +26,6 @@ const SalesOrders = () => {
         <Typography variant="h4">Ordenes de venta</Typography>
         <Button
           onClick={handleClickOpen}
-          disabled={userState.role !== 'admin'}
           variant="text"
           size="large"
           color="primary"
@@ -38,7 +35,7 @@ const SalesOrders = () => {
           </Typography>
         </Button>
       </Box>
-      <AddSalesOrderModal open={open} handlerOpen={handleClose} idSalesOrder="" />
+      <AddOrderSalesModal open={open} handlerOpen={handleClose} idSalesOrder="" />
       <SalesOrdersDataTable />
     </Box>
   );

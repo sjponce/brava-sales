@@ -241,6 +241,21 @@ const sales = {
         });
       }
     },
+  updateOrderOptions:
+    (data) => ({
+      type: actionTypes.UPDATE_ORDER_OPTIONS,
+      payload: data,
+    }),
+  updatePaymentOptions:
+    (data) => ({
+      type: actionTypes.UPDATE_PAYMENT_OPTIONS,
+      payload: data,
+    }),
+  setCurrentStep:
+    (step) => ({
+      type: actionTypes.SET_CURRENT_STEP,
+      payload: step,
+    }),
 };
 
 export default sales;
