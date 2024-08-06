@@ -1,8 +1,11 @@
 const listAll = require('./listAll');
 const axios = require('axios');
 const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+const getSalesProducts = require('./getSalesProducts');
+const getLatestPrice = require('./getLatestPrice');
 jest.mock('axios');
-
+jest.mock('./getSalesProducts');
+jest.mock('./getLatestPrice');
 describe('listAll', () => {
   let req, res, axiosInstance;
 
@@ -18,21 +21,46 @@ describe('listAll', () => {
   afterAll(() => {
     consoleSpy.mockRestore();
   });
-  // TODO: PFG82-170 Removed tests since the api is mocked
-  test('test_listAll_successful_api_call', async () => {
-    expect(1==1).toBeTruthy();
-  });
-  /* test('test_listAll_successful_api_call', async () => {
-    const mockData = { data: 'some product data' };
-    axiosInstance.get.mockResolvedValue({ data: mockData });
+
+  test('test_listAll_successful_with_combined_data', async () => {
+    const mockStockData = {
+      stock123: [
+        { id: 'var1', color: 'red', imageUrl: 'red.jpg' },
+        { id: 'var2', color: 'blue', imageUrl: 'blue.jpg' },
+      ],
+    };
+    const mockSalesData = [
+      {
+        _id: 'prod1',
+        stockId: 'stock123',
+        name: 'Product 1',
+        toObject: () => ({ _id: 'prod1', stockId: 'stock123', name: 'Product 1' }),
+      },
+    ];
+    const mockLatestPrice = 19.99;
+
+    axiosInstance.get.mockResolvedValue({ data: mockStockData });
+    getSalesProducts.mockResolvedValue(mockSalesData);
+    getLatestPrice.mockResolvedValue(mockLatestPrice);
 
     await listAll(req, res, axiosInstance);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      result: mockData,
-      message: 'Se encontro los productos',
+      result: [
+        {
+          _id: 'prod1',
+          stockId: 'stock123',
+          name: 'Product 1',
+          price: 19.99,
+          variations: [
+            { id: 'var1', color: 'red', imageUrl: 'red.jpg' },
+            { id: 'var2', color: 'blue', imageUrl: 'blue.jpg' },
+          ],
+        },
+      ],
+      message: 'Se encontraron los productos',
     });
   });
 
@@ -62,5 +90,5 @@ describe('listAll', () => {
       message: 'Ocurrio un error contactando a Stock',
       error: errorMessage,
     });
-  }); */
+  });
 });
