@@ -112,7 +112,7 @@ const responseMock = {
         color: '',
         imageUrl: '',
         price: 14400,
-      }, 
+      },
     ],
     'Art 3150': [
       {

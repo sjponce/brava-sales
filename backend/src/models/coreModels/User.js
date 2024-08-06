@@ -3,45 +3,27 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
-    removed: {
-        type: Boolean,
-        default: false,
-        },
     enabled: {
-        type: Boolean,
-        default: true,
-        },
+      type: Boolean,
+      default: true,
+    },
+    removed: {
+      type: Boolean,
+      default: false,
+    },
     email: {
       type: String,
       lowercase: true,
       trim: true,
       required: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
-    phone: {
-        type: String,
-        },
-    photo: {
-        type: String,
-        },
-    name: {
-      type: String,
-      required: true,
-    },
-    surname: {
-      type: String,
-      required: true,
-    },
     role: {
       type: String,
       default: 'seller',
-      enum: ['admin', 'seller'],
+      enum: ['admin', 'seller', 'customer'],
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('User', UserSchema,);
+module.exports = mongoose.model('User', UserSchema);

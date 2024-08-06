@@ -4,3 +4,5 @@ export const selectAuth = (state) => state.auth;
 export const selectCurrentAdmin = createSelector([selectAuth], (auth) => auth.current);
 
 export const isLoggedIn = createSelector([selectAuth], (auth) => auth.isLoggedIn);
+
+export const createUserState = createSelector([selectAuth], (auth) => auth.registerUser);

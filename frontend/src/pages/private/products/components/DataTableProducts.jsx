@@ -54,9 +54,10 @@ const DataTableProducts = () => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (productState?.result) {
-      setRows(productState.result.items.result);
-    }
+    if (!productState?.result) return;
+    const newRows = productState.result.items.result
+      .map((item) => ({ ...item, id: item._id }));
+    setRows(newRows);
   }, [productState]);
 
   const updateTable = async () => {
@@ -74,11 +75,11 @@ const DataTableProducts = () => {
       headerName: 'Foto',
       width: 100,
       renderCell: (params) => {
-        const { id } = params.row;
+        const { _id, variations } = params.row;
         return (
-          <Box display="flex" width="100%" onClick={() => handleDetails(id)} alignItems="center">
+          <Box display="flex" width="100%" onClick={() => handleDetails(_id)} alignItems="center">
             <img
-              src={params?.value ? params.value : '/noImage.png'}
+              src={variations?.length ? variations[0].imageUrl : '/noImage.png'}
               alt=""
               style={{
                 width: '100%',
@@ -94,7 +95,7 @@ const DataTableProducts = () => {
       sortable: false,
     },
     {
-      field: 'name',
+      field: 'promotionalName',
       headerName: 'Nombre',
       width: 150,
     },
@@ -102,6 +103,7 @@ const DataTableProducts = () => {
       field: 'color',
       headerName: 'Color',
       width: 100,
+      valueGetter: (params) => `${params.row.variations[0].color || ''}`,
     },
     {
       field: 'description',
@@ -120,18 +122,18 @@ const DataTableProducts = () => {
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { id, name } = params.row;
+        const { _id, promotionalName } = params.row;
         const userState = useSelector((store) => store.auth.current);
         const isDisabled = userState.role !== 'admin';
         return (
           <div className="actions">
-            <IconButton size="small" onClick={() => handleDetails(id)}>
+            <IconButton size="small" onClick={() => handleDetails(_id)}>
               <Visibility />
             </IconButton>
-            <IconButton disabled={isDisabled} size="small" onClick={() => handleEdit(id)}>
+            <IconButton disabled={isDisabled} size="small" onClick={() => handleEdit(_id)}>
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
+            <IconButton disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
               <DeleteRounded />
             </IconButton>
           </div>

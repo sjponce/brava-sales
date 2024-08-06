@@ -1,47 +1,51 @@
+const { ROLE_ENUM } = require('@/middlewares/permission');
 const mongoose = require('mongoose');
 
-const remove = async (userModel, req, res) => {
+const disable = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
 
-  const updates = {
-    enabled: false,
-  };
-
-  // Find the document by id and delete it
   const user = await User.findOne({
     _id: req.params.id,
     removed: false,
   }).exec();
 
-  if (user.role === 'admin' || user.role === 'owner') {
-    return res.status(403).json({
+  if (!user) {
+    return res.status(404).json({
       success: false,
-      result: null,
-      message: "No se puede eliminar el usuario admin o el owner",
+      message: "Usuario no encontrado",
     });
   }
-  // Find the document by id and delete it
+
+  if (user.role === ROLE_ENUM.OWNER) {
+    return res.status(403).json({
+      success: false,
+      message: "No se puede deshabilitar el usuario owner",
+    });
+  }
+
+  const updates = { enabled: !user.enabled };
+
   const result = await User.findOneAndUpdate(
     { _id: req.params.id, removed: false },
     { $set: updates },
     {
-      new: true, // return the new result instead of the old one
+      new: true,
     }
   ).exec();
-  // If no results found, return document not found
+  
   if (!result) {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro un documento',
+      message: "No se pudo actualizar el estado del usuario",
     });
   } else {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se elimino el documento ',
+      message: `Se ${result.enabled ? 'habilito' : 'deshabilito'} el usuario`,
     });
   }
 };
 
-module.exports = remove;
+module.exports = disable;

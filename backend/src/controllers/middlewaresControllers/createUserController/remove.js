@@ -1,3 +1,4 @@
+const { ROLE_ENUM } = require('@/middlewares/permission');
 const mongoose = require('mongoose');
 const { generate: uniqueId } = require('shortid');
 
@@ -11,7 +12,7 @@ const remove = async (userModel, req, res) => {
     removed: false,
   }).exec();
 
-  if (user.role === 'owner') {
+  if (user.role === ROLE_ENUM.OWNER) {
     return res.status(403).json({
       success: false,
       result: null,

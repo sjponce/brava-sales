@@ -9,9 +9,15 @@ const coreAuthRouter = require('./routes/coreRoutes/coreAuth');
 
 const erpApiRouter = require('./routes/appRoutes/appApi');
 
+const coreApiRouter = require('./routes/coreRoutes/coreApi');
+
 const stockApiRouter = require('./routes/appRoutes/stockApi');
 
 const docsApiRouter = require('./routes/appRoutes/docsApi');
+
+const salesApiRouter = require('./routes/appRoutes/salesApi');
+
+const appApiRouter = require('./routes/appRoutes/appApi');
 
 const errorHandlers = require('./handlers/errorHandlers');
 
@@ -36,9 +42,12 @@ app.use(compression());
 // Here our API Routes
 
 app.use('/api', coreAuthRouter);
+app.use('/api', userAuth.isValidAuthToken, appApiRouter);
 app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
+app.use('/api', userAuth.isValidAuthToken, salesApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
 app.use('/api', userAuth.isValidAuthToken, docsApiRouter);
+app.use('/api', userAuth.isValidAuthToken, coreApiRouter);
 
 app.get('/', (req, res) => {
   res.send('Brava sales!!');

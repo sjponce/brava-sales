@@ -29,6 +29,7 @@ const ModalProductDetails = ({
   open, handlerOpen, isUpdate,
 }) => {
   const productData = useSelector(selectCurrentItem);
+  console.log(productData);
 
   const {
     register, handleSubmit, setValue, watch,
@@ -56,15 +57,15 @@ const ModalProductDetails = ({
 
   useEffect(() => {
     if (productData?.result) {
-      setValue('name', productData.result.name);
+      setValue('promotionalName', productData.result.promotionalName);
       setValue('color', productData.result.color);
       setValue('description', productData.result.description);
       setValue('price', productData.result.price);
-      setValue('imageUrl', productData.result.imageUrl);
-      setValue('stock', productData.result.stock);
-      setValue('productVariation', productData.result.productVariation);
+      setValue('imageUrl', productData.result.stockInfo[0].imageUrl);
+      setValue('stock', productData.result.stockInfo[0].stock);
+      setValue('productVariation', productData.result.stockInfo[0].productVariation);
       // Hay que remplazarlo por los tags reales de la DB
-      setValue('tags', [{ id: 1, name: 'Zapatos', category: 'TIPO' }, { id: 7, name: 'Cuero', category: 'MATERIAL' }]);
+      setValue('tags', productData.result.tags);
     }
   }, [productData]);
 

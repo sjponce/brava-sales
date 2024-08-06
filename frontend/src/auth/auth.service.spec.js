@@ -43,7 +43,7 @@ describe('Auth Function Tests', () => {
     const response = await register({ registerData });
 
     expect(response).toEqual(mockError.response.data);
-    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('register'), registerData);
+    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('user/create'), registerData);
   });
 
   test('test_logout_with_credentials', async () => {

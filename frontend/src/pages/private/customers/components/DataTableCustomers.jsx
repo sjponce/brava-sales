@@ -35,20 +35,20 @@ const DataTableCustomers = () => {
     setDialogOpen(false);
   };
 
-  const clientState = useSelector((store) => store.crud.listAll);
-  const readClientState = useSelector((store) => store.crud.read);
-  const createClientState = useSelector((store) => store.crud.create);
-  const updateClientState = useSelector((store) => store.crud.update);
-  const deleteClientState = useSelector((store) => store.crud.delete);
+  const customerState = useSelector((store) => store.crud.listAll);
+  const readCustomerState = useSelector((store) => store.crud.read);
+  const createCustomerState = useSelector((store) => store.crud.create);
+  const updateCustomerState = useSelector((store) => store.crud.update);
+  const deleteCustomerState = useSelector((store) => store.crud.delete);
 
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (!clientState?.result) return;
-    const newRows = clientState.result.items.result
+    if (!customerState?.result) return;
+    const newRows = customerState.result.items.result
       .map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
-  }, [clientState]);
+  }, [customerState]);
 
   const handleEdit = async (id) => {
     setSelectedRow({ ...selectedRow, id });
@@ -57,13 +57,13 @@ const DataTableCustomers = () => {
   };
 
   const updateTable = () => {
-    if (clientState?.isLoading) return;
+    if (customerState?.isLoading) return;
     dispatch(crud.listAll({ entity: 'customer' }));
   };
 
   useEffect(() => {
     updateTable();
-  }, [createClientState, updateClientState, deleteClientState]);
+  }, [createCustomerState, updateCustomerState, deleteCustomerState]);
 
   const columns = [
     {
@@ -124,7 +124,7 @@ const DataTableCustomers = () => {
       renderCell: (params) => {
         const { id, name } = params.row;
         const userState = useSelector((store) => store.auth.current);
-        const isDisabled = userState.role !== 'admin' || clientState.isLoading;
+        const isDisabled = userState.role !== 'admin' || customerState.isLoading;
         return (
           <div className="actions">
             <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
@@ -150,7 +150,7 @@ const DataTableCustomers = () => {
         onCancel={handleDialogCancel}
       />
       <AddCustomerModal idSeller={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
-      <Loading isLoading={clientState?.isLoading || readClientState?.isLoading} />
+      <Loading isLoading={customerState?.isLoading || readCustomerState?.isLoading} />
     </Box>
   );
 };
