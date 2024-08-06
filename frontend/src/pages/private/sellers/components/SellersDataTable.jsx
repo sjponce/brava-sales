@@ -1,5 +1,9 @@
-import { DeleteRounded, EditRounded } from '@mui/icons-material';
-import { Avatar, Box, IconButton } from '@mui/material';
+import {
+  EditRounded, GppBadRounded, GppGoodRounded, KeyRounded,
+} from '@mui/icons-material';
+import {
+  Avatar, Box, IconButton, Tooltip,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
@@ -7,23 +11,33 @@ import DataTable from '@/components/dataTable/DataTable';
 import crud from '@/redux/crud/actions';
 import AddSellerModal from './AddSellerModal';
 import Loading from '@/components/Loading';
+import UpdatePasswordModal from './UpdatePasswordModal';
 
-const DataTableSellers = () => {
+const SellersDataTable = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [openPass, setOpenPass] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
     name: '',
+    userId: '',
   });
 
   const handleOpen = (value) => {
     setOpen(value);
   };
 
-  const handleDisable = (id, name) => {
-    setSelectedRow({ ...selectedRow, id, name });
+  const handleDisable = (userId, name, enabled) => {
+    setSelectedRow({
+      ...selectedRow, userId, name, enabled,
+    });
     setDialogOpen(true);
+  };
+
+  const handleUpdatePassword = (userId) => {
+    setSelectedRow({ ...selectedRow, userId });
+    setOpenPass(true);
   };
 
   const handleDialogCancel = () => {
@@ -31,15 +45,14 @@ const DataTableSellers = () => {
   };
 
   const handleDialogAccept = () => {
-    dispatch(crud.delete({ entity: 'user', id: selectedRow.id }));
+    dispatch(crud.disable({ entity: 'user', id: selectedRow.userId }));
     setDialogOpen(false);
   };
 
   const sellerState = useSelector((store) => store.crud.listAll);
   const readSellerState = useSelector((store) => store.crud.read);
-  const createSellerState = useSelector((store) => store.crud.create);
-  const updateSellerState = useSelector((store) => store.crud.update);
-  const deleteSellerState = useSelector((store) => store.crud.delete);
+  const createUserState = useSelector((state) => state.auth);
+  const disableSellersState = useSelector((store) => store.crud.disable);
 
   const [rows, setRows] = useState([]);
 
@@ -51,18 +64,18 @@ const DataTableSellers = () => {
 
   const handleEdit = async (id) => {
     setSelectedRow({ ...selectedRow, id });
-    await dispatch(crud.read({ entity: 'user', id }));
+    await dispatch(crud.read({ entity: 'seller', id }));
     handleOpen(true);
   };
 
   const updateTable = () => {
     if (sellerState?.isLoading) return;
-    dispatch(crud.listAll({ entity: 'user' }));
+    dispatch(crud.listAll({ entity: 'seller' }));
   };
 
   useEffect(() => {
     updateTable();
-  }, [createSellerState, updateSellerState, deleteSellerState]);
+  }, [createUserState.result, disableSellersState]);
 
   const columns = [
     {
@@ -91,13 +104,14 @@ const DataTableSellers = () => {
     {
       field: 'email',
       headerName: 'Email',
+      renderCell: (params) => `${params.row.user?.email || ''}`,
       width: 200,
     },
     {
       field: 'role',
       headerName: 'Rol',
       width: 110,
-      renderCell: (params) => `${params.row.role === 'admin' ? 'Administrador' : 'Vendedor'}`,
+      renderCell: (params) => `${params.row.user?.role === 'admin' ? 'Administrador' : 'Vendedor'}`,
     },
     {
       field: 'phone',
@@ -109,28 +123,35 @@ const DataTableSellers = () => {
       field: 'enabled',
       headerName: 'Activo',
       width: 100,
-      sortable: false,
       type: 'boolean',
+      sortable: false,
       editable: false,
-      getValueGetter: (params) => !params.row.enabled,
+      valueGetter: (params) => (params.row.user?.enabled),
     },
     {
       field: 'actions',
       headerName: 'Acción',
-      width: 100,
+      width: 120,
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { id, name } = params.row;
+        const { name, id, user } = params.row;
         const userState = useSelector((store) => store.auth.current);
-        const isDisabled = userState.role !== 'admin' || sellerState.isLoading;
+        const isDisabled = userState.role !== 'admin' || sellerState?.isLoading;
         return (
           <div className="actions">
             <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
-              <DeleteRounded />
+            <IconButton disabled={isDisabled} onClick={() => handleUpdatePassword(user._id)} size="small">
+              <Tooltip title="Cambiar contraseña">
+                <KeyRounded />
+              </Tooltip>
+            </IconButton>
+            <IconButton disabled={isDisabled} onClick={() => handleDisable(user._id, name, user?.enabled)} size="small">
+              <Tooltip title={`${user?.enabled ? 'Deshabilitar' : 'Habilitar'} usuario`}>
+                {user?.enabled ? <GppBadRounded /> : <GppGoodRounded />}
+              </Tooltip>
             </IconButton>
           </div>
         );
@@ -142,16 +163,20 @@ const DataTableSellers = () => {
     <Box display="flex" height="100%">
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
-        title={`Deshabilitar: ${selectedRow.name}`}
+        title={`${selectedRow.enabled ? 'Deshabilitar' : 'Habilitar'}: ${selectedRow.name}`}
         text="Esta accion no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
+      <UpdatePasswordModal idUser={`${selectedRow.userId}`} open={openPass} handlerOpen={setOpenPass} />
       <AddSellerModal idSeller={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
-      <Loading isLoading={sellerState?.isLoading || readSellerState?.isLoading} />
+      <Loading isLoading={
+        sellerState?.isLoading || readSellerState?.isLoading || createUserState?.isLoading
+        || disableSellersState?.isLoading || false
+        } />
     </Box>
   );
 };
 
-export default DataTableSellers;
+export default SellersDataTable;

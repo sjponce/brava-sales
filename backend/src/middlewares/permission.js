@@ -7,6 +7,14 @@ const roles = {
   createOnly: ['create', 'read', 'download', 'upload'],
   readOnly: ['read', 'download'],
 };
+
+exports.ROLE_ENUM = Object.freeze(
+  Object.keys(roles).reduce((acc, role) => {
+    acc[role.toUpperCase()] = role;
+    return acc;
+  }, {})
+);
+
 exports.roles = roles;
 
 exports.hasPermission = (permissionName = 'none') => {
@@ -15,8 +23,8 @@ exports.hasPermission = (permissionName = 'none') => {
 
     if (
       roles[currentUserRole]?.includes(permissionName) ||
-      req.admin.role === 'owner' ||
-      req.admin.role === 'admin'
+      req.admin.role === this.ROLE_ENUM.OWNER ||
+      req.admin.role === this.ROLE_ENUM.ADMIN
     ) {
       next();
     } else {

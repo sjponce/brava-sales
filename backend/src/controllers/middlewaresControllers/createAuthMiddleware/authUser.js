@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel }) => {
+const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel, seller }) => {
   const isMatch = databasePassword.validPassword(password);
   if (!isMatch)
     return res.status(403).json({
@@ -40,12 +40,12 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
         success: true,
         result: {
           _id: user._id,
-          name: user.name,
-          surname: user.surname,
           role: user.role,
           email: user.email,
-          phone: user.phone,
-          photo: user.photo,
+          name: seller.name,
+          surname: seller.surname,
+          phone: seller.phone,
+          photo: seller.photo,
         },
         message: 'Usuario autenticado.',
       });

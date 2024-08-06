@@ -10,11 +10,13 @@ const search = require('./search');
 const filter = require('./filter');
 const listAll = require('./listAll');
 const paginatedList = require('./paginatedList');
+const disable = require('./disable');
 
 const createUserController = (userModel) => {
   const userController = {};
 
   userController.create = (req, res) => create(userModel, req, res);
+  userController.disable = (req, res) => disable(userModel, req, res);
   userController.updateProfile = (req, res) => updateProfile(userModel, req, res);
   userController.updatePassword = (req, res) => updatePassword(userModel, req, res);
   userController.updateProfilePassword = (req, res) => updateProfilePassword(userModel, req, res);

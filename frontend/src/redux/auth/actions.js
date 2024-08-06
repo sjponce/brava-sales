@@ -1,5 +1,4 @@
 import * as authService from '@/auth';
-import { request } from '../../request/request';
 import * as actionTypes from './types';
 
 export const login = ({ loginData }) => async (dispatch) => {
@@ -28,19 +27,54 @@ export const login = ({ loginData }) => async (dispatch) => {
   }
 };
 
-export const register = ({ registerData }) => async (dispatch) => {
+export const registerUser = ({ registerData }) => async (dispatch) => {
   dispatch({
-    type: actionTypes.REQUEST_LOADING,
+    type: actionTypes.LOADING_REQUEST,
   });
   const data = await authService.register({ registerData });
 
   if (data.success === true) {
     dispatch({
-      type: actionTypes.REGISTER_SUCCESS,
+      type: actionTypes.SUCCESS_REQUEST,
+      payload: data.result,
     });
   } else {
     dispatch({
-      type: actionTypes.REQUEST_FAILED,
+      type: actionTypes.FAILED_REQUEST,
+    });
+  }
+};
+
+export const updateUser = ({ userId, updateData }) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.LOADING_REQUEST,
+  });
+  const data = await authService.update({ userId, updateData });
+
+  if (data.success === true) {
+    dispatch({
+      type: actionTypes.SUCCESS_REQUEST,
+      payload: data.result,
+    });
+  } else {
+    dispatch({
+      type: actionTypes.FAILED_REQUEST,
+    });
+  }
+};
+export const updatePassword = ({ userId, passwordData }) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.LOADING_REQUEST,
+  });
+  const data = await authService.updatePassword({ userId, passwordData });
+
+  if (data.success === true) {
+    dispatch({
+      type: actionTypes.SUCCESS_REQUEST,
+    });
+  } else {
+    dispatch({
+      type: actionTypes.FAILED_REQUEST,
     });
   }
 };
@@ -71,32 +105,6 @@ export const verify = ({ userId, emailToken }) => async (dispatch) => {
   }
 };
 
-export const resetPassword = ({ resetPasswordData }) => async (dispatch) => {
-  dispatch({
-    type: actionTypes.REQUEST_LOADING,
-  });
-  const data = await authService.resetPassword({ resetPasswordData });
-
-  if (data.success === true) {
-    const authState = {
-      current: data.result,
-      isLoggedIn: true,
-      isLoading: false,
-      isSuccess: true,
-    };
-    window.localStorage.setItem('auth', JSON.stringify(authState));
-    window.localStorage.removeItem('isLogout');
-    dispatch({
-      type: actionTypes.REQUEST_SUCCESS,
-      payload: data.result,
-    });
-  } else {
-    dispatch({
-      type: actionTypes.REQUEST_FAILED,
-    });
-  }
-};
-
 export const logout = () => async (dispatch) => {
   dispatch({
     type: actionTypes.LOGOUT_SUCCESS,
@@ -105,22 +113,4 @@ export const logout = () => async (dispatch) => {
   window.localStorage.removeItem('settings');
   window.localStorage.setItem('isLogout', JSON.stringify({ isLogout: true }));
   await authService.logout();
-};
-
-export const updateProfile = ({ entity, jsonData }) => async (dispatch) => {
-  const data = await request.updateAndUpload({ entity, id: '', jsonData });
-
-  if (data.success === true) {
-    dispatch({
-      type: actionTypes.REQUEST_SUCCESS,
-      payload: data.result,
-    });
-    const authState = {
-      current: data.result,
-      isLoggedIn: true,
-      isLoading: false,
-      isSuccess: true,
-    };
-    window.localStorage.setItem('auth', JSON.stringify(authState));
-  }
 };

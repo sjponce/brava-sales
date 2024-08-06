@@ -2,7 +2,7 @@ import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import DataTableSellers from './components/DataTableSellers';
+import SellersDataTable from './components/SellersDataTable';
 import AddSellerModal from './components/AddSellerModal';
 
 const Sellers = () => {
@@ -39,7 +39,7 @@ const Sellers = () => {
         </Button>
       </Box>
       <AddSellerModal open={open} handlerOpen={handleClose} idSeller="" />
-      <DataTableSellers />
+      <SellersDataTable />
     </Box>
   );
 };

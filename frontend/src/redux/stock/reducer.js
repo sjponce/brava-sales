@@ -30,7 +30,7 @@ const INITIAL_STATE = {
 };
 
 // eslint-disable-next-line default-param-last
-const crudReducer = (state = INITIAL_STATE, action) => {
+const salesReducer = (state = INITIAL_STATE, action) => {
   const { payload, keyState } = action;
   switch (action.type) {
     case actionTypes.RESET_STATE:
@@ -88,4 +88,4 @@ const crudReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default crudReducer;
+export default salesReducer;
