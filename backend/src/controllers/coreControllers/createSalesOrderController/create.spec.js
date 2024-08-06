@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+
 const create = require('./create');
 const { getLatestPrice } = require('./create');
 
 jest.mock('mongoose', () => {
   const mSaveOrder = jest.fn().mockResolvedValue({
     message: 'La Orden de venta se creo correctamente',
-    result: { salesOrder: { result: { salesOrder: { totalAmount: 800 } }, success: true } },
+    result: { salesOrder: { totalAmount: 800 } },
     success: true,
   });
   const mSaveInstallment = function () {
@@ -66,8 +67,8 @@ describe('create', () => {
         orderDate: new Date(),
         shippingAddress: '123 Street',
         products: [
-          { product: 'product1', quantity: 2 },
-          { product: 'product2', quantity: 3 },
+          { product: 'product1', sizes: [{ quantity: 2 }] },
+          { product: 'product2', sizes: [{ quantity: 3 }] },
         ],
         installmentsCount: 2,
       },
@@ -109,8 +110,8 @@ describe('create', () => {
 
   test('test_create_sales_order_with_empty_amounts', async () => {
     req.body.products = [
-      { product: 'product1', quantity: 0 },
-      { product: 'product2', quantity: 0 },
+      { product: 'product1', sizes: [{ quantity: 0 }] },
+      { product: 'product2', sizes: [{ quantity: 0 }] },
     ];
 
     await create(req, res);
@@ -120,6 +121,20 @@ describe('create', () => {
       success: false,
       result: null,
       message: 'No se encontraron productos para la orden de venta',
+    });
+  });
+
+  test('test_final_amount_mismatch', async () => {
+    req.body.finalAmount = 1000; // Set a mismatched final amount
+    req.body.discount = 0; // Set discount to 0 for simplicity
+  
+    await create(req, res);
+  
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'El monto final calculado no coincide con el monto enviado',
     });
   });
 });

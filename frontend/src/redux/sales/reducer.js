@@ -7,6 +7,14 @@ const INITIAL_KEY_STATE = {
   isSuccess: false,
 };
 
+const INITIAL_STEP_STATE = {
+  currentStep: 0,
+  options: {
+    orderOptions: {},
+    paymentOptions: { discountType: 'discount' },
+  },
+};
+
 const INITIAL_STATE = {
   current: {
     result: null,
@@ -24,6 +32,7 @@ const INITIAL_STATE = {
     isLoading: false,
     isSuccess: false,
   },
+  stepper: INITIAL_STEP_STATE,
   create: INITIAL_KEY_STATE,
   update: INITIAL_KEY_STATE,
   delete: INITIAL_KEY_STATE,
@@ -83,6 +92,36 @@ const salesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         [keyState]: {
           ...INITIAL_STATE[keyState],
+        },
+      };
+    case actionTypes.UPDATE_ORDER_OPTIONS:
+      return {
+        ...state,
+        stepper: {
+          ...state.stepper,
+          options: {
+            ...state.stepper.options,
+            orderOptions: payload,
+          },
+        },
+      };
+    case actionTypes.UPDATE_PAYMENT_OPTIONS:
+      return {
+        ...state,
+        stepper: {
+          ...state.stepper,
+          options: {
+            ...state.stepper.options,
+            paymentOptions: payload,
+          },
+        },
+      };
+    case actionTypes.SET_CURRENT_STEP:
+      return {
+        ...state,
+        stepper: {
+          ...state.stepper,
+          currentStep: payload,
         },
       };
     default:

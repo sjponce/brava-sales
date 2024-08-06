@@ -25,3 +25,9 @@ export const selectReadItem = createSelector([selectSales], (sales) => sales.rea
 export const selectDeletedItem = createSelector([selectSales], (sales) => sales.delete);
 
 export const selectSearchedItems = createSelector([selectSales], (sales) => sales.search);
+
+export const getCurrentStep = (state) => state.sales.stepper.currentStep;
+
+export const getOrderOptions = (state) => state.sales.stepper.options.orderOptions;
+
+export const getPaymentOptions = (state) => state.sales.stepper.options.paymentOptions;

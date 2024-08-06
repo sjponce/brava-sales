@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Installment = mongoose.model('Installment');
 const SalesOrder = mongoose.model('SalesOrder');
 const PriceHistory = mongoose.model('PriceHistory');
+const { MONTHLY_INTEREST_RATE } = require('../../../utils/constants');
 
 const getLatestPrice = async (productId) => {
   const latestPrice = await PriceHistory.findOne({ product: productId })
@@ -20,6 +21,13 @@ const getNextSalesOrderCode = async () => {
   return `OV-${nextNumber.toString().padStart(3, '0')}`;
 };
 
+const calculateFinalAmount = (totalAmount, discount, installmentCount) => {
+  const totalWithDiscount = totalAmount - (totalAmount * (discount / 100));
+  const interest = totalWithDiscount * (MONTHLY_INTEREST_RATE * (installmentCount - 1));
+  return totalWithDiscount + interest;
+};
+
+
 const create = async (req, res) => {
   try {
     // Creating a new document in the collection
@@ -34,13 +42,25 @@ const create = async (req, res) => {
     for (const product of products) {
       const latestPrice = await getLatestPrice(product.product);
       product.price = latestPrice;
-      totalAmount += latestPrice * product.quantity;
+      for (const size of product.sizes) {
+        totalAmount += latestPrice * size.quantity;
+      }
     }
     if (totalAmount === 0 || !products.length) {
       return res.status(400).json({
         success: false,
         result: null,
         message: 'No se encontraron productos para la orden de venta',
+      });
+    }
+
+    const finalAmount = calculateFinalAmount(totalAmount, salesOrderData.discount, installmentsCount);
+
+    if (Math.abs(finalAmount - salesOrderData.finalAmount) > 0.01) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'El monto final calculado no coincide con el monto enviado',
       });
     }
 
@@ -54,11 +74,14 @@ const create = async (req, res) => {
       removed: false,
       enabled: true,
       totalAmount,
+      finalAmount,
+      discount: salesOrderData.discount,
+      promotion: salesOrderData.promotion,
       products,
     }).save();
 
     // Creating new installments for the sales order
-    const installmentTotalAmount = salesOrder.totalAmount / installmentsCount;
+    const installmentTotalAmount = parseFloat((salesOrder.finalAmount / installmentsCount).toFixed(2));
 
     try {
       for (let i = 0; i < installmentsCount; i++) {
@@ -97,5 +120,7 @@ const create = async (req, res) => {
     });
   }
 };
+
+
 
 module.exports = create;
