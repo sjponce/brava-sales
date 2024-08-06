@@ -16,11 +16,14 @@
 	},
 	"dependencies": {
 		"@biomejs/biome": "^1.7.3",
+		"angular-expressions": "^1.2.1",
+		"angular-parser": "^0.3.0",
 		"axios": "^1.7.2",
 		"bcryptjs": "^2.4.3",
 		"compression": "^1.7.4",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
+		"docxtemplater": "^3.48.0",
 		"dotenv": "16.3.1",
 		"express": "^4.18.2",
 		"glob": "10.3.10",
@@ -29,7 +32,9 @@
 		"module-alias": "^2.2.3",
 		"mongoose": "^8.1.1",
 		"mongoose-autopopulate": "^1.1.0",
+		"node-mocks-http": "^1.15.1",
 		"nodemon": "3.0.1",
+		"pizzip": "^3.1.7",
 		"resend": "^2.0.0",
 		"shortid": "^2.2.16"
 	},
@@ -45,5 +50,10 @@
 	"_moduleAliases": {
 		"@": "src"
 	},
-	"main": "server.js"
+	"main": "server.js",
+	"jest": {
+		"moduleNameMapper": {
+			"^@/(.*)$": "<rootDir>/src/$1"
+		}
+	}
 }
