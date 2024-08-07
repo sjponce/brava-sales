@@ -51,8 +51,6 @@ describe('AddSalesOrderModal Component', () => {
       </Provider>
     );
 
-    querysel
-
     const closeButton = screen.getByTestId('CloseIcon');
     fireEvent.click(closeButton);
 

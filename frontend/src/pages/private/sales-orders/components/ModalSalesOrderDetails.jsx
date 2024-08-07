@@ -70,7 +70,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
             <IconButton onClick={() => window.print()}>
               <PrintOutlined />
             </IconButton>
-            <IconButton onClick={() => handleModalClose()}>
+            <IconButton data-test-id="DeleteIcon" onClick={() => handleModalClose()}>
               <Close />
             </IconButton>
           </Box>
@@ -91,7 +91,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    <Typography variant="overline">Fecha de creación</Typography>
+                    <Typography variant="overline">Creación</Typography>
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="subtitle2">{formatDate(saleData?.createdAt)}</Typography>
