@@ -41,7 +41,7 @@ const listBySettingKey = async (req, res) => {
       .json({
         success: false,
         result: [],
-        message: 'La coleccion esta vacia',
+        message: 'La colección esta vacia',
       })
       .end();
   }

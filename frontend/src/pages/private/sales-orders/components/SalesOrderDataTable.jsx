@@ -8,26 +8,30 @@ import sales from '@/redux/sales/actions';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
+import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedRow] = useState({
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({
     id: '',
     name: '',
   });
 
   const handleDetails = async (id) => {
-    console.log(id);
+    setSelectedRow({ ...selectedRow, id });
+    await dispatch(sales.read({ entity: 'sales', id }));
+    setOpenDetailsModal(true);
   };
 
   const handleDialogCancel = () => {
-    setDialogOpen(false);
+    setOpenCreateDialog(false);
   };
 
   const handleDialogAccept = () => {
     dispatch(sales.delete({ entity: 'sales', id: selectedRow.id }));
-    setDialogOpen(false);
+    setOpenCreateDialog(false);
   };
 
   const salesOrderState = useSelector((store) => store.sales.listAll);
@@ -103,10 +107,15 @@ const SalesOrderDataTable = () => {
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
         title={`Deshabilitar: ${selectedRow.name}`}
-        text="Esta accion no se puede deshacer, ¿Desea continuar?"
-        isOpen={dialogOpen}
+        text="Esta acción no se puede deshacer, ¿Desea continuar?"
+        isOpen={openCreateDialog}
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
+      />
+      <ModalSalesOrderDetails
+        productId={selectedRow.id}
+        handlerOpen={setOpenDetailsModal}
+        open={openDetailsModal}
       />
       <Loading isLoading={salesOrderState?.isLoading || readSalesOrderState?.isLoading} />
     </Box>

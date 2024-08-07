@@ -7,7 +7,7 @@ const callWithAuth = async (req, res, method, ...args) => {
       return res.status(500).json({
         success: false,
         result: null,
-        message: 'Hubo un error en la autenticacion con stock',
+        message: 'Hubo un error en la autenticación con stock',
       });
     }
     // Create an instance of Axios with the token injected in the headers

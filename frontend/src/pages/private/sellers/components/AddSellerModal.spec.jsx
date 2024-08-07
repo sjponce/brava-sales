@@ -53,7 +53,7 @@ describe('AddSellerModal', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/esta accion no se puede deshacer, ¿desea continuar\?/i)
+        screen.getByText(/esta acción no se puede deshacer, ¿desea continuar\?/i)
       ).toBeInTheDocument();
     });
   });
@@ -69,7 +69,7 @@ describe('AddSellerModal', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/esta accion no se puede deshacer, ¿desea continuar\?/i)
+        screen.getByText(/esta acción no se puede deshacer, ¿desea continuar\?/i)
       ).toBeInTheDocument();
       expect(screen.getByText(/crear nuevo vendedor/i)).toBeInTheDocument();
     });

@@ -10,9 +10,9 @@ import Loading from '@/components/Loading';
 
 const DataTableProducts = () => {
   const dispatch = useDispatch();
-  const [openModal, setOpenModal] = useState(false);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
     name: '',
@@ -22,28 +22,28 @@ const DataTableProducts = () => {
     setSelectedRow({ ...selectedRow, id });
     await dispatch(stock.read({ entity: 'stock', id }));
     setIsUpdate(false);
-    setOpenModal(true);
+    setOpenDetailsModal(true);
   };
 
   const handleEdit = async (id) => {
     setSelectedRow({ ...selectedRow, id });
     await dispatch(stock.read({ entity: 'stock', id }));
     setIsUpdate(true);
-    setOpenModal(true);
+    setOpenDetailsModal(true);
   };
 
   const handleDisable = (id, name) => {
     setSelectedRow({ ...selectedRow, id, name });
-    setDialogOpen(true);
+    setOpenCreateDialog(true);
   };
 
   const handleDialogCancel = () => {
-    setDialogOpen(false);
+    setOpenCreateDialog(false);
   };
 
   const handleDialogAccept = async () => {
     await dispatch(stock.delete({ entity: 'stock', id: selectedRow.id }));
-    setDialogOpen(false);
+    setOpenCreateDialog(false);
   };
 
   const productState = useSelector((store) => store.stock.listAll);
@@ -147,15 +147,15 @@ const DataTableProducts = () => {
       <DataTable columns={columns} rows={rows} rowHeight={75} />
       <CustomDialog
         title={`Deshabilitar: ${selectedRow.name}`}
-        text="Esta accion no se puede deshacer, ¿Desea continuar?"
-        isOpen={dialogOpen}
+        text="Esta acción no se puede deshacer, ¿Desea continuar?"
+        isOpen={openCreateDialog}
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
       <ModalProductDetails
         productId={selectedRow.id}
-        handlerOpen={setOpenModal}
-        open={openModal}
+        handlerOpen={setOpenDetailsModal}
+        open={openDetailsModal}
         isUpdate={isUpdate}
       />
       <Loading
