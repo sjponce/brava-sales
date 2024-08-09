@@ -1,10 +1,11 @@
-import { Visibility } from '@mui/icons-material';
+import { Download, Visibility } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import sales from '@/redux/sales/actions';
+import docs from '@/redux/docs/actions';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
@@ -32,6 +33,10 @@ const SalesOrderDataTable = () => {
   const handleDialogAccept = () => {
     dispatch(sales.delete({ entity: 'sales', id: selectedRow.id }));
     setOpenCreateDialog(false);
+  };
+
+  const handleDownload = (id) => {
+    dispatch(docs.generate({ docName: 'salesOrder', body: { id } }));
   };
 
   const salesOrderState = useSelector((store) => store.sales.listAll);
@@ -95,6 +100,9 @@ const SalesOrderDataTable = () => {
           <div className="actions">
             <IconButton size="small" onClick={() => handleDetails(id)}>
               <Visibility />
+            </IconButton>
+            <IconButton size="small" onClick={() => handleDownload(id)}>
+              <Download />
             </IconButton>
           </div>
         );

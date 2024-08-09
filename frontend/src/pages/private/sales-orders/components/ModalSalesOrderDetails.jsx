@@ -15,9 +15,12 @@ import {
 } from '@mui/material';
 
 import React, { useState } from 'react';
-import { Close, Download, Payment, PrintOutlined } from '@mui/icons-material';
+import {
+  Close, Download, Payment, PrintOutlined,
+} from '@mui/icons-material';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import docs from '@/redux/docs/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import formatDate from '@/utils/formatDate';
@@ -30,7 +33,8 @@ const SytledModal = styled(Modal)({
 });
 
 const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
-  const saleData = useSelector(selectCurrentItem).result;
+  const saleData = useSelector(selectCurrentItem)?.result;
+  const dispatch = useDispatch();
 
   const [openDetailsModal] = useState(false);
 
@@ -39,7 +43,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
   };
 
   const handleDownload = (id) => {
-    console.log('Download', id);
+    dispatch(docs.generate({ docName: 'installment', body: { id } }));
   };
 
   const handlePayment = (id) => {
@@ -259,10 +263,10 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <IconButton size="small" onClick={() => handleDownload(i.id)}>
+                        <IconButton size="small" onClick={() => handleDownload(i._id)}>
                           <Download />
                         </IconButton>
-                        <IconButton size="small" onClick={() => handlePayment(i.id)}>
+                        <IconButton size="small" onClick={() => handlePayment(i._id)}>
                           <Payment />
                         </IconButton>
                       </TableCell>
