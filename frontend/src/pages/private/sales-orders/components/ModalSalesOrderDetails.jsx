@@ -15,9 +15,7 @@ import {
 } from '@mui/material';
 
 import React, { useState } from 'react';
-import {
-  Close, Download, Payment, PrintOutlined,
-} from '@mui/icons-material';
+import { Close, Download, Payment, PrintOutlined } from '@mui/icons-material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import docs from '@/redux/docs/actions';
@@ -150,7 +148,8 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="subtitle2">
-                      {saleData?.installments?.length} de ${saleData?.installments ? saleData?.installments[0].amount : ''}
+                      {saleData?.installments?.length} de $
+                      {saleData?.installments ? saleData?.installments[0].amount : 0}
                     </Typography>
                   </TableCell>
                 </TableRow>

@@ -31,6 +31,11 @@ describe('ModalSalesOrderDetails', () => {
             products: [{ product: { stockId: 'P123' }, color: 'Red', sizes: [{ id: 1, size: 'M', quantity: 2 }] }],
           },
         },
+        createPayment: {
+          result: {
+            _id: 1,
+          },
+        },
       },
     });
 

@@ -82,7 +82,7 @@ const InstallmentPaymentForm = ({ control, watch, setValue, register }) => {
           style={{ display: 'none' }}
           id="raised-button-file"
           type="file"
-          data-testid="image-input"
+          data-test-id="image-input"
           required
           onChange={handleImageChange}
         />

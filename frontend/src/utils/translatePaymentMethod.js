@@ -1,8 +1,8 @@
 const translatePaymentMethod = (method) => {
   const paymentMethod = {
-    Deposit: 'Deposito',
-    'Debit Card': 'Tarjeta de Debito',
-    'Credit Card': 'Tarjeta de Credito',
+    Deposit: 'Depósito',
+    'Debit Card': 'Tarjeta de Débito',
+    'Credit Card': 'Tarjeta de Crédito',
   };
   return paymentMethod[method] || method;
 };

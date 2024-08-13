@@ -100,7 +100,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
           <Typography variant="h4" color="primary">
             Registrar pago
           </Typography>
-          <IconButton onClick={() => handleClose()}>
+          <IconButton data-test-id="CloseIcon" onClick={() => handleClose()}>
             <Close />
           </IconButton>
         </Box>
@@ -132,7 +132,10 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
             />
           </Box>
           <Box display="flex" gap={2} maxHeight={400}>
-            <TableContainer component={Paper} maxHeight={400} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
+            <TableContainer
+              component={Paper}
+              maxHeight={400}
+              sx={{ borderRadius: 2.5, overflow: 'auto' }}>
               <Table size="small">
                 <TableBody>
                   <TableRow>
