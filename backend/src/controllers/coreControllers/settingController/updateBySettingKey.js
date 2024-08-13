@@ -9,7 +9,7 @@ const updateBySettingKey = async (req, res) => {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'No hay una key de configuracion',
+      message: 'No hay una key de configuración',
     });
   }
   const { settingValue } = req.body;
@@ -18,7 +18,7 @@ const updateBySettingKey = async (req, res) => {
     return res.status(202).json({
       success: false,
       result: null,
-      message: 'No hay un valor de configuracion',
+      message: 'No hay un valor de configuración',
     });
   }
   const result = await Model.findOneAndUpdate(

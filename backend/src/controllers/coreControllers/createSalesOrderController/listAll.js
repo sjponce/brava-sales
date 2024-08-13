@@ -10,7 +10,13 @@ const listAll = async (req, res) => {
 
     if (id) {
       query._id = id;
-      const salesOrder = await SalesOrder.findOne(query).populate('customer').exec();
+      const salesOrder = await SalesOrder.findOne(query)
+        .populate({
+          path: 'products.product',
+          model: 'Product',
+        })
+        .populate('customer')
+        .exec();
       if (salesOrder) {
         const installments = await Installment.find({ salesOrder: salesOrder._id }).exec();
         result = { ...salesOrder.toObject(), installments };

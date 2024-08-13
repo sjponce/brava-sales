@@ -56,7 +56,7 @@ const paginatedList = async (userModel, req, res) => {
       success: true,
       result: [],
       pagination,
-      message: 'La coleccion esta vacia',
+      message: 'La colección esta vacia',
     });
   }
 };

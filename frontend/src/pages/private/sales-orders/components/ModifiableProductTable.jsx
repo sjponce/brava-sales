@@ -71,7 +71,6 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
             <TableCell>
               <Typography variant="overline">Detalles de orden</Typography>
             </TableCell>
-            {/* <TableCell>Cantidad</TableCell> */}
             <TableCell> </TableCell>
             <TableCell align="right">
               <Typography variant="overline">Unitario</Typography>
@@ -93,7 +92,7 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                     id={`products.${index}.product`}
                     value={watch(`products.${index}`)}
                     style={{ width: '160px' }}
-                    onChange={(event, newValue) => {
+                    onChange={(_, newValue) => {
                       if (newValue) {
                         setValue(`products.${index}.product`, newValue._id);
                         setValue(`products.${index}.price`, newValue.price);

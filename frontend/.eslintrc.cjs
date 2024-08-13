@@ -38,6 +38,7 @@ module.exports = {
         'no-underscore-dangle': 'off',
         'react/jsx-closing-bracket-location': 'off',
         'react/prop-types': 'off',
+        'react/jsx-one-expression-per-line': 'off',
       },
     },
   ],

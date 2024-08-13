@@ -29,7 +29,6 @@ const ModalProductDetails = ({
   open, handlerOpen, isUpdate,
 }) => {
   const productData = useSelector(selectCurrentItem);
-  console.log(productData);
 
   const {
     register, handleSubmit, setValue, watch,
@@ -137,7 +136,7 @@ const ModalProductDetails = ({
         </Box>
         <CustomDialog
           title="Editar producto"
-          text="Esta accion no se puede deshacer, ¿Desea continuar?"
+          text="Esta acción no se puede deshacer, ¿Desea continuar?"
           isOpen={dialogOpen}
           onAccept={handleSubmit(onSubmit)}
           onCancel={handleDialogCancel}

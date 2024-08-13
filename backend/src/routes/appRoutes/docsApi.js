@@ -7,7 +7,9 @@ const createDocMiddleware = require('@/controllers/middlewaresControllers/create
 const setupRoutes = async () => {
   const docMiddleware = createDocMiddleware();
 
-  router.route('/docs/test').get(catchErrors(docMiddleware.docTest));
+  router.route('/docs/test').post(catchErrors(docMiddleware.docTest));
+  router.route('/docs/salesOrder').post(catchErrors(docMiddleware.docSalesOrder));
+  router.route('/docs/installment').post(catchErrors(docMiddleware.docInstallment));
 
 };
 

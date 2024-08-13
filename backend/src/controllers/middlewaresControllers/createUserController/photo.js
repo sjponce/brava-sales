@@ -36,7 +36,7 @@ const photo = async (userModel, req, res) => {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Actualizacion exitosa',
+      message: 'Actualización exitosa',
     });
   }
 };

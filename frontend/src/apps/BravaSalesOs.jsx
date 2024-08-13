@@ -6,6 +6,7 @@ import { AppContextProvider } from '@/context/appContext';
 import { lightTheme, darkTheme } from '../theme/theme';
 import PageLoader from '@/components/PageLoader';
 import AuthRouter from '@/router/AuthRouter';
+import GlobalDownloadManager from '../utils/GlobalDownloadManager';
 
 const ErpApp = lazy(() => import('./ErpApp'));
 
@@ -14,6 +15,7 @@ const DefaultApp = () => (
     <Suspense fallback={<PageLoader />}>
       <ErpApp />
     </Suspense>
+    <GlobalDownloadManager />
   </AppContextProvider>
 );
 

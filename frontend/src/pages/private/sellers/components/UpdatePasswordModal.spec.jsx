@@ -62,7 +62,7 @@ describe('UpdatePasswordModal', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Esta accion no se puede deshacer, ¿Desea continuar\?/i),
+        screen.getByText(/Esta acción no se puede deshacer, ¿Desea continuar\?/i),
       ).toBeInTheDocument();
     });
   });

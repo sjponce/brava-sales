@@ -81,7 +81,7 @@ const UpdatePasswordModal = ({ idUser, open, handlerOpen }) => {
           </Button>
           <CustomDialog
             title="Actualizar contraseña"
-            text="Esta accion no se puede deshacer, ¿Desea continuar?"
+            text="Esta acción no se puede deshacer, ¿Desea continuar?"
             isOpen={dialogOpen}
             onAccept={handleSubmit(onSubmit)}
             onCancel={handleDialogCancel}

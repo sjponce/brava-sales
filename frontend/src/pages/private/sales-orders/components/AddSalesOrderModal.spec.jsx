@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import AddSalesOrderModal from './AddSalesOrderModal';
-import store from '@/redux/store';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
 
@@ -50,8 +49,6 @@ describe('AddSalesOrderModal Component', () => {
         <AddSalesOrderModal open={true} handlerOpen={mockHandlerOpen} />
       </Provider>
     );
-
-    querysel
 
     const closeButton = screen.getByTestId('CloseIcon');
     fireEvent.click(closeButton);
