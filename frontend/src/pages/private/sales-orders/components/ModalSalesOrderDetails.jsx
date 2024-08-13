@@ -25,8 +25,9 @@ import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
+import ModalInstallmentDetails from './ModalInstallmentDetails';
 
-const SytledModal = styled(Modal)({
+const StyledModal = styled(Modal)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -35,8 +36,9 @@ const SytledModal = styled(Modal)({
 const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
   const saleData = useSelector(selectCurrentItem)?.result;
   const dispatch = useDispatch();
-
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [openDetailsModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({});
 
   const handleModalClose = () => {
     handlerOpen(false);
@@ -47,18 +49,19 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
   };
 
   const handlePayment = (id) => {
-    console.log('payment', id);
+    setSelectedRow(id);
+    setOpenDetailsDialog(true);
   };
 
   return (
-    <SytledModal
+    <StyledModal
       open={open}
       aria-labelledby="modal-modal-title"
-      maxheai
       aria-describedby="modal-modal-description">
       <Box
         maxHeight="95vh"
         bgcolor="background.default"
+        width={{ xs: '100%', sm: 800 }}
         color="text.primary"
         p={3}
         borderRadius={2.5}
@@ -81,7 +84,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
         </Box>
         <Divider sx={{ mb: 2 }} />
         <Box display="flex" gap={2} maxHeight={400}>
-          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'visible' }}>
+          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -147,7 +150,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="subtitle2">
-                      {saleData?.installments?.length} de ${saleData?.installments[0].amount}
+                      {saleData?.installments?.length} de ${saleData?.installments ? saleData?.installments[0].amount : ''}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -164,7 +167,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
           </TableContainer>
           <TableContainer
             component={Paper}
-            sx={{ borderRadius: 2.5, overflow: { xs: 'visible', md: 'auto' } }}>
+            sx={{ borderRadius: 2.5, overflow: { xs: 'auto', md: 'auto' } }}>
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -212,7 +215,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
           </TableContainer>
         </Box>
         <Box marginTop={2}>
-          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'visible' }}>
+          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -259,7 +262,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
                       </TableCell>
                       <TableCell>
                         <Typography align="center" variant="subtitle2">
-                          {formatDate(i.paymentDate)}
+                          {formatDate(i.totalPaymentDate)}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -283,8 +286,13 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
           text="Esta acción no se puede deshacer, ¿Desea continuar?"
           isOpen={openDetailsModal}
         />
+        <ModalInstallmentDetails
+          installmentId={selectedRow}
+          open={openDetailsDialog}
+          handlerOpen={setOpenDetailsDialog}
+        />
       </Box>
-    </SytledModal>
+    </StyledModal>
   );
 };
 

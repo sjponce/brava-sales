@@ -39,6 +39,13 @@ const SalesOrderDataTable = () => {
     dispatch(docs.generate({ docName: 'salesOrder', body: { id } }));
   };
 
+  const updatedPayment = useSelector((state) => state.sales.createPayment);
+
+  useEffect(() => {
+    if (!updatedPayment.result) return;
+    dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
+  }, [updatedPayment]);
+
   const salesOrderState = useSelector((store) => store.sales.listAll);
   const readSalesOrderState = useSelector((store) => store.sales.read);
   const createSalesOrderState = useSelector((store) => store.sales.create);
@@ -120,12 +127,12 @@ const SalesOrderDataTable = () => {
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
-      <ModalSalesOrderDetails
-        productId={selectedRow.id}
-        handlerOpen={setOpenDetailsModal}
-        open={openDetailsModal}
+      <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
+      <Loading
+        isLoading={
+          salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
+        }
       />
-      <Loading isLoading={salesOrderState?.isLoading || readSalesOrderState?.isLoading} />
     </Box>
   );
 };
