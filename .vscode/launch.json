@@ -5,12 +5,14 @@
         "type": "node",
         "request": "launch",
         "name": "Launch Express App",
-        "runtimeExecutable": "npm",
-        "runtimeArgs": ["start"],
+        "program": "${workspaceFolder}/backend/src/server.js",
         "cwd": "${workspaceFolder}/backend",
-        "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
         "restart": true,
-        "console": "integratedTerminal"
+        "env": {
+          "NODE_ENV": "development"
+        }
       },
       {
         "type": "node",

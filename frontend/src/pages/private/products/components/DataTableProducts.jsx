@@ -103,7 +103,7 @@ const DataTableProducts = () => {
       field: 'color',
       headerName: 'Color',
       width: 100,
-      valueGetter: (params) => `${params.row.variations[0].color || ''}`,
+      valueGetter: (params) => `${params.row.variations[0]?.color || ''}`,
     },
     {
       field: 'description',
