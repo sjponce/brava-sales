@@ -7,7 +7,9 @@ const read = require('./read');
 const createStockMiddleware = () => {
   const stockMethods = {
     listAll: async (req, res, ...args) => {
-      await listAll(req, res, ...args);
+      // TODO: Removed stock since its down Release 1.3.0
+      //await callWithAuth(req, res, listAll, ...args);
+      listAll(req, res, ...args);
     },
     update: async (req, res, ...args) => {
       await callWithAuth(req, res, update, ...args);

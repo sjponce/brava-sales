@@ -5,23 +5,17 @@ import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import sales from '@/redux/sales/actions';
-import AddSalesOrderModal from './AddSalesOrderModal';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRow] = useState({
     id: '',
     name: '',
   });
-
-  const handleOpen = (value) => {
-    setOpen(value);
-  };
 
   const handleDetails = async (id) => {
     console.log(id);
@@ -114,7 +108,6 @@ const SalesOrderDataTable = () => {
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
-      <AddSalesOrderModal idSalesOrder={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
       <Loading isLoading={salesOrderState?.isLoading || readSalesOrderState?.isLoading} />
     </Box>
   );

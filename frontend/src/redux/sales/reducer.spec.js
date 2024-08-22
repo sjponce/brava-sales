@@ -2,6 +2,21 @@ import salesReducer from './reducer';
 import * as actionTypes from './types';
 
 describe('salesReducer', () => {
+  const INITIAL_KEY_STATE = {
+    result: null,
+    current: null,
+    isLoading: false,
+    isSuccess: false,
+  };
+
+  const INITIAL_STEP_STATE = {
+    currentStep: 0,
+    options: {
+      orderOptions: {},
+      paymentOptions: { discountType: 'discount' },
+    },
+  };
+
   const INITIAL_STATE = {
     current: {
       result: null,
@@ -19,43 +34,19 @@ describe('salesReducer', () => {
       isLoading: false,
       isSuccess: false,
     },
-    create: {
-      result: null,
-      current: null,
-      isLoading: false,
-      isSuccess: false,
-    },
-    update: {
-      result: null,
-      current: null,
-      isLoading: false,
-      isSuccess: false,
-    },
-    delete: {
-      result: null,
-      current: null,
-      isLoading: false,
-      isSuccess: false,
-    },
-    read: {
-      result: null,
-      current: null,
-      isLoading: false,
-      isSuccess: false,
-    },
-    search: {
-      result: [],
-      current: null,
-      isLoading: false,
-      isSuccess: false,
-    },
+    stepper: INITIAL_STEP_STATE,
+    create: INITIAL_KEY_STATE,
+    update: INITIAL_KEY_STATE,
+    delete: INITIAL_KEY_STATE,
+    read: INITIAL_KEY_STATE,
+    search: { ...INITIAL_KEY_STATE, result: [] },
   };
 
   it('should return the initial state when the action type is RESET_STATE', () => {
     const action = { type: actionTypes.RESET_STATE };
     const newState = salesReducer(undefined, action);
     expect(newState).toEqual(INITIAL_STATE);
-  });
+  })
 
   it('should update the current state with the payload when the action type is CURRENT_ITEM', () => {
     const payload = { id: 1, name: 'Test Item' };

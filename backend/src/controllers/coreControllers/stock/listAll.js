@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-// const axios = require('axios');
+const getSalesProducts = require('./getSalesProducts');
+const getLatestPrice = require('./getLatestPrice');
 
 const responseMock = {
   status: 200,
@@ -112,7 +112,7 @@ const responseMock = {
         color: '',
         imageUrl: '',
         price: 14400,
-      },
+      }, 
     ],
     'Art 3150': [
       {
@@ -127,14 +127,13 @@ const responseMock = {
   },
 };
 
-const listAll = async (req, res) => {
+const listAll = async (req, res, axiosInstance) => {
   try {
-    // TODO: Mocked on PFG82-170 since the Stocks server is down
-
-    // const apiUrl = `${process.env.STOCK_API}/product/byNameMap`;
-    // const response = await axiosInstance.get(apiUrl);
-
-    const stockData = await getStockData();
+    axiosInstance;
+    // TODO: Removed stock since its down Release 1.3.0
+    /* const apiUrl = `${process.env.STOCK_API}/product/byNameMap`;
+    const stockCall = await axiosInstance.get(apiUrl); */
+    const stockData = responseMock.data;
     const salesData = await getSalesProducts();
 
     if (!stockData) {
@@ -155,6 +154,7 @@ const listAll = async (req, res) => {
 
     const combinedProducts = await Promise.all(
       salesData.map(async (product) => {
+
         const stockInfo = stockData[product.stockId] || [];
         const latestPrice = await getLatestPrice(product._id);
 
@@ -180,6 +180,13 @@ const listAll = async (req, res) => {
       message: 'Se encontraron los productos',
     });
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return res.status(404).json({
+        success: false,
+        result: null,
+        message: 'No se encontraron productos',
+      });
+    }
     console.error('Error fetching products from stock API:', error);
     return res.status(500).json({
       success: false,
@@ -192,32 +199,3 @@ const listAll = async (req, res) => {
 
 module.exports = listAll;
 
-const getStockData = async () => {
-  // TODO: PFG82-170 Replace this with API call 
-  // const apiUrl = `${process.env.STOCK_API}/product/byNameMap`;
-
-  return responseMock.data;
-};
-
-const getSalesProducts = async () => {
-  const Product = mongoose.model('Product');
-  try {
-    return await Product.find().populate('tags').exec();
-  } catch (error) {
-    console.error('Error fetching products from sales API:', error);
-    return [];
-  }
-};
-
-const getLatestPrice = async (productId) => {
-  const PriceHistory = mongoose.model('PriceHistory');
-  try {
-    const latestPrice = await PriceHistory.findOne({ product: productId })
-      .sort({ effectiveDate: -1 })
-      .exec();
-    return latestPrice ? latestPrice.price : 0;
-  } catch (error) {
-    console.error(`Error fetching price for product ${productId}:`, error);
-    return 0;
-  }
-};

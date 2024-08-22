@@ -61,9 +61,9 @@ const ModalProductDetails = ({
       setValue('color', productData.result.color);
       setValue('description', productData.result.description);
       setValue('price', productData.result.price);
-      setValue('imageUrl', productData.result.stockInfo[0].imageUrl);
-      setValue('stock', productData.result.stockInfo[0].stock);
-      setValue('productVariation', productData.result.stockInfo[0].productVariation);
+      setValue('imageUrl', productData.result.stockInfo[0]?.imageUrl);
+      setValue('stock', productData.result.stockInfo[0]?.stock);
+      setValue('productVariation', productData.result.stockInfo[0]?.productVariation);
       // Hay que remplazarlo por los tags reales de la DB
       setValue('tags', productData.result.tags);
     }

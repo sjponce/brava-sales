@@ -1,13 +1,12 @@
 import {
   Autocomplete, Box, TextField, Typography,
 } from '@mui/material';
-import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
 
-const AddSalesOrderForm = ({ setValue }) => {
+const AddSalesOrderForm = ({ setValue, watch }) => {
   const customers = useSelector((store) => store.crud.listAll);
-  const [selectedCustomer, setSelectedCustomer] = React.useState(null);
+  const selectedCustomer = watch('customer') || null;
 
   return (
     <>
@@ -17,40 +16,18 @@ const AddSalesOrderForm = ({ setValue }) => {
         border={1}
         borderColor="background.paper"
         borderRadius={2.5}
-        p={1}
-        mt={2}>
+        p={1}>
         <Box display="flex" gap={2}>
           <Autocomplete
             fullWidth
-            id="customers"
+            id={selectedCustomer?._id || ''}
             sx={{ maxWidth: '300px', width: '100%' }}
-            onChange={(event, newValue) => {
-              if (newValue) {
-                setSelectedCustomer(newValue);
-                setValue('customer', newValue._id);
-                setValue('shippingAddress.street', newValue.address?.street || '');
-                setValue('shippingAddress.streetNumber', newValue.address?.streetNumber || '');
-                setValue('shippingAddress.floor', newValue.address?.floor || '');
-                setValue('shippingAddress.apartment', newValue.address?.apartment || '');
-                setValue('shippingAddress.city', newValue.address?.city || '');
-                setValue('shippingAddress.state', newValue.address?.state || '');
-                setValue('shippingAddress.zipCode', newValue.address?.zipCode || '');
-              } else {
-                setSelectedCustomer(null);
-                setValue('customer', '');
-                setValue('shippingAddress.street', '');
-                setValue('shippingAddress.streetNumber', '');
-                setValue('shippingAddress.floor', '');
-                setValue('shippingAddress.apartment', '');
-                setValue('shippingAddress.city', '');
-                setValue('shippingAddress.state', '');
-                setValue('shippingAddress.zipCode', '');
-              }
-            }}
+            value={selectedCustomer}
+            onChange={(event, value) => { setValue('customer', value); }}
             options={customers.result.items.result}
             getOptionLabel={(option) => option?.name || ''}
             filterSelectedOptions
-            isOptionEqualToValue={(option, value) => option.id === value.id}
+            isOptionEqualToValue={(option, value) => option._id === value._id || value === ''}
             renderInput={(params) => (
               <TextField {...params} required variant="outlined" label="Cliente" margin="normal" />
             )}
@@ -60,23 +37,23 @@ const AddSalesOrderForm = ({ setValue }) => {
               <Typography>
                 Documento:
                 {' '}
-                {selectedCustomer.documentType}
+                {selectedCustomer?.documentType || ''}
                 {' '}
-                {selectedCustomer.documentNumber}
+                {selectedCustomer?.documentNumber || ''}
               </Typography>
               <Typography>
                 email:
                 {' '}
-                {selectedCustomer.email}
+                {selectedCustomer?.email || ''}
               </Typography>
               <Typography>
                 Address:
                 {' '}
-                {selectedCustomer.address?.zipCode}
+                {selectedCustomer?.address?.zipCode || ''}
                 {' '}
-                {selectedCustomer.address?.street}
+                {selectedCustomer?.address?.street || ''}
                 {' '}
-                {selectedCustomer.address?.streetNumber}
+                {selectedCustomer?.address?.streetNumber || ''}
               </Typography>
             </Box>
           )}
