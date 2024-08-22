@@ -32,6 +32,7 @@ const INITIAL_STATE = {
     isLoading: false,
     isSuccess: false,
   },
+  createPayment: INITIAL_KEY_STATE,
   stepper: INITIAL_STEP_STATE,
   create: INITIAL_KEY_STATE,
   update: INITIAL_KEY_STATE,

@@ -18,7 +18,9 @@ const listAll = async (req, res) => {
         .populate('customer')
         .exec();
       if (salesOrder) {
-        const installments = await Installment.find({ salesOrder: salesOrder._id }).exec();
+        const installments = await Installment.find({ salesOrder: salesOrder._id }).populate({
+          path: 'payments',
+        }).exec();
         result = { ...salesOrder.toObject(), installments };
       }
     } else {

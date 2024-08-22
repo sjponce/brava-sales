@@ -18,6 +18,8 @@ module.exports = {
     'no-console': 'off',
     'import/extensions': 'off',
     'linebreak-style': 'off',
+    'comma-dangle': 'off',
+    'object-curly-newline': 'off',
   },
   overrides: [
     {
