@@ -9,15 +9,17 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Controller } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
 import translatePaymentMethod from '@/utils/translatePaymentMethod';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
 const paymentMethods = ['Deposit', 'Debit Card', 'Credit Card'];
 
-const InstallmentPaymentForm = ({ control, watch, setValue, register }) => {
+const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) => {
   const [uploadedImg, setUploadedImg] = useState(watch('photo') || '');
+  const updatedPaymentResult = useSelector((state) => state.sales.createPayment.result);
 
   const handleRemoveImage = (event) => {
     event.preventDefault();
@@ -35,6 +37,13 @@ const InstallmentPaymentForm = ({ control, watch, setValue, register }) => {
       setUploadedImg(true);
     }
   };
+
+  useEffect(() => {
+    if (updatedPaymentResult) {
+      reset();
+      setUploadedImg(false);
+    }
+  }, [updatedPaymentResult, reset]);
 
   return (
     <Box height={60} p={1} display="flex" color="primary" mb={2} gap={2} alignItems="center">

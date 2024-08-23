@@ -109,7 +109,7 @@ describe('createPayment', () => {
   test('test_create_payment_marks_installment_as_paid', async () => {
     const mockInstallment = {
       _id: 'installment123',
-      amount: 300,
+      amount: 200,
       payments: [{ amount: 100, removed: false, disabled: false }],
       save: jest.fn().mockResolvedValue(true),
     };
