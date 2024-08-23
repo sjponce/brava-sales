@@ -4,6 +4,8 @@ import '@testing-library/jest-dom';
 import { useForm } from 'react-hook-form';
 import InstallmentPaymentForm from './InstallmentPaymentForm';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 
 jest.mock('react-hook-form', () => ({
   useForm: jest.fn(),
@@ -11,6 +13,15 @@ jest.mock('react-hook-form', () => ({
 }));
 
 jest.mock('@/utils/uploadImageToImgbb', () => jest.fn());
+
+const mockStore = configureStore([]);
+const store = mockStore({
+  sales: {
+    createPayment: {
+      result: null,
+    },
+  },
+});
 
 describe('InstallmentPaymentForm', () => {
   const mockSetValue = jest.fn();
@@ -31,17 +42,19 @@ describe('InstallmentPaymentForm', () => {
 
   test('test_payment_method_selection', () => {
     const { getByLabelText, getByText } = render(
-      <InstallmentPaymentForm
+      <Provider store={store}>
+        <InstallmentPaymentForm
         control={{}}
         watch={mockWatch}
         setValue={mockSetValue}
         register={mockRegister}
       />
+      </Provider>
     );
 
     const select = getByLabelText('Método de pago');
     fireEvent.mouseDown(select);
-    
+
     const option = getByText(/Tarjeta de débito/i);
     fireEvent.click(option);
     waitFor(() => {
@@ -51,47 +64,56 @@ describe('InstallmentPaymentForm', () => {
 
   test('test_amount_input_validation', () => {
     const { getByLabelText } = render(
-      <InstallmentPaymentForm
+      <Provider store={store}>
+        <InstallmentPaymentForm
         control={{}}
         watch={mockWatch}
         setValue={mockSetValue}
         register={mockRegister}
       />
+      </Provider>
     );
 
     const amountInput = getByLabelText('Monto');
     fireEvent.change(amountInput, { target: { value: '100.50' } });
 
-    expect(mockRegister).toHaveBeenCalledWith('amount', expect.objectContaining({
-      required: 'Este campo es requerido',
-      pattern: {
-        value: /^\d+(\.\d{1,2})?$/,
-        message: 'Ingrese un número válido con hasta dos decimales',
-      },
-      validate: expect.any(Function),
-    }));
+    expect(mockRegister).toHaveBeenCalledWith(
+      'amount',
+      expect.objectContaining({
+        required: 'Este campo es requerido',
+        pattern: {
+          value: /^\d+(\.\d{1,2})?$/,
+          message: 'Ingrese un número válido con hasta dos decimales',
+        },
+        validate: expect.any(Function),
+      })
+    );
   });
 
   test('test_image_upload_functionality', async () => {
     uploadImageToImgbb.mockResolvedValue('https://example.com/image.jpg');
 
     const { getByTestId, getByLabelText } = render(
-      <InstallmentPaymentForm
+      <Provider store={store}>
+        <InstallmentPaymentForm
         control={{}}
         watch={mockWatch}
         setValue={mockSetValue}
         register={mockRegister}
       />
+      </Provider>
     );
 
     const fileInput = getByTestId('image-input');
     const file = new File(['dummy content'], 'test.png', { type: 'image/png' });
-    
+
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     await waitFor(() => {
       expect(uploadImageToImgbb).toHaveBeenCalledWith(file);
-      expect(mockSetValue).toHaveBeenCalledWith('photo', 'https://example.com/image.jpg', { shouldValidate: true });
+      expect(mockSetValue).toHaveBeenCalledWith('photo', 'https://example.com/image.jpg', {
+        shouldValidate: true,
+      });
     });
 
     const removeButton = getByLabelText('Eliminar imagen');
@@ -102,12 +124,14 @@ describe('InstallmentPaymentForm', () => {
     mockWatch.mockReturnValue('https://example.com/image.jpg');
 
     const { getByLabelText } = render(
-      <InstallmentPaymentForm
+      <Provider store={store}>
+        <InstallmentPaymentForm
         control={{}}
         watch={mockWatch}
         setValue={mockSetValue}
         register={mockRegister}
       />
+      </Provider>
     );
 
     const removeButton = getByLabelText('Eliminar imagen');

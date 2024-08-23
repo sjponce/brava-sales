@@ -19,9 +19,9 @@ const createPayment = async (req, res) => {
     }).save();
     installment.payments.push(newPayment);
 
-    const totalPayment = [...installment.payments, newPayment].reduce(
+    const totalPayment = installment.payments.reduce(
       (totalAmount, currentPayment) => {
-        if (currentPayment.removed && currentPayment.disabled) {
+        if (currentPayment.removed || currentPayment.disabled) {
           return totalAmount;
         }
         return totalAmount + currentPayment.amount;

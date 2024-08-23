@@ -52,7 +52,6 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
     formState: { isValid },
   } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const updatedPaymentResult = useSelector((state) => state.sales.createPayment.result);
   const handleDialogCancel = () => {
     setDialogOpen(false);
   };
@@ -80,11 +79,12 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
   );
   const paymentDifference = (installment?.amount ?? 0) - payedAmount;
   const { isLoading } = useSelector((state) => state.sales.createPayment);
+
   useEffect(() => {
-    if (updatedPaymentResult) {
+    if (open) {
       reset();
     }
-  }, [updatedPaymentResult]);
+  }, [open, reset]);
 
   return (
     <StyledModal open={open}>
@@ -112,8 +112,9 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
               watch={watch}
               setValue={setValue}
               register={register}
+              reset={reset}
             />
-            <Box display="flex" justifyContent="flex-end" fullWidth>
+            <Box display="flex" justifyContent="flex-end" fullWidth mr={2}>
               <Button
                 type="submit"
                 variant="contained"
@@ -170,7 +171,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
           </Box>
         </Box>
         <Box maxHeight={400}>
-          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
+          <TableContainer component={Paper} sx={{ maxHeight: 400, borderRadius: 2.5, overflow: 'auto' }}>
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -193,7 +194,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
                 </TableRow>
               </TableHead>
 
-              <TableBody>
+              <TableBody maxHeight={400}>
                 {installment?.payments?.map((p) => (
                   <React.Fragment key={p._id}>
                     <TableRow>
