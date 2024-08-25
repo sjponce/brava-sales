@@ -13,15 +13,20 @@ const docSalesOrder = async (req, res) => {
       const salesOrderData = listAllResponse.result;
 
       const doc = createDocx('SalesOrder', {
-        code: salesOrderData.code,
+        code: salesOrderData.salesOrderCode,
         name: salesOrderData.customer.name,
-        lastName: salesOrderData.customer.lastName,
-        data: { email: salesOrderData.customer.email },
-        phone: { number: salesOrderData.customer.phone },
+        orderDate: salesOrderData.orderDate,
+        totalAmount: salesOrderData.totalAmount,
+        finalAmount: salesOrderData.finalAmount,
+        email: salesOrderData.customer.email,
+        documentNumber: salesOrderData.customer.documentNumber,
+        address: salesOrderData.customer.address,
+        number: salesOrderData.customer.number,
+        discount: salesOrderData.discount,
         products: salesOrderData.products.map(product => ({
-          name: product.product.name,
+          name: product.product.stockId,
           price: product.price,
-          quantity: product.quantity
+          quantity: product.sizes.quantity
         })),
       });
 
