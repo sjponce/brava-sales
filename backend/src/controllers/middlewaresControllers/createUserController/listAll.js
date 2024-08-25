@@ -23,7 +23,7 @@ const listAll = async (userModel, req, res) => {
     return res.status(203).json({
       success: false,
       result: [],
-      message: 'la coleccion esta vacia',
+      message: 'la colección esta vacia',
     });
   }
 };

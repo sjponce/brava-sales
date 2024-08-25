@@ -17,7 +17,7 @@ import sales from '@/redux/sales/actions';
 import Loading from '@/components/Loading';
 import { getCurrentStep } from '@/redux/sales/selectors';
 
-const SumaryDataStep = ({ watch, handleSubmit }) => {
+const SummaryDataStep = ({ watch, handleSubmit }) => {
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -29,7 +29,7 @@ const SumaryDataStep = ({ watch, handleSubmit }) => {
   const currentStep = useSelector(getCurrentStep);
 
   const createSalesOrder = async (data) => {
-    const oderData = {
+    const orderData = {
       orderDate: new Date(),
       products: data.products,
       totalAmount: data.totalAmount,
@@ -43,7 +43,7 @@ const SumaryDataStep = ({ watch, handleSubmit }) => {
       dispatch(
         sales.create({
           entity: 'sales',
-          jsonData: oderData,
+          jsonData: orderData,
         }),
       );
     } catch (error) {
@@ -80,7 +80,7 @@ const SumaryDataStep = ({ watch, handleSubmit }) => {
           <TableHead>
             <TableRow>
               <TableCell colSpan={3} align="center">
-                <Typography variant="button" color="primary">Composicion de pedido</Typography>
+                <Typography variant="button" color="primary">composición de pedido</Typography>
               </TableCell>
             </TableRow>
             <TableRow>
@@ -179,7 +179,7 @@ const SumaryDataStep = ({ watch, handleSubmit }) => {
       </TableContainer>
       <CustomDialog
         title="Crear orden de venta"
-        text="Esta accion no se puede deshacer, ¿Desea continuar?"
+        text="Esta acción no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onCancel={handleDialogCancel}
         onAccept={handleSubmit(onSubmit)}
@@ -189,4 +189,4 @@ const SumaryDataStep = ({ watch, handleSubmit }) => {
   );
 };
 
-export default SumaryDataStep;
+export default SummaryDataStep;

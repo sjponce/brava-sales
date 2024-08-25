@@ -164,7 +164,7 @@ const SellersDataTable = () => {
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
         title={`${selectedRow.enabled ? 'Deshabilitar' : 'Habilitar'}: ${selectedRow.name}`}
-        text="Esta accion no se puede deshacer, ¿Desea continuar?"
+        text="Esta acción no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}

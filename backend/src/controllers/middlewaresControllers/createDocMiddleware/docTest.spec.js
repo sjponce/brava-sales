@@ -11,6 +11,7 @@ describe('docTest', () => {
     const mockBuffer = Buffer.from('mock document content');
 
     createDocx.mockReturnValue(mockBuffer);
+    res.json = jest.fn();
 
     await docTest(req, res);
 
@@ -25,7 +26,13 @@ describe('docTest', () => {
         { name: 'Product 3', price: 7.99, quantity: 8 },
       ],
     });
-    expect(res._getData()).toEqual(mockBuffer);
+    
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      result: { doc: mockBuffer, docInfo: { docName: 'Test', docExtension: 'docx' } },
+      message: `El documento se ha generado correctamente`,
+  });
+
     expect(res.statusCode).toBe(200);
   });
 });

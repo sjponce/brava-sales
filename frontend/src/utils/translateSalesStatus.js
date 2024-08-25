@@ -5,6 +5,8 @@ const translateStatus = (status) => {
     Shipped: 'Enviado',
     Delivered: 'Entregado',
     Cancelled: 'Cancelado',
+    Paid: 'Pagado',
+    OverDue: 'Vencido',
   };
   return translations[status] || status;
 };

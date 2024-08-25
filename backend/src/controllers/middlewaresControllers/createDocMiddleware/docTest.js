@@ -1,7 +1,7 @@
 const { createDocx } = require('@/helpers/documentHelper');
 
 const docTest = async (req, res) => {
-  const document = createDocx('Test', {
+  const doc = createDocx('Test', {
     name: 'Santiago',
     lastName: ['Ponce', 'dos'],
     data: { email: 'santiago@gmail.com' },
@@ -12,7 +12,11 @@ const docTest = async (req, res) => {
       { name: 'Product 3', price: 7.99, quantity: 8 },
     ],
   });
-  res.send(document);
+  return res.status(200).json({
+    success: true,
+    result: { doc, docInfo: { docName: 'Test', docExtension: 'docx' } },
+    message: `El documento se ha generado correctamente`,
+  });
 };
 
 module.exports = docTest;

@@ -20,7 +20,7 @@ import OrderDataStep from './steps/OrderDataStep';
 import PaymentDataStep from './steps/PaymentDataStep';
 import crud from '@/redux/crud/actions';
 import stock from '@/redux/stock/actions';
-import SumaryDataStep from './steps/SumaryDataStep';
+import SumaryDataStep from './steps/SummaryDataStep';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
