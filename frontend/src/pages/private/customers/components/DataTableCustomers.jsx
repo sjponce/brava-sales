@@ -1,5 +1,5 @@
-import { DeleteRounded, EditRounded } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { GppBadRounded, GppGoodRounded, EditRounded } from '@mui/icons-material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
@@ -21,8 +21,8 @@ const DataTableCustomers = () => {
     setOpen(value);
   };
 
-  const handleDisable = (id, name) => {
-    setSelectedRow({ ...selectedRow, id, name });
+  const handleDisable = (id, enabled, name) => {
+    setSelectedRow({ ...selectedRow, id, name, enabled });
     setDialogOpen(true);
   };
 
@@ -31,7 +31,7 @@ const DataTableCustomers = () => {
   };
 
   const handleDialogAccept = () => {
-    dispatch(crud.delete({ entity: 'customer', id: selectedRow.id }));
+    dispatch(crud.disable({ entity: 'customer', id: selectedRow.id }));
     setDialogOpen(false);
   };
 
@@ -39,7 +39,7 @@ const DataTableCustomers = () => {
   const readCustomerState = useSelector((store) => store.crud.read);
   const createCustomerState = useSelector((store) => store.crud.create);
   const updateCustomerState = useSelector((store) => store.crud.update);
-  const deleteCustomerState = useSelector((store) => store.crud.delete);
+  const disableCustomerState = useSelector((store) => store.crud.disable);
 
   const [rows, setRows] = useState([]);
 
@@ -63,7 +63,7 @@ const DataTableCustomers = () => {
 
   useEffect(() => {
     updateTable();
-  }, [createCustomerState, updateCustomerState, deleteCustomerState]);
+  }, [createCustomerState, updateCustomerState, disableCustomerState]);
 
   const columns = [
     {
@@ -130,8 +130,10 @@ const DataTableCustomers = () => {
             <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
-              <DeleteRounded />
+            <IconButton disabled={isDisabled} onClick={() => handleDisable(id, params.row.enabled, name)} size="small">
+              <Tooltip title={`${params.row.enabled ? 'Deshabilitar' : 'Habilitar'} usuario`}>
+                {params.row.enabled ? <GppBadRounded /> : <GppGoodRounded />}
+              </Tooltip>
             </IconButton>
           </div>
         );
@@ -143,7 +145,7 @@ const DataTableCustomers = () => {
     <Box display="flex" height="100%">
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
-        title={`Deshabilitar: ${selectedRow.name}`}
+        title={`${selectedRow.enabled ? 'Deshabilitar' : 'Habilitar'}: ${selectedRow.name}`}
         text="Esta acción no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onAccept={handleDialogAccept}
