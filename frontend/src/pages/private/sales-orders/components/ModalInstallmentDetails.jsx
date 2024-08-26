@@ -17,6 +17,8 @@ import {
 import { Close } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import formatDate from '@/utils/formatDate';
 import translatePaymentMethod from '@/utils/translatePaymentMethod';
@@ -39,6 +41,10 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
       paymentData: { ...data },
       installmentId,
     };
+    if (data.paymentMethod === 'MercadoPago') {
+      dispatch(sales.createMPLink({ entity: 'sales', body }));
+      return;
+    }
     dispatch(sales.createPayment({ entity: 'sales', body }));
   };
 
@@ -70,7 +76,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
     setDialogOpen(false);
   };
 
-  const installment = useSelector(selectCurrentItem)?.result.installments.find(
+  const installment = useSelector(selectCurrentItem)?.result?.installments?.find(
     (i) => i._id === installmentId
   );
   const payedAmount = installment?.payments?.reduce(
@@ -79,12 +85,57 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
   );
   const paymentDifference = (installment?.amount ?? 0) - payedAmount;
   const { isLoading } = useSelector((state) => state.sales.createPayment);
+  const mpLink = useSelector((state) => state.sales.createMPLink.result);
 
   useEffect(() => {
     if (open) {
       reset();
     }
   }, [open, reset]);
+
+  useEffect(() => {
+    if (mpLink) {
+      window.location.href = mpLink;
+    }
+  }, [mpLink]);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const installmentParam = searchParams?.get('installment');
+      const salesOrderParam = searchParams?.get('salesOrder');
+      const amountParam = searchParams?.get('amount');
+      const { pathname } = location;
+      if (installmentParam && salesOrderParam && amountParam) {
+        if (pathname.includes('success')) {
+          const body = {
+            paymentData: { paymentMethod: 'MercadoPago', amount: amountParam },
+            installmentId,
+          };
+          dispatch(sales.createPayment({ entity: 'sales', body }));
+        }
+        if (pathname.includes('failure')) {
+          notification.error({
+            message: 'Ocurrio un error',
+            description: 'No se pudo realizar el pago',
+          });
+        }
+        if (pathname.includes('pending')) {
+          notification.error({
+            message: 'El pago esta pendiente',
+            description: 'Comuniquese con su asesor comercial',
+          });
+        }
+      }
+
+      navigate(pathname, { replace: true });
+    };
+
+    fetchData();
+  }, [location]);
 
   return (
     <StyledModal open={open}>
@@ -171,7 +222,9 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
           </Box>
         </Box>
         <Box maxHeight={400}>
-          <TableContainer component={Paper} sx={{ maxHeight: 400, borderRadius: 2.5, overflow: 'auto' }}>
+          <TableContainer
+            component={Paper}
+            sx={{ maxHeight: 400, borderRadius: 2.5, overflow: 'auto' }}>
             <Table size="small">
               <TableHead>
                 <TableRow>

@@ -9,7 +9,7 @@ const PaymentSchema = new Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['Credit Card', 'Debit Card', 'Bank Transfer', 'Deposit'],
+      enum: ['Credit Card', 'Debit Card', 'MercadoPago', 'Deposit'],
     },
     photo: { type: String },
     removed: {

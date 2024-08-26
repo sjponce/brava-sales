@@ -50,6 +50,20 @@ const routes = {
         {
           path: '/sales-orders',
           element: <SalesOrder />,
+          children: [
+            {
+              path: '/sales-orders/success',
+              element: <SalesOrder />,
+            },
+            {
+              path: '/sales-orders/failure',
+              element: <SalesOrder />,
+            },
+            {
+              path: '/sales-orders/pending',
+              element: <SalesOrder />,
+            },
+          ]
         },
         {
           path: '/customers',

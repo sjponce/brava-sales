@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import translatePaymentMethod from '@/utils/translatePaymentMethod';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
-const paymentMethods = ['Deposit', 'Debit Card', 'Credit Card'];
+const paymentMethods = ['Deposit', 'Debit Card', 'Credit Card', 'MercadoPago'];
 
 const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) => {
   const [uploadedImg, setUploadedImg] = useState(watch('photo') || '');

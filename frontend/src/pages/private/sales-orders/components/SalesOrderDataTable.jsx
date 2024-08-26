@@ -2,6 +2,7 @@ import { Download, Visibility } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import sales from '@/redux/sales/actions';
@@ -39,6 +40,8 @@ const SalesOrderDataTable = () => {
     dispatch(docs.generate({ docName: 'salesOrder', body: { id } }));
   };
 
+  const location = useLocation();
+
   const updatedPayment = useSelector((state) => state.sales.createPayment);
 
   useEffect(() => {
@@ -56,11 +59,13 @@ const SalesOrderDataTable = () => {
 
   useEffect(() => {
     if (!salesOrderState?.result) return;
-    const newRows = salesOrderState.result.items.result.map((item) => ({ ...item, id: item._id }));
+    const newRows = salesOrderState.result?.items.result.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [salesOrderState]);
 
   const updateTable = () => {
+    console.log(salesOrderState);
+
     if (salesOrderState?.isLoading) return;
     dispatch(sales.listAll({ entity: 'sales' }));
   };
@@ -116,6 +121,21 @@ const SalesOrderDataTable = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const installment = searchParams?.get('installment');
+      const salesOrder = searchParams?.get('salesOrder');
+      if (installment && salesOrder) {
+        setSelectedRow({ ...selectedRow, salesOrder });
+        await dispatch(sales.read({ entity: 'sales', id: salesOrder }));
+        setOpenDetailsModal(true);
+      }
+    };
+
+    fetchData();
+  }, [location]);
 
   return (
     <Box display="flex" height="100%">

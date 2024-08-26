@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Close, Download, Payment, PrintOutlined } from '@mui/icons-material';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +24,7 @@ import { selectCurrentItem } from '@/redux/sales/selectors';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
 import ModalInstallmentDetails from './ModalInstallmentDetails';
+import { useLocation } from 'react-router-dom';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -50,6 +51,22 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
     setSelectedRow(id);
     setOpenDetailsDialog(true);
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const installment = searchParams?.get('installment');
+      const salesOrder = searchParams?.get('salesOrder');
+      if (installment && salesOrder) {
+        setSelectedRow(installment);
+        setOpenDetailsDialog(true);
+      }
+    };
+
+    fetchData();
+  }, [location]);
 
   return (
     <StyledModal

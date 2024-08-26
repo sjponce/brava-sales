@@ -9,7 +9,7 @@ const createPayment = async (req, res) => {
     const installment = await Installment.findById(installmentId).populate('payments').exec();
 
     if (!installment) {
-      throw new Error('Installment not found');
+      throw new Error('No se encontro la cuota');
     }
 
     const newPayment = await new Payment({
