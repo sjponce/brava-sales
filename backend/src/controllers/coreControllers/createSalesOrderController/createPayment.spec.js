@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const createPayment = require('./createPayment');
+const { getPreference } = require('@/config/mercadoPagoConfig');
 
 jest.mock('mongoose', () => {
   const mInstallment = {
@@ -17,15 +18,19 @@ jest.mock('mongoose', () => {
   };
 });
 const paymentModel = function () {
-    return {
-        save: jest.fn().mockResolvedValue({ _id: 'payment123', amount: 100 }),
-      };
+  return {
+    save: jest.fn().mockResolvedValue({ _id: 'payment123', amount: 100 }),
   };
-  paymentModel.findOne = jest.fn().mockReturnValue({
-    exec: jest.fn(),
-    sort: jest.fn().mockReturnThis(),
-    limit: jest.fn().mockReturnThis(),
-  });
+};
+paymentModel.findOne = jest.fn().mockReturnValue({
+  exec: jest.fn(),
+  sort: jest.fn().mockReturnThis(),
+  limit: jest.fn().mockReturnThis(),
+});
+
+jest.mock('@/config/mercadoPagoConfig', () => ({
+  getPreference: jest.fn(),
+}));
 
 describe('createPayment', () => {
   let req, res;
@@ -69,7 +74,7 @@ describe('createPayment', () => {
         _id: 'installment123',
         payments: expect.arrayContaining([expect.objectContaining({ _id: 'payment123' })]),
       }),
-      message: 'Se encontraron las ordenes de venta',
+      message: 'Se creo el pago',
     });
   });
 
@@ -78,12 +83,11 @@ describe('createPayment', () => {
 
     await createPayment(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'Ocurrio un error buscando las ordenedes de venta',
-      error: 'Installment not found',
+      message: 'No se encontro la cuota',
     });
   });
 
@@ -102,7 +106,6 @@ describe('createPayment', () => {
       success: false,
       result: null,
       message: 'El monto es mayor al monto de la cuota',
-      error: 'El monto es mayor al monto de la cuota',
     });
   });
 
@@ -120,5 +123,107 @@ describe('createPayment', () => {
     expect(mockInstallment.status).toBe('Paid');
     expect(mockInstallment.totalPaymentDate).toBeDefined();
     expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  test('test_create_payment_with_mercadopago_success', async () => {
+    const mockInstallment = {
+      _id: 'installment123',
+      amount: 200,
+      payments: [],
+      salesOrderCode: 'SO001',
+      save: jest.fn().mockResolvedValue(true),
+    };
+    mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
+
+    const mockMercadoPagoData = {
+      preference_id: 'pref123',
+      auto_return: 'approved',
+      items: [{ title: 'SO001', unit_price: 100 }],
+    };
+    getPreference.mockResolvedValue(mockMercadoPagoData);
+
+    req.body.paymentData.paymentMethod = 'MercadoPago';
+    req.body.mercadoPagoData = { preference_id: 'pref123' };
+
+    await createPayment(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      success: true,
+      installment: expect.objectContaining({
+        _id: 'installment123',
+        amount: 200,
+        salesOrderCode: 'SO001',
+        payments: expect.arrayContaining([
+          expect.objectContaining({
+            _id: 'payment123',
+            amount: 100,
+          }),
+        ]),
+      }),
+      message: 'Se creo el pago',
+    }));
+  });
+
+  test('test_create_payment_with_mercadopago_missing_data', async () => {
+    req.body.paymentData.paymentMethod = 'MercadoPago';
+    req.body.mercadoPagoData = null;
+
+    await createPayment(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'No se encuentra la informacion de mercado pago',
+    });
+  });
+
+  test('test_create_payment_with_mercadopago_not_approved', async () => {
+    const mockMercadoPagoData = {
+      preference_id: 'pref123',
+      auto_return: 'pending',
+    };
+    getPreference.mockResolvedValue(mockMercadoPagoData);
+
+    req.body.paymentData.paymentMethod = 'MercadoPago';
+    req.body.mercadoPagoData = { preference_id: 'pref123' };
+
+    await createPayment(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'El pago no fue aprobado',
+    });
+  });
+
+  test('test_create_payment_with_mercadopago_duplicate_payment', async () => {
+    const mockInstallment = {
+      _id: 'installment123',
+      amount: 200,
+      payments: [{ mercadoPagoData: { preference_id: 'pref123' } }],
+      save: jest.fn().mockResolvedValue(true),
+    };
+    mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
+
+    const mockMercadoPagoData = {
+      preference_id: 'pref123',
+      auto_return: 'approved',
+    };
+    getPreference.mockResolvedValue(mockMercadoPagoData);
+
+    req.body.paymentData.paymentMethod = 'MercadoPago';
+    req.body.mercadoPagoData = { preference_id: 'pref123' };
+
+    await createPayment(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'El pago ya fue procesado anteriormente',
+    });
   });
 });

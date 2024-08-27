@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const { MercadoPagoConfig, Preference } = require("mercadopago");
+const { createPreference } = require("@/config/mercadoPagoConfig");
 const mongoose = require('mongoose');
 const Installment = mongoose.model('Installment');
 
@@ -12,8 +12,6 @@ const createMPLink = async (req, res) => {
     if (!installment) {
       throw new Error('No se encontro la cuota');
     }
-
-  const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 
   const body = {
     items: [
@@ -32,7 +30,7 @@ const createMPLink = async (req, res) => {
     auto_return: 'approved',
   };
   try {
-    const preference = await new Preference(client).create({ body });
+    const preference = await createPreference(body);
     if(preference) {
         return res.status(200).json({
             success: true,
