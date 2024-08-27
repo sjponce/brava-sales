@@ -43,11 +43,11 @@ const createPayment = async (req, res) => {
           message: 'El pago no fue aprobado',
         });
       }
-
+      
       if (
         installment.payments.find(
           (payment) =>
-            payment.mercadoPagoData?.preference_id === mercadoPagoPaymentData?.preference_id
+            payment.mercadoPagoData?.preference_id === mercadoPagoData?.preference_id
         )
       ) {
         return res.status(409).json({
@@ -75,7 +75,7 @@ const createPayment = async (req, res) => {
     const newPayment = await new Payment({
       amount: paymentData.amount,
       paymentMethod: paymentData.paymentMethod,
-      mercadoPagoData: { ...mercadoPagoPaymentData },
+      mercadoPagoData,
       photo: paymentData.photo,
     }).save();
     installment.payments.push(newPayment);
