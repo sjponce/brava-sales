@@ -113,6 +113,19 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
         if (pathname.includes('success')) {
           const body = {
             paymentData: { paymentMethod: 'MercadoPago', amount: amountParam },
+            mercadoPagoData: {
+              collection_id: searchParams?.get('collection_id'),
+              collection_status: searchParams?.get('collection_status'),
+              payment_id: searchParams?.get('payment_id'),
+              status: searchParams?.get('status'),
+              external_reference: searchParams?.get('external_reference'),
+              payment_type: searchParams?.get('payment_type'),
+              merchant_order_id: searchParams?.get('merchant_order_id'),
+              preference_id: searchParams?.get('preference_id'),
+              site_id: searchParams?.get('site_id'),
+              processing_mode: searchParams?.get('processing_mode'),
+              merchant_account_id: searchParams?.get('merchant_account_id'),
+            },
             installmentId,
           };
           dispatch(sales.createPayment({ entity: 'sales', body }));
@@ -129,9 +142,8 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
             description: 'Comuniquese con su asesor comercial',
           });
         }
+        navigate(pathname, { replace: true });
       }
-
-      navigate(pathname, { replace: true });
     };
 
     fetchData();

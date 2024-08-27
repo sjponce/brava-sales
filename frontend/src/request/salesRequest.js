@@ -52,7 +52,7 @@ export const salesRequest = {
     try {
       const response = await axios.put(`${entity}/create-payment`, body);
       successHandler(response, {
-        notifyOnSuccess: false,
+        notifyOnSuccess: true,
         notifyOnFailed: true,
       });
       return response.data;

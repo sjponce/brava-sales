@@ -3,7 +3,6 @@ import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import sales from '@/redux/sales/actions';
 import docs from '@/redux/docs/actions';
@@ -14,26 +13,15 @@ import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
-    name: '',
   });
 
   const handleDetails = async (id) => {
     setSelectedRow({ ...selectedRow, id });
     await dispatch(sales.read({ entity: 'sales', id }));
     setOpenDetailsModal(true);
-  };
-
-  const handleDialogCancel = () => {
-    setOpenCreateDialog(false);
-  };
-
-  const handleDialogAccept = () => {
-    dispatch(sales.delete({ entity: 'sales', id: selectedRow.id }));
-    setOpenCreateDialog(false);
   };
 
   const handleDownload = (id) => {
@@ -64,8 +52,6 @@ const SalesOrderDataTable = () => {
   }, [salesOrderState]);
 
   const updateTable = () => {
-    console.log(salesOrderState);
-
     if (salesOrderState?.isLoading) return;
     dispatch(sales.listAll({ entity: 'sales' }));
   };
@@ -128,7 +114,7 @@ const SalesOrderDataTable = () => {
       const installment = searchParams?.get('installment');
       const salesOrder = searchParams?.get('salesOrder');
       if (installment && salesOrder) {
-        setSelectedRow({ ...selectedRow, salesOrder });
+        setSelectedRow({ id: salesOrder });
         await dispatch(sales.read({ entity: 'sales', id: salesOrder }));
         setOpenDetailsModal(true);
       }
@@ -140,13 +126,6 @@ const SalesOrderDataTable = () => {
   return (
     <Box display="flex" height="100%">
       <DataTable columns={columns} rows={rows} />
-      <CustomDialog
-        title={`Deshabilitar: ${selectedRow.name}`}
-        text="Esta acción no se puede deshacer, ¿Desea continuar?"
-        isOpen={openCreateDialog}
-        onAccept={handleDialogAccept}
-        onCancel={handleDialogCancel}
-      />
       <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
       <Loading
         isLoading={

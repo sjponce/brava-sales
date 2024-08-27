@@ -18,13 +18,13 @@ import React, { useEffect, useState } from 'react';
 import { Close, Download, Payment, PrintOutlined } from '@mui/icons-material';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import docs from '@/redux/docs/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
 import ModalInstallmentDetails from './ModalInstallmentDetails';
-import { useLocation } from 'react-router-dom';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
