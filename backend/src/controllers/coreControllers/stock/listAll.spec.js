@@ -24,7 +24,7 @@ describe('listAll', () => {
   test('pass', ()=> {
     expect(true).toBe(true);
   })
-  /* test('test_listAll_successful_with_combined_data', async () => {
+  test('test_listAll_successful_with_combined_data', async () => {
     const mockStockData = {
       stock123: [
         { id: 'var1', color: 'red', imageUrl: 'red.jpg' },
@@ -92,5 +92,5 @@ describe('listAll', () => {
       message: 'Ocurrio un error contactando a Stock',
       error: errorMessage,
     });
-  }); */
+  });
 });
