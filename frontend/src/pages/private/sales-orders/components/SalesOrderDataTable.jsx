@@ -32,10 +32,13 @@ const SalesOrderDataTable = () => {
 
   const updatedPayment = useSelector((state) => state.sales.createPayment);
 
+  const crudUpdate = useSelector((state) => state.crud.update);
+
   useEffect(() => {
-    if (!updatedPayment.result) return;
+    if (!updatedPayment.result && !crudUpdate?.result) return;
+    if (updatedPayment.isLoading && crudUpdate?.isLoading) return;
     dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
-  }, [updatedPayment]);
+  }, [updatedPayment, crudUpdate]);
 
   const salesOrderState = useSelector((store) => store.sales.listAll);
   const readSalesOrderState = useSelector((store) => store.sales.read);

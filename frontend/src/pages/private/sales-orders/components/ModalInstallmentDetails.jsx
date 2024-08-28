@@ -11,14 +11,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
   styled,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Cancel, Check, Close, Image } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import formatDate from '@/utils/formatDate';
 import translatePaymentMethod from '@/utils/translatePaymentMethod';
@@ -26,6 +26,8 @@ import InstallmentPaymentForm from '@/forms/InstallmentPaymentForm';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import sales from '@/redux/sales/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
+import translateStatus from '@/utils/translateSalesStatus';
+import crud from '@/redux/crud/actions';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -58,6 +60,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
     formState: { isValid },
   } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const handleDialogCancel = () => {
     setDialogOpen(false);
   };
@@ -87,6 +90,10 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
   const { isLoading } = useSelector((state) => state.sales.createPayment);
   const mpLink = useSelector((state) => state.sales.createMPLink.result);
 
+  const [selectedRow, setSelectedRow] = useState({
+    id: '',
+  });
+
   useEffect(() => {
     if (open) {
       reset();
@@ -110,44 +117,54 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
       const amountParam = searchParams?.get('amount');
       const { pathname } = location;
       if (installmentParam && salesOrderParam && amountParam) {
-        if (pathname.includes('success')) {
-          const body = {
-            paymentData: { paymentMethod: 'MercadoPago', amount: amountParam },
-            mercadoPagoData: {
-              collection_id: searchParams?.get('collection_id'),
-              collection_status: searchParams?.get('collection_status'),
-              payment_id: searchParams?.get('payment_id'),
-              status: searchParams?.get('status'),
-              external_reference: searchParams?.get('external_reference'),
-              payment_type: searchParams?.get('payment_type'),
-              merchant_order_id: searchParams?.get('merchant_order_id'),
-              preference_id: searchParams?.get('preference_id'),
-              site_id: searchParams?.get('site_id'),
-              processing_mode: searchParams?.get('processing_mode'),
-              merchant_account_id: searchParams?.get('merchant_account_id'),
-            },
-            installmentId,
-          };
-          dispatch(sales.createPayment({ entity: 'sales', body }));
-        }
-        if (pathname.includes('failure')) {
-          notification.error({
-            message: 'Ocurrio un error',
-            description: 'No se pudo realizar el pago',
-          });
-        }
-        if (pathname.includes('pending')) {
-          notification.error({
-            message: 'El pago esta pendiente',
-            description: 'Comuniquese con su asesor comercial',
-          });
-        }
+        const body = {
+          paymentData: { paymentMethod: 'MercadoPago', amount: amountParam },
+          mercadoPagoData: {
+            collection_id: searchParams?.get('collection_id'),
+            collection_status: searchParams?.get('collection_status'),
+            payment_id: searchParams?.get('payment_id'),
+            status: searchParams?.get('status'),
+            external_reference: searchParams?.get('external_reference'),
+            payment_type: searchParams?.get('payment_type'),
+            merchant_order_id: searchParams?.get('merchant_order_id'),
+            preference_id: searchParams?.get('preference_id'),
+            site_id: searchParams?.get('site_id'),
+            processing_mode: searchParams?.get('processing_mode'),
+            merchant_account_id: searchParams?.get('merchant_account_id'),
+          },
+          installmentId,
+        };
+        dispatch(sales.createPayment({ entity: 'sales', body }));
         navigate(pathname, { replace: true });
       }
     };
 
     fetchData();
   }, [location]);
+
+  const handleApproval = (id, status) => {
+    setSelectedRow({
+      ...selectedRow,
+      id,
+      status,
+    });
+    setStatusDialogOpen(true);
+  };
+
+  const handleDialogAccept = () => {
+    console.log('asdsad');
+
+    dispatch(
+      crud.update({
+        entity: 'payment',
+        id: selectedRow.id,
+        jsonData: {
+          status: selectedRow.status,
+        },
+      })
+    );
+    setStatusDialogOpen(false);
+  };
 
   return (
     <StyledModal open={open}>
@@ -182,7 +199,12 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={isLoading || !isValid || !watch('photo') || !watch('paymentMethod')}
+                disabled={
+                  isLoading ||
+                  !isValid ||
+                  (watch('paymentMethod') !== 'MercadoPago' && !watch('photo')) ||
+                  !watch('paymentMethod')
+                }
                 size="medium">
                 <Typography variant="button">Añadir pago</Typography>
               </Button>
@@ -192,6 +214,13 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
               text="Esta acción no se puede deshacer, ¿Desea continuar?"
               isOpen={dialogOpen}
               onAccept={handleSubmit(onSubmit)}
+              onCancel={handleDialogCancel}
+            />
+            <CustomDialog
+              title={`${selectedRow.status === 'Rejected' ? 'Aprobar' : 'Rechazar'} Pago`}
+              text="Esta acción no se puede deshacer, ¿Desea continuar?"
+              isOpen={statusDialogOpen}
+              onAccept={handleDialogAccept}
               onCancel={handleDialogCancel}
             />
           </Box>
@@ -256,6 +285,13 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
                   <TableCell align="center">
                     <Typography variant="overline">Método de pago</Typography>
                   </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="overline">Estado</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    {' '}
+                    <Typography variant="overline">Acción</Typography>{' '}
+                  </TableCell>
                 </TableRow>
               </TableHead>
 
@@ -277,6 +313,34 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
                         <Typography align="center" variant="subtitle2">
                           {translatePaymentMethod(p.paymentMethod)}
                         </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography align="center" variant="subtitle2">
+                          {translateStatus(p.status)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell p={8}>
+                        <Box display="flex" justifyContent="center">
+                          <IconButton
+                            disabled={!p.photo}
+                            onClick={() => window.open(p.photo, '_blank')}>
+                            <Image color={p.photo ? '' : 'disabled'} />
+                          </IconButton>
+                          <IconButton
+                            disabled={p.status === 'Approved'}
+                            onClick={() => handleApproval(p._id, 'Approved')}
+                            size="small">
+                            <Check color={p.status !== 'Approved' ? '' : 'disabled'} />
+                            <Tooltip title="Aprobar pago" />
+                          </IconButton>
+                          <IconButton
+                            disabled={p.status === 'Rejected'}
+                            onClick={() => handleApproval(p._id, 'Rejected')}
+                            size="small">
+                            <Cancel />
+                            <Tooltip title="Rechazar pago" />
+                          </IconButton>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   </React.Fragment>

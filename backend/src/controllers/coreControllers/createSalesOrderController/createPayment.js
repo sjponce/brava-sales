@@ -20,6 +20,17 @@ const createPayment = async (req, res) => {
     let mercadoPagoPaymentData;
 
     if (paymentData.paymentMethod === 'MercadoPago') {
+      if (
+        mercadoPagoData.collection_status === 'null' ||
+        mercadoPagoData.collection_status === 'rejected'
+      ) {
+        return res.status(409).json({
+          success: false,
+          result: null,
+          message: 'El pago no fue aprobado',
+        });
+      }
+
       if (!mercadoPagoData) {
         return res.status(409).json({
           success: false,
@@ -36,18 +47,10 @@ const createPayment = async (req, res) => {
           message: 'No se encuentra la informacion de mercado pago',
         });
       }
-      if (mercadoPagoPaymentData.auto_return !== 'approved') {
-        return res.status(409).json({
-          success: false,
-          result: null,
-          message: 'El pago no fue aprobado',
-        });
-      }
-      
+
       if (
         installment.payments.find(
-          (payment) =>
-            payment.mercadoPagoData?.preference_id === mercadoPagoData?.preference_id
+          (payment) => payment.mercadoPagoData?.preference_id === mercadoPagoData?.preference_id
         )
       ) {
         return res.status(409).json({
@@ -72,10 +75,23 @@ const createPayment = async (req, res) => {
       }
     }
 
+    let status = mercadoPagoData?.status ?? 'Pending';
+
+    if (status === 'approved') {
+      status = 'Approved';
+    }
+    if (status === 'pending') {
+      status = 'Pending';
+    }
+    if (status === 'rejected') {
+      status = 'Rejected';
+    }
+
     const newPayment = await new Payment({
       amount: paymentData.amount,
       paymentMethod: paymentData.paymentMethod,
       mercadoPagoData,
+      status,
       photo: paymentData.photo,
     }).save();
     installment.payments.push(newPayment);

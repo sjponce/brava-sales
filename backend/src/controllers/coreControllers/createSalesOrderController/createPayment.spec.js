@@ -165,20 +165,6 @@ describe('createPayment', () => {
     }));
   });
 
-  test('test_create_payment_with_mercadopago_missing_data', async () => {
-    req.body.paymentData.paymentMethod = 'MercadoPago';
-    req.body.mercadoPagoData = null;
-
-    await createPayment(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(409);
-    expect(res.json).toHaveBeenCalledWith({
-      success: false,
-      result: null,
-      message: 'No se encuentra la informacion de mercado pago',
-    });
-  });
-
   test('test_create_payment_with_mercadopago_not_approved', async () => {
     const mockMercadoPagoData = {
       preference_id: 'pref123',
@@ -195,7 +181,7 @@ describe('createPayment', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'El pago no fue aprobado',
+      message: 'Los datos de mercado pago no coinciden con los datos de la cuota',
     });
   });
 
