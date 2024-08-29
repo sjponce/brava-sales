@@ -31,7 +31,11 @@ const DataTableCustomers = () => {
   };
 
   const handleDialogAccept = () => {
-    dispatch(crud.disable({ entity: 'customer', id: selectedRow.id }));
+    dispatch(crud.update({
+      entity: 'customer',
+      id: selectedRow.id,
+      jsonData: { enabled: !selectedRow.enabled }
+    }));
     setDialogOpen(false);
   };
 
