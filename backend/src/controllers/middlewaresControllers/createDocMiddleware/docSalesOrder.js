@@ -23,14 +23,16 @@ const docSalesOrder = async (req, res) => {
         documentNumber: salesOrderData.customer.documentNumber,
         address: salesOrderData.customer.address,
         number: salesOrderData.customer.number,
-        discount: salesOrderData.discount,
+        discount: salesOrderData.discount || 0,
         products: salesOrderData.products.map(product => ({
           name: product.product.stockId,
+          color: product.color,
           price: product.price,
           sizes: product.sizes.map(size => ({
             size: size.size,
-            quantity: size.quantity
-          }))
+            quantity: size.quantity,
+            subFinalAmount: product.price * size.quantity
+          })),
         })),
       });
 
