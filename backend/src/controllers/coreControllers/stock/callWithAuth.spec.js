@@ -31,7 +31,7 @@ describe('callWithAuth', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'Hubo un error en la autenticacion con stock',
+      message: 'Hubo un error en la autenticación con stock',
     });
   });
 

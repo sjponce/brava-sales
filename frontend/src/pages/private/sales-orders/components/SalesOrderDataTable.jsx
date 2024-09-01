@@ -1,34 +1,50 @@
-import { Visibility } from '@mui/icons-material';
+import { Download, Visibility } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import DataTable from '@/components/dataTable/DataTable';
 import sales from '@/redux/sales/actions';
+import docs from '@/redux/docs/actions';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
+import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedRow] = useState({
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({
     id: '',
     name: '',
   });
 
   const handleDetails = async (id) => {
-    console.log(id);
+    setSelectedRow({ ...selectedRow, id });
+    await dispatch(sales.read({ entity: 'sales', id }));
+    setOpenDetailsModal(true);
   };
 
   const handleDialogCancel = () => {
-    setDialogOpen(false);
+    setOpenCreateDialog(false);
   };
 
   const handleDialogAccept = () => {
     dispatch(sales.delete({ entity: 'sales', id: selectedRow.id }));
-    setDialogOpen(false);
+    setOpenCreateDialog(false);
   };
+
+  const handleDownload = (id) => {
+    dispatch(docs.generate({ docName: 'salesOrder', body: { id } }));
+  };
+
+  const updatedPayment = useSelector((state) => state.sales.createPayment);
+
+  useEffect(() => {
+    if (!updatedPayment.result) return;
+    dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
+  }, [updatedPayment]);
 
   const salesOrderState = useSelector((store) => store.sales.listAll);
   const readSalesOrderState = useSelector((store) => store.sales.read);
@@ -92,6 +108,9 @@ const SalesOrderDataTable = () => {
             <IconButton size="small" onClick={() => handleDetails(id)}>
               <Visibility />
             </IconButton>
+            <IconButton size="small" onClick={() => handleDownload(id)}>
+              <Download />
+            </IconButton>
           </div>
         );
       },
@@ -103,12 +122,17 @@ const SalesOrderDataTable = () => {
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
         title={`Deshabilitar: ${selectedRow.name}`}
-        text="Esta accion no se puede deshacer, ¿Desea continuar?"
-        isOpen={dialogOpen}
+        text="Esta acción no se puede deshacer, ¿Desea continuar?"
+        isOpen={openCreateDialog}
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
-      <Loading isLoading={salesOrderState?.isLoading || readSalesOrderState?.isLoading} />
+      <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
+      <Loading
+        isLoading={
+          salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
+        }
+      />
     </Box>
   );
 };

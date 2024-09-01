@@ -147,7 +147,7 @@ const AddSellerModal = ({
           </Button>
           <CustomDialog
             title={`${isUpdate ? 'Editar' : 'Crear nuevo'} cliente`}
-            text="Esta accion no se puede deshacer, ¿Desea continuar?"
+            text="Esta acción no se puede deshacer, ¿Desea continuar?"
             isOpen={dialogOpen}
             onAccept={handleSubmit(onSubmit)}
             onCancel={handleDialogCancel}

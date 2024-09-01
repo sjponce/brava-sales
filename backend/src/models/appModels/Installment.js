@@ -16,7 +16,7 @@ const InstallmentSchema = new Schema(
           return /^OV-\d+$/.test(v);
         },
         message: (props) =>
-          `${props.value} is not a valid sales order ID. It should follow the pattern OV-n where n is a number.`,
+          `${props.value} El id tiene que tener un formato de OV-xxx.`,
       },
     },
     installmentNumber: {
@@ -36,12 +36,17 @@ const InstallmentSchema = new Schema(
       enum: ['Pending', 'Paid', 'Overdue'],
       default: 'Pending',
     },
-    paymentDate: Date,
-    paymentAmount: Number,
+    totalPaymentDate: Date,
     removed: {
       type: Boolean,
       default: false,
     },
+    payments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Payment',
+      },
+    ],
     enabled: {
       type: Boolean,
       default: true,

@@ -17,7 +17,7 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "Jest Current File",
+        "name": "Backend Jest Current File",
         "cwd": "${workspaceFolder}/backend",
         "runtimeExecutable": "npm",
         "runtimeArgs": ["test"],
@@ -28,6 +28,22 @@
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Frontend Jest Current File",
+        "cwd": "${workspaceFolder}/frontend",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": ["test"],
+        "args": [
+          "${fileBasename}",
+          "--config",
+          "jest.config.js"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
       }
+
     ],
 }

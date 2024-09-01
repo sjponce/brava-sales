@@ -2,12 +2,11 @@ import * as actionTypes from './types';
 import { salesRequest } from '@/request/salesRequest';
 
 const sales = {
-  resetState:
-    () => async (dispatch) => {
-      dispatch({
-        type: actionTypes.RESET_STATE,
-      });
-    },
+  resetState: () => async (dispatch) => {
+    dispatch({
+      type: actionTypes.RESET_STATE,
+    });
+  },
   resetAction:
     ({ actionType }) => async (dispatch) => {
       dispatch({
@@ -217,6 +216,35 @@ const sales = {
       }
     },
 
+  createPayment:
+    ({ entity, body }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.RESET_ACTION,
+        keyState: 'createPayment',
+      });
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'createPayment',
+        payload: null,
+      });
+
+      const data = await salesRequest.createPayment({ entity, body });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'createPayment',
+          payload: data.installment,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'createPayment',
+          payload: null,
+        });
+      }
+    },
+
   search:
     ({ entity, options = {} }) => async (dispatch) => {
       dispatch({
@@ -241,21 +269,18 @@ const sales = {
         });
       }
     },
-  updateOrderOptions:
-    (data) => ({
-      type: actionTypes.UPDATE_ORDER_OPTIONS,
-      payload: data,
-    }),
-  updatePaymentOptions:
-    (data) => ({
-      type: actionTypes.UPDATE_PAYMENT_OPTIONS,
-      payload: data,
-    }),
-  setCurrentStep:
-    (step) => ({
-      type: actionTypes.SET_CURRENT_STEP,
-      payload: step,
-    }),
+  updateOrderOptions: (data) => ({
+    type: actionTypes.UPDATE_ORDER_OPTIONS,
+    payload: data,
+  }),
+  updatePaymentOptions: (data) => ({
+    type: actionTypes.UPDATE_PAYMENT_OPTIONS,
+    payload: data,
+  }),
+  setCurrentStep: (step) => ({
+    type: actionTypes.SET_CURRENT_STEP,
+    payload: step,
+  }),
 };
 
 export default sales;

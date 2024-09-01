@@ -55,6 +55,13 @@ const initialState = {
       isLoading: false,
       isSuccess: true,
     },
+    createPayment: {
+      result: {
+        _id: '1',
+      },
+      isLoading: false,
+      isSuccess: true,
+    },
     read: { isLoading: false },
     create: { isLoading: false },
     update: { isLoading: false },

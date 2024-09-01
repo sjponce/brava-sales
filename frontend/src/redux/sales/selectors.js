@@ -6,6 +6,8 @@ export const selectCurrentItem = createSelector([selectSales], (sales) => sales.
 
 export const selectListItems = createSelector([selectSales], (sales) => sales.list);
 
+export const selectCreatePayment = createSelector([selectSales], (sales) => sales.createPayment);
+
 export const selectListAllItems = createSelector([selectSales], (sales) => sales.listAll);
 
 export const selectItemById = (itemId) => createSelector(

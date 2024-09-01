@@ -38,7 +38,19 @@ export const salesRequest = {
   },
   read: async ({ entity, id }) => {
     try {
-      const response = await axios.get(`${entity}/read/${id}`);
+      const response = await axios.get(`${entity}/${id}`);
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  createPayment: async ({ entity, body }) => {
+    try {
+      const response = await axios.put(`${entity}/create-payment`, body);
       successHandler(response, {
         notifyOnSuccess: false,
         notifyOnFailed: true,

@@ -21,6 +21,12 @@ describe('salesReducer', () => {
     current: {
       result: null,
     },
+    createPayment: {
+      current: null,
+      isLoading: false,
+      isSuccess: false,
+      result: null,
+    },
     list: {
       result: {
         items: [],
@@ -46,7 +52,7 @@ describe('salesReducer', () => {
     const action = { type: actionTypes.RESET_STATE };
     const newState = salesReducer(undefined, action);
     expect(newState).toEqual(INITIAL_STATE);
-  })
+  });
 
   it('should update the current state with the payload when the action type is CURRENT_ITEM', () => {
     const payload = { id: 1, name: 'Test Item' };

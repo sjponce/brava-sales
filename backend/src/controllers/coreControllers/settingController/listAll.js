@@ -20,7 +20,7 @@ const listAll = async (req, res) => {
     return res.status(203).json({
       success: false,
       result: [],
-      message: 'La coleccion esta vacia',
+      message: 'La colección esta vacia',
     });
   }
 };
