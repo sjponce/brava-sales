@@ -1,11 +1,13 @@
 const { createDocx } = require('@/helpers/documentHelper');
 const read = require('../../middlewaresControllers/createCRUDController/read');
+const formatDate = require('@/utils/formatDate');
 const { default: mongoose } = require('mongoose');
 
 const docInstallment = async (req, res) => {
   try {
     const { id } = req.body;
     const Model = mongoose.model('Installment');
+    const Customer = mongoose.model('Customer');
     const readResponse = await new Promise((resolve) => {
       read(Model, { params: { id } }, { status: () => ({ json: resolve }) });
     });
@@ -13,18 +15,19 @@ const docInstallment = async (req, res) => {
     if (readResponse.success && readResponse.result) {
       const installmentData = readResponse.result;
       const salesOrderData = readResponse.result.salesOrder;
+      const customerData = await Customer.findById(salesOrderData.customer).exec();
 
       const doc = createDocx('Installment', {
-        number: installmentData.installmentNumber,
-        name: salesOrderData.customer.name,
-        lastName: salesOrderData.customer.lastName,
-        data: { email: salesOrderData.customer.email },
-        phone: { number: salesOrderData.customer.phone },
-        products: salesOrderData.products.map(product => ({
-          name: product.product.name,
-          price: product.price,
-          quantity: product.quantity
-        })),
+        code: salesOrderData.salesOrderCode,
+        orderDate: formatDate(salesOrderData.orderDate),
+        installmentAmount: installmentData.amount,
+        installmentNumber: installmentData.installmentNumber,
+        dueDate: formatDate(installmentData.dueDate),
+        address: salesOrderData.shippingAddress,
+        name: customerData.name,
+        number: customerData.number,
+        documentNumber: customerData.documentNumber,
+        email: customerData.email,
       });
 
       return res.status(200).json({
