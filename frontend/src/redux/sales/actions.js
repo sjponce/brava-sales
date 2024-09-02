@@ -244,7 +244,34 @@ const sales = {
         });
       }
     },
+  createMPLink:
+    ({ entity, body }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.RESET_ACTION,
+        keyState: 'createMPLink',
+      });
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'createMPLink',
+        payload: null,
+      });
 
+      const data = await salesRequest.createMPLink({ entity, body });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'createMPLink',
+          payload: data.redirectUrl,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'createMPLink',
+          payload: null,
+        });
+      }
+    },
   search:
     ({ entity, options = {} }) => async (dispatch) => {
       dispatch({
