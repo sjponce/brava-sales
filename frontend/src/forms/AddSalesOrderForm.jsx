@@ -24,7 +24,7 @@ const AddSalesOrderForm = ({ setValue, watch }) => {
             sx={{ maxWidth: '300px', width: '100%' }}
             value={selectedCustomer}
             onChange={(event, value) => { setValue('customer', value); }}
-            options={customers.result.items.result}
+            options={customers.result?.items?.result}
             getOptionLabel={(option) => option?.name || ''}
             filterSelectedOptions
             isOptionEqualToValue={(option, value) => option._id === value._id || value === ''}

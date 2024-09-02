@@ -5,6 +5,7 @@ import SalesOrderDataTable from './SalesOrderDataTable';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
 import { request } from '@/request';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const mockDelete = jest.fn().mockResolvedValue({
   message: 'Se elimino el elemento',
@@ -90,7 +91,9 @@ describe('SalesOrderDataTable Component', () => {
   test('test_render_data_table', async () => {
     render(
       <Provider store={mockStore}>
-        <SalesOrderDataTable />
+        <Router>
+          <SalesOrderDataTable />
+        </Router>
       </Provider>
     );
     await waitFor(() => {
@@ -121,7 +124,9 @@ describe('SalesOrderDataTable Component', () => {
     });
     render(
       <Provider store={mockStore}>
-        <SalesOrderDataTable />
+        <Router>
+          <SalesOrderDataTable />
+        </Router>
       </Provider>
     );
     await waitFor(() => {

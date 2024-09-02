@@ -7,7 +7,6 @@ import Customers from '@/pages/private/customers/Customers';
 import Products from '@/pages/private/products/Products';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
-// const NotFound = lazy(() => import('@/pages/NotFound.jsx'));
 const CommingSoon = lazy(() => import('@/pages/private/CommingSoon.jsx'));
 
 const Dashboard = lazy(() => import('@/pages/private/Dashboard'));
@@ -50,6 +49,20 @@ const routes = {
         {
           path: '/sales-orders',
           element: <SalesOrder />,
+          children: [
+            {
+              path: '/sales-orders/success',
+              element: <SalesOrder />,
+            },
+            {
+              path: '/sales-orders/failure',
+              element: <SalesOrder />,
+            },
+            {
+              path: '/sales-orders/pending',
+              element: <SalesOrder />,
+            },
+          ]
         },
         {
           path: '/customers',

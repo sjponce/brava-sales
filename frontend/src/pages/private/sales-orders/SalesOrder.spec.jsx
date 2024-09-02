@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import SalesOrders from './SalesOrder';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('SalesOrders Component', () => {
   let store;
@@ -26,7 +27,9 @@ describe('SalesOrders Component', () => {
   test('test_open_add_sales_order_modal', async () => {
     render(
       <Provider store={store}>
-        <SalesOrders />
+        <Router>
+          <SalesOrders />
+        </Router>
       </Provider>
     );
 
@@ -41,7 +44,9 @@ describe('SalesOrders Component', () => {
   test('test_close_add_sales_order_modal', async () => {
     render(
       <Provider store={store}>
-        <SalesOrders />
+        <Router>
+          <SalesOrders />
+        </Router>
       </Provider>
     );
 
