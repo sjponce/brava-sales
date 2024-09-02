@@ -1,6 +1,6 @@
 const { createDocx } = require('@/helpers/documentHelper');
 const listAll = require('../../coreControllers/createSalesOrderController/listAll');
-const { format } = require('date-fns');
+const formatDate = require('@/utils/formatDate');
 
 const docSalesOrder = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ const docSalesOrder = async (req, res) => {
       const doc = createDocx('SalesOrder', {
         code: salesOrderData.salesOrderCode,
         name: salesOrderData.customer.name,
-        orderDate: format(new Date(salesOrderData.orderDate), 'dd/MM/yyyy'),
+        orderDate: formatDate(salesOrderData.orderDate),
         totalAmount: salesOrderData.totalAmount,
         finalAmount: salesOrderData.finalAmount,
         email: salesOrderData.customer.email,
@@ -26,6 +26,7 @@ const docSalesOrder = async (req, res) => {
         discount: salesOrderData.discount || 0,
         products: salesOrderData.products.map(product => ({
           name: product.product.stockId,
+          description: product.product.description,
           color: product.color,
           price: product.price,
           sizes: product.sizes.map(size => ({
