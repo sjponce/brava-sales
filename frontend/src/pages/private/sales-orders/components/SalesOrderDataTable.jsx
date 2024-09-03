@@ -9,7 +9,7 @@ import docs from '@/redux/docs/actions';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
-import ModalSalesOrderDetailsCopy from './ModalSalesOrderDetailsCopy';
+import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 import stock from '@/redux/stock/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 
@@ -144,7 +144,7 @@ const SalesOrderDataTable = () => {
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
-      <ModalSalesOrderDetailsCopy handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
+      <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
       <Loading
         isLoading={
           salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
