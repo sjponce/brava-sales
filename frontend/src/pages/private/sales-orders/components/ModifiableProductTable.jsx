@@ -112,7 +112,7 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                         handlerUpdateOptions(`variations-${index}`, []);
                       }
                     }}
-                    options={products.result.items.result}
+                    options={products.result?.items?.result}
                     getOptionLabel={(option) => option?.stockId || ''}
                     isOptionEqualToValue={(option, value) => option?._id === value?.product
                       || value?.product === null

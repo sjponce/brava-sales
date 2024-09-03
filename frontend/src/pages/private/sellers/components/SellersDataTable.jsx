@@ -58,7 +58,7 @@ const SellersDataTable = () => {
 
   useEffect(() => {
     if (!sellerState?.result) return;
-    const newRows = sellerState.result.items.result.map((item) => ({ ...item, id: item._id }));
+    const newRows = sellerState.result?.items?.result.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [sellerState]);
 

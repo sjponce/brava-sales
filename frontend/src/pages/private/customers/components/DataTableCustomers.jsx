@@ -45,7 +45,7 @@ const DataTableCustomers = () => {
 
   useEffect(() => {
     if (!customerState?.result) return;
-    const newRows = customerState.result.items.result
+    const newRows = customerState.result?.items?.result
       .map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [customerState]);

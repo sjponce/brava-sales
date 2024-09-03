@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import translatePaymentMethod from '@/utils/translatePaymentMethod';
 import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 
-const paymentMethods = ['Deposit', 'Debit Card', 'Credit Card'];
+const paymentMethods = ['Deposit', 'Debit Card', 'Credit Card', 'MercadoPago'];
 
 const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) => {
   const [uploadedImg, setUploadedImg] = useState(watch('photo') || '');
@@ -37,6 +37,9 @@ const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) =
       setUploadedImg(true);
     }
   };
+
+  const selectedPaymentMethod = watch('paymentMethod');
+  const isMercadoPago = selectedPaymentMethod === 'MercadoPago';
 
   useEffect(() => {
     if (updatedPaymentResult) {
@@ -85,22 +88,23 @@ const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) =
           validate: (value) => parseFloat(value) > 0 || 'El monto debe ser mayor que cero',
         })}
       />
-      <label htmlFor="raised-button-file">
-        <input
-          accept="image/*"
-          style={{ display: 'none' }}
-          id="raised-button-file"
-          type="file"
-          data-test-id="image-input"
-          required
-          onChange={handleImageChange}
-        />
-        <Tooltip title={uploadedImg ? 'Eliminar imagen' : 'Agregar imagen'}>
-          <IconButton component="span" onClick={uploadedImg ? handleRemoveImage : undefined}>
-            {uploadedImg ? <HideImageOutlined /> : <AddPhotoAlternateOutlined />}
-          </IconButton>
-        </Tooltip>
-      </label>
+      {!isMercadoPago && (
+        <label htmlFor="raised-button-file">
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="raised-button-file"
+            type="file"
+            data-test-id="image-input"
+            onChange={handleImageChange}
+          />
+          <Tooltip title={uploadedImg ? 'Eliminar imagen' : 'Agregar imagen'}>
+            <IconButton component="span" onClick={uploadedImg ? handleRemoveImage : undefined}>
+              {uploadedImg ? <HideImageOutlined /> : <AddPhotoAlternateOutlined />}
+            </IconButton>
+          </Tooltip>
+        </label>
+      )}
     </Box>
   );
 };

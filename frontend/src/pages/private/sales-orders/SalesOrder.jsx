@@ -7,6 +7,7 @@ import AddOrderSalesModal from './components/AddSalesOrderModal';
 
 const SalesOrders = () => {
   const [open, setOpen] = useState(false);
+
   const handleClickOpen = () => {
     setOpen(true);
   };

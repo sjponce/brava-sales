@@ -1,5 +1,6 @@
 const { createDocx } = require('@/helpers/documentHelper');
 const listAll = require('../../coreControllers/createSalesOrderController/listAll');
+const formatDate = require('@/utils/formatDate');
 
 const docSalesOrder = async (req, res) => {
   try {
@@ -13,15 +14,26 @@ const docSalesOrder = async (req, res) => {
       const salesOrderData = listAllResponse.result;
 
       const doc = createDocx('SalesOrder', {
-        code: salesOrderData.code,
+        code: salesOrderData.salesOrderCode,
         name: salesOrderData.customer.name,
-        lastName: salesOrderData.customer.lastName,
-        data: { email: salesOrderData.customer.email },
-        phone: { number: salesOrderData.customer.phone },
+        orderDate: formatDate(salesOrderData.orderDate),
+        totalAmount: salesOrderData.totalAmount,
+        finalAmount: salesOrderData.finalAmount,
+        email: salesOrderData.customer.email,
+        documentNumber: salesOrderData.customer.documentNumber,
+        address: salesOrderData.customer.address,
+        number: salesOrderData.customer.number,
+        discount: salesOrderData.discount || 0,
         products: salesOrderData.products.map(product => ({
-          name: product.product.name,
+          name: product.product.stockId,
+          description: product.product.description,
+          color: product.color,
           price: product.price,
-          quantity: product.quantity
+          sizes: product.sizes.map(size => ({
+            size: size.size,
+            quantity: size.quantity,
+            subFinalAmount: product.price * size.quantity
+          })),
         })),
       });
 

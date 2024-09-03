@@ -52,6 +52,18 @@ export const salesRequest = {
     try {
       const response = await axios.put(`${entity}/create-payment`, body);
       successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  createMPLink: async ({ entity, body }) => {
+    try {
+      const response = await axios.put(`${entity}/create-mp-link`, body);
+      successHandler(response, {
         notifyOnSuccess: false,
         notifyOnFailed: true,
       });

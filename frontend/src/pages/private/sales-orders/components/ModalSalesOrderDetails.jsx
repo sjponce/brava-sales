@@ -16,10 +16,11 @@ import {
   ToggleButton,
 } from '@mui/material';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Close, Download, Payment, PrintOutlined } from '@mui/icons-material';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import docs from '@/redux/docs/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { selectCurrentItem } from '@/redux/sales/selectors';
@@ -60,6 +61,22 @@ const ModalSalesOrderDetailsCopy = ({ open, handlerOpen }) => {
     setSelectedRow(id);
     setOpenDetailsDialog(true);
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const installment = searchParams?.get('installment');
+      const salesOrder = searchParams?.get('salesOrder');
+      if (installment && salesOrder) {
+        setSelectedRow(installment);
+        setOpenDetailsDialog(true);
+      }
+    };
+
+    fetchData();
+  }, [location]);
 
   return (
     <StyledModal
