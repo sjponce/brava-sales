@@ -46,6 +46,7 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
   };
 
   useEffect(() => {
+    console.log('products', watch('products'));
   }, [watch('products')]);
 
   const sumQuantity = (quantity) => {
@@ -125,7 +126,13 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                   <Select
                     size="small"
                     value={watch(`products.${index}.color`) || ''}
-                    onChange={(event) => setValue(`products.${index}.color`, event.target.value)}
+                    onChange={(event) => {
+                      const selectedVariation = currentOptions[`variations-${index}`].find(
+                        (variation) => variation.color === event.target.value
+                      );
+                      setValue(`products.${index}.color`, event.target.value);
+                      setValue(`products.${index}.idStock`, selectedVariation.id);
+                    }}
                     required
                     margin="none"
                     sx={{ width: '160px' }}>
@@ -163,6 +170,9 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                         const existingSize = currentSizes.find((item) => item.size === size);
                         return existingSize || { size, quantity: 0 };
                       });
+
+                      newSizes.sort((a, b) => String(a.size).localeCompare(String(b.size)));
+
                       setValue(`products.${index}.sizes`, newSizes);
                     }}
                     required

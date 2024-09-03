@@ -270,6 +270,18 @@ export const salesRequest = {
       return errorHandler(error);
     }
   },
+  reserveStock: async ({ jsonData }) => {
+    try {
+      const response = await axios.post('sales/reserve-stock', jsonData);
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
 };
 
 export default salesRequest;

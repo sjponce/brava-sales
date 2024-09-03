@@ -9,7 +9,9 @@ import docs from '@/redux/docs/actions';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
-import ModalSalesOrderDetails from './ModalSalesOrderDetails';
+import ModalSalesOrderDetailsCopy from './ModalSalesOrderDetailsCopy';
+import stock from '@/redux/stock/actions';
+import { selectCurrentItem } from '@/redux/sales/selectors';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
@@ -20,11 +22,20 @@ const SalesOrderDataTable = () => {
     name: '',
   });
 
+  const saleData = useSelector(selectCurrentItem)?.result;
+
   const handleDetails = async (id) => {
     setSelectedRow({ ...selectedRow, id });
     await dispatch(sales.read({ entity: 'sales', id }));
     setOpenDetailsModal(true);
   };
+
+  useEffect(() => {
+    if (saleData && saleData.products) {
+      const ids = saleData.products?.map((product) => product.idStock);
+      dispatch(stock.getStockProducts({ entity: 'stock', ids }));
+    }
+  }, [saleData]);
 
   const handleDialogCancel = () => {
     setOpenCreateDialog(false);
@@ -51,6 +62,12 @@ const SalesOrderDataTable = () => {
   const createSalesOrderState = useSelector((store) => store.sales.create);
   const updateSalesOrderState = useSelector((store) => store.sales.update);
   const deleteSalesOrderState = useSelector((store) => store.sales.delete);
+  const reserveStockState = useSelector((store) => store.sales.reserveStock);
+  const stockProductsState = useSelector((store) => store.stock.getStockProducts);
+
+  useEffect(() => {
+    dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
+  }, [reserveStockState]);
 
   const [rows, setRows] = useState([]);
 
@@ -67,7 +84,7 @@ const SalesOrderDataTable = () => {
 
   useEffect(() => {
     updateTable();
-  }, [createSalesOrderState, updateSalesOrderState, deleteSalesOrderState]);
+  }, [createSalesOrderState, updateSalesOrderState, deleteSalesOrderState, reserveStockState]);
 
   const columns = [
     {
@@ -127,10 +144,11 @@ const SalesOrderDataTable = () => {
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
-      <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
+      <ModalSalesOrderDetailsCopy handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
       <Loading
         isLoading={
           salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
+          || reserveStockState?.isLoading || stockProductsState?.isLoading
         }
       />
     </Box>

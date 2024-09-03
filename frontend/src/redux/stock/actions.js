@@ -172,6 +172,30 @@ const stock = {
         });
       }
     },
+  getStockProducts:
+    ({ entity, ids }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'getStockProducts',
+        payload: null,
+      });
+
+      const data = await stockRequest.getStockProducts({ entity, ids });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'getStockProducts',
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'getStockProducts',
+          payload: null,
+        });
+      }
+    },
 };
 
 export default stock;
