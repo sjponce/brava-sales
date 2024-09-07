@@ -24,47 +24,6 @@ describe('listAll', () => {
   test('pass', ()=> {
     expect(true).toBe(true);
   })
-  /* test('test_listAll_successful_with_combined_data', async () => {
-    const mockStockData = {
-      stock123: [
-        { id: 'var1', color: 'red', imageUrl: 'red.jpg' },
-        { id: 'var2', color: 'blue', imageUrl: 'blue.jpg' },
-      ],
-    };
-    const mockSalesData = [
-      {
-        _id: 'prod1',
-        stockId: 'stock123',
-        name: 'Product 1',
-        toObject: () => ({ _id: 'prod1', stockId: 'stock123', name: 'Product 1' }),
-      },
-    ];
-    const mockLatestPrice = 19.99;
-
-    axiosInstance.get.mockResolvedValue({ data: mockStockData });
-    getSalesProducts.mockResolvedValue(mockSalesData);
-    getLatestPrice.mockResolvedValue(mockLatestPrice);
-
-    await listAll(req, res, axiosInstance);
-
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      success: true,
-      result: [
-        {
-          _id: 'prod1',
-          stockId: 'stock123',
-          name: 'Product 1',
-          price: 19.99,
-          variations: [
-            { id: 'var1', color: 'red', imageUrl: 'red.jpg' },
-            { id: 'var2', color: 'blue', imageUrl: 'blue.jpg' },
-          ],
-        },
-      ],
-      message: 'Se encontraron los productos',
-    });
-  });
 
   test('test_listAll_product_not_found', async () => {
     axiosInstance.get.mockRejectedValue({ response: { status: 404 } });
@@ -76,6 +35,20 @@ describe('listAll', () => {
       success: false,
       result: null,
       message: 'No se encontraron productos',
+    });
+  });
+
+  test('test_listAll_sales_not_found', async () => {
+    axiosInstance.get.mockResolvedValue({ data: { products: [] } });
+    getSalesProducts.mockResolvedValue([]);
+
+    await listAll(req, res, axiosInstance);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      result: null,
+      message: 'No se encontraron productos en ventas',
     });
   });
 
@@ -92,5 +65,5 @@ describe('listAll', () => {
       message: 'Ocurrio un error contactando a Stock',
       error: errorMessage,
     });
-  }); */
+  });
 });
