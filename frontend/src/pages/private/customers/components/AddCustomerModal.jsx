@@ -1,7 +1,6 @@
 import {
   Box, Button, Divider, IconButton, Modal, Typography, styled,
 } from '@mui/material';
-import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Close } from '@mui/icons-material';
@@ -10,6 +9,7 @@ import AddCustomerForm from '@/forms/AddCustomerForm';
 import { selectCreatedItem, selectCurrentItem } from '@/redux/crud/selectors';
 import crud from '@/redux/crud/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import { registerUser } from '@/redux/auth/actions';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -17,8 +17,8 @@ const StyledModal = styled(Modal)({
   justifyContent: 'center',
 });
 
-const AddSellerModal = ({
-  idSeller, open, handlerOpen,
+const AddCustomerModal = ({
+  idCustomer, open, handlerOpen,
 }) => {
   const documentTypeOptions = [
     { label: 'DNI', value: 'DNI' },
@@ -33,19 +33,19 @@ const AddSellerModal = ({
   const dispatch = useDispatch();
   const customerData = useSelector(selectCurrentItem);
   const {
-    register, handleSubmit, setValue, watch,
+    register, handleSubmit, setValue, watch, reset
   } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const isUpdate = !!idSeller.length;
+  const isUpdate = !!idCustomer.length;
 
   const createSeller = async (data) => {
     try {
       dispatch(
-        crud.create({
-          entity: 'customer',
-          jsonData: {
+        registerUser({
+          registerData: {
             ...data,
+            role: 'customer',
             documentType: documentTypeOptions.find((documentType) => documentType.label === data.documentType)?.value ?? watch('documentType'),
             ivaCondition: ivaConditionOptions.find((ivaCondition) => ivaCondition.label === data.ivaCondition)?.value ?? watch('ivaCondition'),
           },
@@ -74,7 +74,7 @@ const AddSellerModal = ({
       dispatch(
         crud.update({
           entity: 'customer',
-          id: idSeller,
+          id: idCustomer,
           jsonData: {
             ...data,
             documentType: documentTypeOptions.find((documentType) => documentType.label === data.documentType)?.value ?? watch('documentType'),
@@ -93,6 +93,7 @@ const AddSellerModal = ({
   };
 
   const handleDialogCancel = () => {
+    reset();
     setDialogOpen(false);
   };
 
@@ -102,6 +103,7 @@ const AddSellerModal = ({
     } else {
       createSeller(data);
     }
+    reset();
     setDialogOpen(false);
     handlerOpen(false);
   };
@@ -133,7 +135,8 @@ const AddSellerModal = ({
             setValue={setValue}
             watch={watch}
             documentTypeOptions={documentTypeOptions}
-            ivaConditionOptions={ivaConditionOptions} />
+            ivaConditionOptions={ivaConditionOptions}
+            isUpdate={isUpdate} />
           <Button
             type="submit"
             variant="contained"
@@ -158,10 +161,4 @@ const AddSellerModal = ({
   );
 };
 
-AddSellerModal.propTypes = {
-  idSeller: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  handlerOpen: PropTypes.func.isRequired,
-};
-
-export default AddSellerModal;
+export default AddCustomerModal;

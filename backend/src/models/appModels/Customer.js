@@ -3,6 +3,12 @@ const Schema = mongoose.Schema;
 
 const CustomerSchema = new Schema(
   {
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      autopopulate: true,
+      required: true,
+    },
     removed: {
         type: Boolean,
         default: false,

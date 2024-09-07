@@ -37,16 +37,15 @@ const DataTableCustomers = () => {
 
   const customerState = useSelector((store) => store.crud.listAll);
   const readCustomerState = useSelector((store) => store.crud.read);
-  const createCustomerState = useSelector((store) => store.crud.create);
   const updateCustomerState = useSelector((store) => store.crud.update);
   const deleteCustomerState = useSelector((store) => store.crud.delete);
+  const createUserState = useSelector((state) => state.auth);
 
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
     if (!customerState?.result) return;
-    const newRows = customerState.result?.items?.result
-      .map((item) => ({ ...item, id: item._id }));
+    const newRows = customerState.result?.items?.result.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [customerState]);
 
@@ -63,7 +62,7 @@ const DataTableCustomers = () => {
 
   useEffect(() => {
     updateTable();
-  }, [createCustomerState, updateCustomerState, deleteCustomerState]);
+  }, [createUserState.result, updateCustomerState, deleteCustomerState]);
 
   const columns = [
     {
@@ -149,8 +148,12 @@ const DataTableCustomers = () => {
         onAccept={handleDialogAccept}
         onCancel={handleDialogCancel}
       />
-      <AddCustomerModal idSeller={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
-      <Loading isLoading={customerState?.isLoading || readCustomerState?.isLoading} />
+      <AddCustomerModal idCustomer={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
+      <Loading
+        isLoading={
+          customerState?.isLoading || readCustomerState?.isLoading || createUserState?.isLoading
+        }
+      />
     </Box>
   );
 };

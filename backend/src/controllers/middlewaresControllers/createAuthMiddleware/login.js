@@ -49,24 +49,23 @@ const login = async (req, res, { userModel }) => {
       message: 'El usuario no esta habilitado.',
     });
 
-  if (user.role === ROLE_ENUM.CUSTOMER)
-    return res.status(409).json({
-      success: false,
-      result: null,
-      message: 'El usuario no es un vendedor.',
-    });
-    
-  const seller = await mongoose.model('Seller').findOne({ user: user._id });
+  let userEntity;
 
-  if (!seller)
+  if (user.role === ROLE_ENUM.CUSTOMER) {
+    userEntity = await mongoose.model('Customer').findOne({ user: user._id });
+  } else {
+    userEntity = await mongoose.model('Seller').findOne({ user: user._id });
+  }
+
+
+  if (!userEntity)
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No existe un vendedor con este usuario',
+      message: 'El usuario no existe',
     });
 
-  //  authUser if your has correct password
-  authUser(req, res, { user, databasePassword, password, UserPasswordModel, seller });
+  authUser(req, res, { user, databasePassword, password, UserPasswordModel, userEntity });
 };
 
 module.exports = login;

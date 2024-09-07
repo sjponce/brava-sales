@@ -21,7 +21,7 @@ describe('authUser', () => {
       role: 'user',
       email: 'john.doe@example.com',
     };
-    seller = {
+    userEntity = {
       name: 'John',
       surname: 'Doe',
       phone: '1234567890',
@@ -39,7 +39,7 @@ describe('authUser', () => {
   it('should return a 403 status code with an "Credenciales invalidas." message when the password does not match the database password', async () => {
     databasePassword.validPassword.mockReturnValue(false);
 
-    await authUser(req, res, { user, databasePassword, password, UserPasswordModel, seller });
+    await authUser(req, res, { user, databasePassword, password, UserPasswordModel, userEntity });
 
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.json).toHaveBeenCalledWith({
@@ -53,7 +53,7 @@ describe('authUser', () => {
     databasePassword.validPassword.mockReturnValue(true);
     jest.spyOn(jwt, 'sign').mockReturnValue('fakeToken');
 
-    await authUser(req, res, { user, databasePassword, password, UserPasswordModel, seller });
+    await authUser(req, res, { user, databasePassword, password, UserPasswordModel, userEntity });
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.cookie).toHaveBeenCalledWith('token', 'fakeToken', {"Partitioned": true, "domain": "localhost", "httpOnly": true, "maxAge": 86400000, "path": "/", "sameSite": "Lax", "secure": false});
@@ -61,12 +61,12 @@ describe('authUser', () => {
       success: true,
       result: {
         _id: user._id,
-        name: seller.name,
-        surname: seller.surname,
+        name: userEntity.name,
+        surname: userEntity.surname,
         role: user.role,
         email: user.email,
-        phone: seller.phone,
-        photo: seller.photo,
+        phone: userEntity.phone,
+        photo: userEntity.photo,
       },
       message: 'Usuario autenticado.',
     });
@@ -79,7 +79,7 @@ describe('authUser', () => {
     jest.spyOn(jwt, 'sign').mockReturnValue('fakeToken');
     req.body.remember = true;
 
-    await authUser(req, res, { user, databasePassword, password, UserPasswordModel, seller });
+    await authUser(req, res, { user, databasePassword, password, UserPasswordModel, userEntity });
 
     expect(jwt.sign).toHaveBeenCalledWith(
       { id: user._id },
