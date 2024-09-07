@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 import { selectCurrentItem } from '@/redux/sales/selectors';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 jest.mock('@/redux/sales/selectors', () => ({
   selectCurrentItem: jest.fn(),
@@ -36,6 +37,9 @@ describe('ModalSalesOrderDetails', () => {
             _id: 1,
           },
         },
+        createMPLink: {
+          result: null,
+        },
       },
     });
 
@@ -46,7 +50,9 @@ describe('ModalSalesOrderDetails', () => {
   test('test_modal_closes_on_close_button_click', () => {
     render(
       <Provider store={store}>
-        <ModalSalesOrderDetails open={true} handlerOpen={handlerOpen} />
+        <Router>
+          <ModalSalesOrderDetails open={true} handlerOpen={handlerOpen} />
+        </Router>
       </Provider>
     );
 
@@ -57,7 +63,9 @@ describe('ModalSalesOrderDetails', () => {
   test('test_modal_displays_correct_sales_order_details', () => {
     render(
       <Provider store={store}>
-        <ModalSalesOrderDetails open={true} handlerOpen={handlerOpen} />
+        <Router>
+          <ModalSalesOrderDetails open={true} handlerOpen={handlerOpen} />
+        </Router>
       </Provider>
     );
 
