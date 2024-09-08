@@ -2,14 +2,16 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Sellers from '@/pages/private/sellers/Sellers';
 import SalesOrder from '@/pages/private/sales-orders/SalesOrder';
-import Home from '@/pages/private/home/Home';
 import Customers from '@/pages/private/customers/Customers';
 import Products from '@/pages/private/products/Products';
+import Home from '@/pages/private/home/Home';
+import HomeEcommerce from '@/pages/private/ecommerce/HomeEcommerce';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
 const CommingSoon = lazy(() => import('@/pages/private/CommingSoon.jsx'));
 
 const Dashboard = lazy(() => import('@/pages/private/Dashboard'));
+const Ecommerce = lazy(() => import('@/pages/private/Ecommerce'));
 
 const routes = {
   expense: [],
@@ -29,6 +31,16 @@ const routes = {
     {
       path: '/logout',
       element: <Logout />,
+    },
+    {
+      path: '/ecommerce',
+      element: <Ecommerce />,
+      children: [
+        {
+          path: '/ecommerce',
+          element: <HomeEcommerce />,
+        },
+      ],
     },
     {
       path: '/',
