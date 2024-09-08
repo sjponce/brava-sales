@@ -31,7 +31,7 @@ const registerStockMovement = async (req, res, axiosInsance) => {
         return res.status(500).json({
         success: false,
         result: null,
-        message: 'Internal server error registering stock movement',
+        message: 'Error interno del servidor al registrar movimiento de stock',
         });
     }
     };

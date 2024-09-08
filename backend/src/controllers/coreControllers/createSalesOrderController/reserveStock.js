@@ -23,7 +23,7 @@ const reserveStock = async (req, res) => {
       return res.status(500).json({
         success: false,
         result: null,
-        message: 'Internal server error',
+        message: 'Error interno del servidor',
         error: 'salesOrder.products is not an array',
       });
     }
@@ -140,7 +140,7 @@ const reserveStock = async (req, res) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Internal server error',
+      message: 'Error interno del servidor',
       error: error.message,
     });
   }

@@ -46,7 +46,7 @@ const getStockProducts = async (req, res, axiosInstance) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Internal server error',
+      message: 'Error interno del servidor',
     });
   }
 };
