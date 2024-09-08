@@ -3,6 +3,8 @@ const { callWithAuth } = require('./callWithAuth');
 const update  = require('./update');
 const remove = require('./remove');
 const read = require('./read');
+const getStockProducts = require('./getStockProducts');
+const registerStockMovement = require('./registerStockMovement');
 
 const createStockMiddleware = () => {
   const stockMethods = {
@@ -17,7 +19,13 @@ const createStockMiddleware = () => {
     },
     read: async (req, res, ...args) => {
       await callWithAuth(req, res, read, ...args);
-    }
+    },
+    getStockProducts: async (req, res, ...args) => {
+      await callWithAuth(req, res, getStockProducts, ...args);
+    },
+    registerStockMovement: async (req, res, ...args) => {
+      await callWithAuth(req, res, registerStockMovement, ...args);
+    },
   };
   return stockMethods;
 };

@@ -161,12 +161,23 @@ export const stockRequest = {
       return errorHandler(error);
     }
   },
-
   source: () => {
     const { CancelToken } = axios;
     const source = CancelToken.source();
     return source;
   },
+  getStockProducts: async ({ entity, ids }) => {
+    try {
+      const response = await axios.post(`${entity}/getStockProducts`, ids);
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  }
 };
 
 export default stockRequest;
