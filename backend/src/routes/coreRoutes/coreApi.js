@@ -18,6 +18,7 @@ router.route('/user/disable/:id').patch(catchErrors(userController.disable));
 
 router.route('/user/update/:id').patch(catchErrors(userController.update));
 
+router.route('/user/listAll').patch(catchErrors(userController.listAll));
 
 //_______________________________ Admin Profile _______________________________
 

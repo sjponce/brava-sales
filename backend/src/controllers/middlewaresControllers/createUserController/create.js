@@ -80,6 +80,7 @@ const create = async (userModel, req, res) => {
     email,
     enabled,
     role,
+    forcePasswordReset: role === ROLE_ENUM.CUSTOMER,
   }).save();
 
   if (!resultUser) {

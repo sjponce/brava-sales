@@ -59,7 +59,7 @@ const LoginForm = ({ register }) => (
         label={<Typography variant="subtitle2">Recuérdame</Typography>}
       />
       <Link href="/forgetpassword">
-        <Typography variant="subtitle2">Olvidé mi contraseña</Typography>
+        <Typography variant="subtitle2">Reestablecer contraseña</Typography>
       </Link>
     </Box>
   </Box>

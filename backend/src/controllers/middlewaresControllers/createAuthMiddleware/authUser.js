@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken');
-const authUser = async (req, res, { user, databasePassword, password, UserPasswordModel, userEntity }) => {
+const authUser = async (
+  req,
+  res,
+  { user, databasePassword, password, UserPasswordModel, userEntity }
+) => {
   const isMatch = databasePassword.validPassword(password);
   if (!isMatch)
     return res.status(403).json({
@@ -12,6 +16,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
     const token = jwt.sign(
       {
         id: user._id,
+        forcePasswordReset: user.forcePasswordReset,
       },
       process.env.JWT_SECRET,
       { expiresIn: req.body.remember ? 5 * 24 + 'h' : '24h' }
@@ -46,6 +51,7 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
           surname: userEntity.surname,
           phone: userEntity.phone,
           photo: userEntity.photo,
+          forcePasswordReset: user.forcePasswordReset,
         },
         message: 'Usuario autenticado.',
       });
@@ -59,4 +65,3 @@ const authUser = async (req, res, { user, databasePassword, password, UserPasswo
 };
 
 module.exports = authUser;
-

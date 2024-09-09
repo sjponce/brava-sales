@@ -12,4 +12,5 @@ const translateStatus = (status) => {
   };
   return translations[status] || status;
 };
+
 export default translateStatus;

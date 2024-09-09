@@ -67,6 +67,9 @@ const authReducer = (state = INITIAL_STATE, action) => {
         isSuccess: true,
       };
 
+    case actionTypes.RESET_STATE:
+      return INITIAL_STATE;
+
     default:
       return state;
   }

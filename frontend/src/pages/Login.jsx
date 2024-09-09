@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Box, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { login } from '@/redux/auth/actions';
-import { selectAuth } from '@/redux/auth/selectors';
+import { selectAuth, selectCurrentAdmin } from '@/redux/auth/selectors';
 import LoginForm from '@/forms/LoginForm';
 import AuthModule from '@/modules/AuthModule';
 import Loading from '@/components/Loading';
 
 const LoginPage = () => {
   const { isLoading, isSuccess } = useSelector(selectAuth);
+  const { forcePasswordReset } = useSelector(selectCurrentAdmin);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
@@ -20,7 +21,8 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) navigate('/');
+    if (forcePasswordReset) navigate('/reset-password');
+    else if (isSuccess) navigate('/');
   }, [isSuccess]);
 
   return (
@@ -37,8 +39,7 @@ const LoginPage = () => {
               disabled={isLoading}
               size="large"
               fullWidth
-              sx={{ mt: 1 }}
-            >
+              sx={{ mt: 1 }}>
               <Typography variant="button">Iniciar sesión</Typography>
             </Button>
           </Box>
