@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import ModalInstallmentDetails from './ModalInstallmentDetails';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('ModalInstallmentDetails Component', () => {
   let mockStore;
@@ -30,6 +31,10 @@ describe('ModalInstallmentDetails Component', () => {
             isLoading: false,
             result: { installments: [{ ...mockInstallment }] },
           },
+          createMPLink: {
+            isLoading: false,
+            result: null,
+          },
         },
       },
     });
@@ -38,11 +43,13 @@ describe('ModalInstallmentDetails Component', () => {
   test('test_render_modal_installment_details', async () => {
     render(
       <Provider store={mockStore}>
-        <ModalInstallmentDetails
-          open={true}
-          handleClose={() => {}}
-          installmentId={mockInstallmentId}
-        />
+        <Router>
+          <ModalInstallmentDetails
+            open={true}
+            handleClose={() => {}}
+            installmentId={mockInstallmentId}
+            />
+        </Router>
       </Provider>
     );
 
@@ -54,11 +61,13 @@ describe('ModalInstallmentDetails Component', () => {
   test('test_payment_calculation', async () => {
     render(
       <Provider store={mockStore}>
-        <ModalInstallmentDetails
-          open={true}
-          handleClose={() => {}}
-          installmentId={mockInstallmentId}
-        />
+        <Router>
+          <ModalInstallmentDetails
+            open={true}
+            handleClose={() => {}}
+            installmentId={mockInstallmentId}
+            />
+        </Router>
       </Provider>
     );
     const payedAmount = mockInstallment.payments.reduce((sum, payment) => sum + payment.amount, 0);
@@ -73,11 +82,13 @@ describe('ModalInstallmentDetails Component', () => {
     const mockHandleClose = jest.fn();
     render(
       <Provider store={mockStore}>
-        <ModalInstallmentDetails
-          open={true}
-          handlerOpen={mockHandleClose}
-          installment={mockInstallment}
-        />
+        <Router>
+          <ModalInstallmentDetails
+            open={true}
+            handlerOpen={mockHandleClose}
+            installment={mockInstallment}
+            />
+        </Router>
       </Provider>
     );
 

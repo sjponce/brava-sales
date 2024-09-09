@@ -244,7 +244,34 @@ const sales = {
         });
       }
     },
+  createMPLink:
+    ({ entity, body }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.RESET_ACTION,
+        keyState: 'createMPLink',
+      });
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'createMPLink',
+        payload: null,
+      });
 
+      const data = await salesRequest.createMPLink({ entity, body });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'createMPLink',
+          payload: data.redirectUrl,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'createMPLink',
+          payload: null,
+        });
+      }
+    },
   search:
     ({ entity, options = {} }) => async (dispatch) => {
       dispatch({
@@ -281,6 +308,30 @@ const sales = {
     type: actionTypes.SET_CURRENT_STEP,
     payload: step,
   }),
+  reserveStock:
+    ({ jsonData }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'reserveStock',
+        payload: null,
+      });
+
+      const data = await salesRequest.reserveStock({ jsonData });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'reserveStock',
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'reserveStock',
+          payload: null,
+        });
+      }
+    },
 };
 
 export default sales;

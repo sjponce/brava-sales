@@ -55,7 +55,7 @@ const DataTableProducts = () => {
 
   useEffect(() => {
     if (!productState?.result) return;
-    const newRows = productState.result.items.result
+    const newRows = productState.result?.items?.result
       .map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [productState]);

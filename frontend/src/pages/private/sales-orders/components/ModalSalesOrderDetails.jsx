@@ -12,18 +12,23 @@ import {
   TableHead,
   TableRow,
   Typography,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Close, Download, Payment, PrintOutlined } from '@mui/icons-material';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import docs from '@/redux/docs/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
 import ModalInstallmentDetails from './ModalInstallmentDetails';
+import OrderDetailsTab from '@/pages/private/sales-orders/components/tabs/OrderDetailsTab';
+import OrderProductsTab from './tabs/OrderProductsTab';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -31,14 +36,20 @@ const StyledModal = styled(Modal)({
   justifyContent: 'center',
 });
 
-const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
+const ModalSalesOrderDetailsCopy = ({ open, handlerOpen }) => {
   const saleData = useSelector(selectCurrentItem)?.result;
   const dispatch = useDispatch();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [openDetailsModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
+  const [currentOptions, setCurrentOptions] = useState({ option: 'sumary' });
+
+  const handlerUpdateOptions = (event, newOption) => {
+    setCurrentOptions({ ...currentOptions, option: newOption });
+  };
 
   const handleModalClose = () => {
+    setCurrentOptions({ option: 'sumary' });
     handlerOpen(false);
   };
 
@@ -51,13 +62,28 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
     setOpenDetailsDialog(true);
   };
 
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const installment = searchParams?.get('installment');
+      const salesOrder = searchParams?.get('salesOrder');
+      if (installment && salesOrder) {
+        setSelectedRow(installment);
+        setOpenDetailsDialog(true);
+      }
+    };
+
+    fetchData();
+  }, [location]);
+
   return (
     <StyledModal
       open={open}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description">
       <Box
-        maxHeight="95vh"
         bgcolor="background.default"
         width={{ xs: '100%', sm: 800 }}
         color="text.primary"
@@ -80,206 +106,99 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
             </IconButton>
           </Box>
         </Box>
-        <Divider sx={{ mb: 2 }} />
-        <Box display="flex" gap={2} maxHeight={400}>
-          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell colSpan={2} align="center">
-                    <Typography variant="button" color="primary">
-                      Detalle
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Creación</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">{formatDate(saleData?.createdAt)}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Estado</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">{translateStatus(saleData?.status)}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Código</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">{saleData?.salesOrderCode}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Cliente</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">{saleData?.customer?.name}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Monto Base</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">${saleData?.totalAmount}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Descuento</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">%{saleData?.discount}</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Cuotas</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">
-                      {saleData?.installments?.length} de $
-                      {saleData?.installments ? saleData?.installments[0].amount : 0}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Monto final</Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="subtitle2">${saleData?.finalAmount}</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TableContainer
-            component={Paper}
-            sx={{ borderRadius: 2.5, overflow: { xs: 'auto', md: 'auto' } }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell colSpan={3} align="center">
-                    <Typography variant="button" color="primary">
-                      Composición de pedido
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Producto</Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="overline">Talle</Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="overline">Cantidad</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {saleData?.products?.map((p) => (
-                  <React.Fragment key={p.product.stockId}>
-                    <TableRow>
-                      <TableCell colSpan={3}>
-                        <Typography variant="subtitle2">{`${p.product.stockId} ${p.color}`}</Typography>
-                      </TableCell>
-                    </TableRow>
-                    {p.sizes.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell />
-                        <TableCell align="center">
-                          <Typography variant="subtitle2">{`${item.size}`}</Typography>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Typography variant="subtitle2">{`${item.quantity}`}</Typography>
+        <ToggleButtonGroup
+          fullWidth
+          color="primary"
+          exclusive
+          size="small"
+          value={currentOptions?.option}
+          onChange={handlerUpdateOptions}
+          aria-label="payment type">
+          <ToggleButton value="sumary" aria-label="sumary">
+            Resumen
+          </ToggleButton>
+          <ToggleButton value="installment" aria-label="installments">
+            Pagos
+          </ToggleButton>
+          <ToggleButton value="products" aria-label="products">
+            Productos
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <Divider sx={{ mb: 2, mt: 2 }} />
+        <Box sx={{ overflowY: 'auto', height: '55vh' }}>
+          <Box>
+            {currentOptions?.option === 'sumary' && <OrderDetailsTab saleData={saleData} />}
+            {currentOptions?.option === 'products' && <OrderProductsTab saleData={saleData} />}
+            {currentOptions?.option === 'installment' && (
+              <Box>
+                <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell colSpan={5} align="center">
+                          <Typography variant="button" color="primary">
+                            Cuotas
+                          </Typography>
                         </TableCell>
                       </TableRow>
-                    ))}
-                  </React.Fragment>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant="overline">Número</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="overline">Estado</Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography variant="overline">Fecha de Vencimiento</Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography variant="overline">Fecha de Pago</Typography>
+                        </TableCell>
+                        <TableCell align="center" />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {saleData?.installments?.map((i) => (
+                        <React.Fragment key={i.installmentNumber}>
+                          <TableRow>
+                            <TableCell>
+                              <Typography align="center" variant="subtitle2">
+                                {i.installmentNumber}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography align="center" variant="subtitle2">
+                                {translateStatus(i.status)}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography align="center" variant="subtitle2">
+                                {formatDate(i.dueDate)}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography align="center" variant="subtitle2">
+                                {formatDate(i.totalPaymentDate)}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <IconButton size="small" onClick={() => handleDownload(i._id)}>
+                                <Download />
+                              </IconButton>
+                              <IconButton size="small" onClick={() => handlePayment(i._id)}>
+                                <Payment />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        </React.Fragment>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            )}
+          </Box>
         </Box>
-        <Box marginTop={2}>
-          <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell colSpan={5} align="center">
-                    <Typography variant="button" color="primary">
-                      Cuotas
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Typography variant="overline">Número</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="overline">Estado</Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="overline">Fecha de Vencimiento</Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="overline">Fecha de Pago</Typography>
-                  </TableCell>
-                  <TableCell align="center" />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {saleData?.installments?.map((i) => (
-                  <React.Fragment key={i.installmentNumber}>
-                    <TableRow>
-                      <TableCell>
-                        <Typography align="center" variant="subtitle2">
-                          {i.installmentNumber}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography align="center" variant="subtitle2">
-                          {translateStatus(i.status)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography align="center" variant="subtitle2">
-                          {formatDate(i.dueDate)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography align="center" variant="subtitle2">
-                          {formatDate(i.totalPaymentDate)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <IconButton size="small" onClick={() => handleDownload(i._id)}>
-                          <Download />
-                        </IconButton>
-                        <IconButton size="small" onClick={() => handlePayment(i._id)}>
-                          <Payment />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  </React.Fragment>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-        <Divider sx={{ mb: 1 }} />
         <CustomDialog
           title="Editar producto"
           text="Esta acción no se puede deshacer, ¿Desea continuar?"
@@ -295,4 +214,4 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
   );
 };
 
-export default ModalSalesOrderDetails;
+export default ModalSalesOrderDetailsCopy;

@@ -16,3 +16,5 @@ export const selectItemById = (itemId) => createSelector(
 export const selectUpdatedItem = createSelector([selectStock], (stock) => stock.update);
 
 export const selectReadItem = createSelector([selectStock], (stock) => stock.read);
+
+export const getStockProducts = createSelector([selectStock], (stock) => stock.getStockProducts);

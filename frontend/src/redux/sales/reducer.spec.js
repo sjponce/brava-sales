@@ -42,6 +42,7 @@ describe('salesReducer', () => {
     },
     stepper: INITIAL_STEP_STATE,
     create: INITIAL_KEY_STATE,
+    createMPLink: INITIAL_KEY_STATE,
     update: INITIAL_KEY_STATE,
     delete: INITIAL_KEY_STATE,
     read: INITIAL_KEY_STATE,
