@@ -60,7 +60,7 @@ describe('AddSalesOrderForm', () => {
     );
 
     expect(getByText(`Documento: ${selectedCustomer.documentType} ${selectedCustomer.documentNumber}`)).toBeInTheDocument();
-    expect(getByText(`email: ${selectedCustomer.email}`)).toBeInTheDocument();
-    expect(getByText(`Address: ${selectedCustomer.address.zipCode} ${selectedCustomer.address.street} ${selectedCustomer.address.streetNumber}`)).toBeInTheDocument();
+    expect(getByText(`Correo electrónico: ${selectedCustomer.email}`)).toBeInTheDocument();
+    expect(getByText(`Domicilio: ${selectedCustomer.address.zipCode} ${selectedCustomer.address.street} ${selectedCustomer.address.streetNumber}`)).toBeInTheDocument();
   });
 });
