@@ -1,7 +1,7 @@
 import * as actionTypes from './types';
 import { salesRequest } from '@/request/salesRequest';
 
-const sales = {
+const ecommerce = {
   resetState: () => async (dispatch) => {
     dispatch({
       type: actionTypes.RESET_STATE,
@@ -334,4 +334,4 @@ const sales = {
     },
 };
 
-export default sales;
+export default ecommerce;

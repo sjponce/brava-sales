@@ -9,6 +9,8 @@ const translateStatus = (status) => {
     Approved: 'Aprobado',
     Rejected: 'Rechazado',
     OverDue: 'Vencido',
+    Reserved: 'Reservado',
+    'Partially reserved': 'Parcialmente reservado',
   };
   return translations[status] || status;
 };

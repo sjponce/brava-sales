@@ -1,24 +1,29 @@
 import { useEffect } from 'react';
 
 import { useLocation, useRoutes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useAppContext } from '@/context/appContext';
+import routes, { routesEcommerce } from './routes';
 
-import routes from './routes';
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
 
 export default function AppRouter() {
   const location = useLocation();
   const { appContextAction } = useAppContext();
   const { app } = appContextAction;
+  const authUserState = useSelector(selectCurrentAdmin);
+
+  const router = authUserState.role === 'customer' ? routesEcommerce : routes;
 
   const routesList = [];
 
-  Object.entries(routes).forEach(([, value]) => {
+  Object.entries(router).forEach(([, value]) => {
     routesList.push(...value);
   });
 
   function getAppNameByPath(path) {
-    Object.keys(routes).forEach((key) => {
-      if (routes[key].some((route) => route.path === path)) {
+    Object.keys(router).forEach((key) => {
+      if (router[key].some((route) => route.path === path)) {
         return key;
       }
       return '';

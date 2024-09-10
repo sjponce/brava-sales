@@ -34,6 +34,10 @@ const SalesOrderSchema = new Schema(
           type: String,
           required: true,
         },
+        idStock: {
+          type: Number,
+          required: true,
+        },
         price: {
           type: Number,
           required: true,
@@ -49,6 +53,12 @@ const SalesOrderSchema = new Schema(
               required: true,
               min: 1,
             },
+          },
+        ],
+        reservations: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: 'StockReservation',
           },
         ],
       },
@@ -78,7 +88,7 @@ const SalesOrderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Partially shipped', 'Partially delivered', 'Cancelled', 'Partially reserved', 'Reserved'],
       default: 'Pending',
     },
     paymentStatus: {
