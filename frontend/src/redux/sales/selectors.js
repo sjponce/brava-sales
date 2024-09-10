@@ -34,3 +34,5 @@ export const getCurrentStep = (state) => state.sales.stepper.currentStep;
 export const getOrderOptions = (state) => state.sales.stepper.options.orderOptions;
 
 export const getPaymentOptions = (state) => state.sales.stepper.options.paymentOptions;
+
+export const getReserveStock = createSelector([selectSales], (sales) => sales.reserveStock);
