@@ -58,6 +58,7 @@ const tagsArray = [
   { id: 57, name: 'Casual', category: 'LINEA' },
   { id: 58, name: 'Low Price', category: 'LINEA' },
   { id: 59, name: 'Urban', category: 'LINEA' },
+  { id: 60, name: 'Kids', category: 'LINEA' },
 ];
 
 export default tagsArray;

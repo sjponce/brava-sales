@@ -1,4 +1,4 @@
-import { DarkModeOutlined, LightModeOutlined, Storefront } from '@mui/icons-material';
+import { DarkModeOutlined, FilterList, LightModeOutlined, Notifications, ShoppingCart } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -8,7 +8,6 @@ import {
   MenuItem,
   Stack,
   Toolbar,
-  Tooltip,
   Typography,
   styled,
 } from '@mui/material';
@@ -30,7 +29,6 @@ const StyledToolbar = styled(Toolbar)({
 const Logo = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
-  fontWeight: 'bold',
   gap: '10px',
   '& img': {
     width: '30px',
@@ -39,7 +37,7 @@ const Logo = styled(Box)(() => ({
   },
 }));
 
-const NavbarMaterial = () => {
+const Navbar = ({ toggleDrawer }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,25 +59,27 @@ const NavbarMaterial = () => {
   };
 
   return (
-    <Stack position="sticky">
+    <Stack position="fixed" sx={{ zIndex: 1 }}>
       <StyledToolbar
-        sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5 }}
+        sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5, opacity: 0.9 }}
         disableGutters
       >
+        <IconButton onClick={() => toggleDrawer(true)}>
+          <FilterList />
+        </IconButton>
         <Logo>
-          <IconButton>
-            <img src="/bravaLogo.png" alt="logo" style={{ opacity: 0.6 }} />
-          </IconButton>
-          <Typography variant="button" sx={{ display: { xs: 'none', sm: 'flex', opacity: '0.7' } }}>
-            Brava sales
+          <Typography variant="overline" sx={{ display: { xs: 'none', sm: 'flex', opacity: '0.7' }, mr: 2, ml: 1 }}>
+            aderis
           </Typography>
         </Logo>
         <Box gap={1} display="flex" alignItems="center">
-          <Tooltip title="Ecommerse" arrow>
-            <IconButton onClick={() => navigate('/ecommerce')}>
-              <Storefront />
-            </IconButton>
-          </Tooltip>
+          <Divider orientation="vertical" flexItem variant="middle" />
+          <IconButton>
+            <ShoppingCart />
+          </IconButton>
+          <IconButton>
+            <Notifications />
+          </IconButton>
           <IconButton onClick={handleToggleTheme}>
             {theme === 'dark' ? <LightModeOutlined /> : <DarkModeOutlined />}
           </IconButton>
@@ -88,7 +88,6 @@ const NavbarMaterial = () => {
             <Avatar src={user.photo} sx={{ width: 30, height: 30 }} />
           </IconButton>
         </Box>
-
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}
@@ -111,4 +110,4 @@ const NavbarMaterial = () => {
   );
 };
 
-export default NavbarMaterial;
+export default Navbar;

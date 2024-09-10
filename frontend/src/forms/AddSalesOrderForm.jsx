@@ -42,12 +42,12 @@ const AddSalesOrderForm = ({ setValue, watch }) => {
                 {selectedCustomer?.documentNumber || ''}
               </Typography>
               <Typography>
-                email:
+                Correo electrónico:
                 {' '}
                 {selectedCustomer?.email || ''}
               </Typography>
               <Typography>
-                Address:
+                Domicilio:
                 {' '}
                 {selectedCustomer?.address?.zipCode || ''}
                 {' '}
