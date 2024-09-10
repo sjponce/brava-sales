@@ -1,4 +1,4 @@
-import { DarkModeOutlined, LightModeOutlined } from '@mui/icons-material';
+import { DarkModeOutlined, LightModeOutlined, Storefront } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -8,6 +8,7 @@ import {
   MenuItem,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
   styled,
 } from '@mui/material';
@@ -74,6 +75,11 @@ const NavbarMaterial = () => {
           </Typography>
         </Logo>
         <Box gap={1} display="flex" alignItems="center">
+          <Tooltip title="Ecommerse" arrow>
+            <IconButton onClick={() => navigate('/ecommerce')}>
+              <Storefront />
+            </IconButton>
+          </Tooltip>
           <IconButton onClick={handleToggleTheme}>
             {theme === 'dark' ? <LightModeOutlined /> : <DarkModeOutlined />}
           </IconButton>

@@ -37,7 +37,7 @@ const Logo = styled(Box)(() => ({
   },
 }));
 
-const Navbar = ({ handlerOpenMenu }) => {
+const Navbar = ({ toggleDrawer }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -59,12 +59,12 @@ const Navbar = ({ handlerOpenMenu }) => {
   };
 
   return (
-    <Stack position="fixed">
+    <Stack position="fixed" sx={{ zIndex: 1 }}>
       <StyledToolbar
         sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5, opacity: 0.9 }}
         disableGutters
       >
-        <IconButton onClick={() => handlerOpenMenu()}>
+        <IconButton onClick={() => toggleDrawer(true)}>
           <FilterList />
         </IconButton>
         <Logo>

@@ -1,43 +1,25 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import {
-  Toolbar,
   Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
   CssBaseline,
   Container,
 } from '@mui/material';
 import Navbar from './navbar/Navbar';
-
-const drawerWidth = 300;
+import Filters from './filters/Filters';
 
 const EcommerceLayout = () => {
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
-    console.log('open');
-    setOpen(!open);
+  const toggleDrawer = (newOpen) => {
+    setOpen(newOpen);
   };
 
   return (
     <Box display="flex" justifyContent="center">
       <CssBaseline />
-      <Navbar handlerOpenMenu={handleDrawerOpen} />
-      <Drawer anchor="left" open={open} variant="persistent">
-        <Toolbar />
-        <Box sx={{ overflow: 'auto', width: drawerWidth }}>
-          <List>
-            {['Filtro 1', 'Filtro 2', 'Filtro 3', 'Filtro 4'].map((text) => (
-              <ListItem button key={text}>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
+      <Navbar toggleDrawer={toggleDrawer} />
+      <Filters open={open} toggleDrawer={toggleDrawer} />
       <Box>
         <Container>
           <Outlet />

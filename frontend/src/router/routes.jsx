@@ -6,6 +6,7 @@ import Customers from '@/pages/private/customers/Customers';
 import Products from '@/pages/private/products/Products';
 import Home from '@/pages/private/home/Home';
 import HomeEcommerce from '@/pages/private/ecommerce/HomeEcommerce';
+import NotFound from '@/components/NotFound';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
 const CommingSoon = lazy(() => import('@/pages/private/CommingSoon.jsx'));
@@ -74,7 +75,7 @@ const routes = {
               path: '/sales-orders/pending',
               element: <SalesOrder />,
             },
-          ]
+          ],
         },
         {
           path: '/customers',
@@ -85,6 +86,42 @@ const routes = {
           element: <Products />,
         },
       ],
+    },
+  ],
+};
+
+export const routesEcommerce = {
+  expense: [],
+  default: [
+    {
+      path: '/login',
+      element: <Navigate to="/" />,
+    },
+    {
+      path: '/verify/*',
+      element: <Navigate to="/" />,
+    },
+    {
+      path: '/resetpassword/*',
+      element: <Navigate to="/" />,
+    },
+    {
+      path: '/logout',
+      element: <Logout />,
+    },
+    {
+      path: '/',
+      element: <Ecommerce />,
+      children: [
+        {
+          path: '/',
+          element: <HomeEcommerce />,
+        },
+      ],
+    },
+    {
+      path: '*',
+      element: <NotFound />,
     },
   ],
 };
