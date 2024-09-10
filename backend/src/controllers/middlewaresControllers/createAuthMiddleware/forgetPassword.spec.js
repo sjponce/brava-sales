@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
-const forgetPassword = require('./forgetPassword'); // Adjust the path as necessary
+const forgetPassword = require('./forgetPassword');
 
 jest.mock('bcryptjs');
 jest.mock('shortid', () => ({

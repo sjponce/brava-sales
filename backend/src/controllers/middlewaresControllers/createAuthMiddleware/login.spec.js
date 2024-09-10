@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const authUser = require('./authUser');
-const login = require('./login'); // Adjust the path as necessary
+const login = require('./login');
 
 describe('login', () => {
   let req, res, userModel, UserModel, UserPasswordModel;

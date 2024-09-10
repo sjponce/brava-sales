@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const authUser = require('./authUser'); // Adjust the path as necessary
+const authUser = require('./authUser');
 
 describe('authUser', () => {
   let req, res, user, databasePassword, password, UserPasswordModel, seller;
