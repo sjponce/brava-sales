@@ -42,12 +42,12 @@ app.use(compression());
 // Here our API Routes
 
 app.use('/api', coreAuthRouter);
+app.use('/api', userAuth.isValidAuthToken, coreApiRouter);
 app.use('/api', userAuth.isValidAuthToken, appApiRouter);
 app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
 app.use('/api', userAuth.isValidAuthToken, salesApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
 app.use('/api', userAuth.isValidAuthToken, docsApiRouter);
-app.use('/api', userAuth.isValidAuthToken, coreApiRouter);
 
 app.get('/', (req, res) => {
   res.send('Brava sales!!');

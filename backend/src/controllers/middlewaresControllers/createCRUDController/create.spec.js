@@ -1,4 +1,4 @@
-const create = require('./create'); // Adjust the path as necessary
+const create = require('./create');
 const modelExceptions = require('./modelExceptions');
 const translate = require('../../../utils/translateModel');
 const mongoose = require('mongoose');

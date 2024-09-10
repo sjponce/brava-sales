@@ -173,7 +173,7 @@ const SellersDataTable = () => {
       <AddSellerModal idSeller={`${selectedRow.id}`} open={open} handlerOpen={handleOpen} />
       <Loading isLoading={
         sellerState?.isLoading || readSellerState?.isLoading || createUserState?.isLoading
-        || disableSellersState?.isLoading || false
+        || disableSellersState?.isLoading
         } />
     </Box>
   );

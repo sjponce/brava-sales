@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { jest } from '@jest/globals';
-import { login, register, logout } from './auth.service.js';
+import { login, register, logout, resetPassword } from './auth.service.js';
 
 jest.mock('axios');
 
@@ -61,5 +61,22 @@ describe('Auth Function Tests', () => {
     expect(response).toEqual(mockData.data);
     expect(axios.defaults.withCredentials).toBe(true);
     expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('logout'));
+  });
+
+  test('test_reset_password_successful', async () => {
+    const mockData = {
+      data: {
+        success: true,
+        message: 'Password reset email sent successfully',
+      },
+      status: 200,
+    };
+    axios.post.mockResolvedValue(mockData);
+
+    const email = 'user@example.com';
+    const response = await resetPassword({ email });
+
+    expect(response).toEqual(mockData.data);
+    expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('resetpassword'), { email });
   });
 });

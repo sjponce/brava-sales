@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Loading = ({ isLoading }) => (
   <Box>
-    <Backdrop data-testid="loading-backdrop" open={isLoading} style={{ color: '#fff', zIndex: 1500 }}>
+    <Backdrop data-test-id="loading-backdrop" open={isLoading} style={{ color: '#fff', zIndex: 1500 }}>
       <CircularProgress color="inherit" />
     </Backdrop>
   </Box>

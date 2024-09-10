@@ -22,6 +22,10 @@ const UserSchema = new Schema(
       default: 'seller',
       enum: ['admin', 'seller', 'customer'],
     },
+    forcePasswordReset: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

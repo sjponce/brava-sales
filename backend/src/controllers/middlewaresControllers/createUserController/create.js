@@ -2,28 +2,31 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { generate: uniqueId } = require('shortid');
 const { ROLE_ENUM } = require('@/middlewares/permission');
-const Seller = mongoose.model('Seller');
-const Customer = mongoose.model('Customer');
+const { default: axios } = require('axios');
+const translate = require('@/utils/translateModel');
 
-const createRoleSpecificEntity = async (userData, resultUser) => {
+const createRoleSpecificEntity = async (userData, resultUser, token) => {
   const entityData = { ...userData };
   delete entityData.password;
 
-  let result;
-  switch (userData.role) {
-    case ROLE_ENUM.SELLER || ROLE_ENUM.ADMIN:
-      result = await new Seller({
-        user: resultUser._id,
-        ...userData,
-      }).save();
-      break;
-    case ROLE_ENUM.CUSTOMER:
-      result = await new Customer({
-        user: resultUser._id,
-        ...userData,
-      }).save();
-      break;
+  if(![ROLE_ENUM.ADMIN, ROLE_ENUM.CUSTOMER, ROLE_ENUM.SELLER].includes(userData.role)) {
+    return false;
   }
+
+  let result;
+  const cookie = `token=${token}`;
+      result = await axios.post(
+        `${process.env.BASE_API}/${userData.role}/create`,
+        {
+          ...userData,
+          user: resultUser._id,
+        },
+        {
+          headers: {
+            cookie,
+          },
+        }
+      );
 
   if (!result) {
     return false;
@@ -35,8 +38,8 @@ const create = async (userModel, req, res) => {
   const User = mongoose.model(userModel);
   const UserPassword = mongoose.model(userModel + 'Password');
 
-  const { email, password, enabled, role, name, surname } = req.body;
-  if (!email || !password || !role || !name || !surname)
+  const { email, password, enabled, role, name } = req.body;
+  if (!email || !password || !role || !name)
     return res.status(400).json({
       success: false,
       result: null,
@@ -77,6 +80,7 @@ const create = async (userModel, req, res) => {
     email,
     enabled,
     role,
+    forcePasswordReset: role === ROLE_ENUM.CUSTOMER,
   }).save();
 
   if (!resultUser) {
@@ -106,20 +110,20 @@ const create = async (userModel, req, res) => {
     });
   }
 
-  const entityCreated = await createRoleSpecificEntity(req.body, resultUser);
+  const entityCreated = await createRoleSpecificEntity(req.body, resultUser, req.cookies.token);
   if (!entityCreated) {
     await User.deleteOne({ _id: resultUser._id }).exec();
     await UserPassword.deleteOne({ user: resultUser._id }).exec();
     return res.status(403).json({
       success: false,
       result: null,
-      message: `The ${req.body.role} could not be saved`,
+      message: `El ${translate(req.body.role)} no pudo ser creado`,
     });
   }
   return res.status(200).send({
     success: true,
     result: { resultUser, entityCreated },
-    message: 'Usuario y vendedor creado',
+    message: `Usuario y ${translate(req.body.role)} creado`,
   });
 };
 

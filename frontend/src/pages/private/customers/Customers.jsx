@@ -37,7 +37,7 @@ const Customers = () => {
           </Typography>
         </Button>
       </Box>
-      <AddCustomerModal open={open} handlerOpen={handleClose} idSeller="" />
+      <AddCustomerModal open={open} handlerOpen={handleClose} idCustomer="" />
       <DataTableCustomers />
     </Box>
   );

@@ -45,6 +45,24 @@ export const registerUser = ({ registerData }) => async (dispatch) => {
   }
 };
 
+export const resetPassword = ({ email, password }) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.LOADING_REQUEST,
+  });
+  const data = await authService.resetPassword({ email, password });
+
+  if (data.success === true) {
+    dispatch({
+      type: actionTypes.SUCCESS_REQUEST,
+      payload: data.result,
+    });
+  } else {
+    dispatch({
+      type: actionTypes.FAILED_REQUEST,
+    });
+  }
+};
+
 export const updateUser = ({ userId, updateData }) => async (dispatch) => {
   dispatch({
     type: actionTypes.LOADING_REQUEST,
@@ -113,4 +131,12 @@ export const logout = () => async (dispatch) => {
   window.localStorage.removeItem('settings');
   window.localStorage.setItem('isLogout', JSON.stringify({ isLogout: true }));
   await authService.logout();
+};
+
+export const resetAuthState = () => async (dispatch) => {
+  dispatch({
+    type: actionTypes.RESET_STATE,
+  });
+  window.localStorage.removeItem('auth');
+  window.localStorage.removeItem('settings');
 };

@@ -4,6 +4,7 @@ const roles = {
   owner: ['create', 'read', 'update', 'delete', 'download', 'upload'],
   admin: ['admin', 'create', 'read', 'update', 'delete', 'download', 'upload'],
   seller: ['create', 'read', 'update', 'download', 'upload'],
+  customer: ['create', 'read', 'update', 'download', 'upload'],
   createOnly: ['create', 'read', 'download', 'upload'],
   readOnly: ['read', 'download'],
 };

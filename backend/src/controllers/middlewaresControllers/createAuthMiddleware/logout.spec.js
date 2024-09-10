@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const logout = require('./logout'); // Adjust the path as necessary
-
+const logout = require('./logout');
 describe('logout', () => {
   let req, res, userModel, UserPasswordModel;
 

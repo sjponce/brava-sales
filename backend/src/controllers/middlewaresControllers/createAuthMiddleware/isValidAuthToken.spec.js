@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const isValidAuthToken = require('./isValidAuthToken'); // Adjust the path as necessary
+const isValidAuthToken = require('./isValidAuthToken');
 
 describe('isValidAuthToken', () => {
   let req, res, next, userModel, jwtSecret, UserPasswordModel, UserModel;

@@ -16,6 +16,15 @@ const isValidAuthToken = async (req, res, next, { userModel, jwtSecret = 'JWT_SE
       });
     const verified = jwt.verify(token, process.env[jwtSecret]);
 
+    if (verified.forcePasswordReset) {
+      return res.status(403).json({
+        success: false,
+        result: null,
+        message: 'Se requiere un cambio de contraseña.',
+        forcePasswordReset: true,
+      });
+    }
+
     const userPasswordPromise = UserPassword.findOne({
       user: verified.id,
       removed: false,
