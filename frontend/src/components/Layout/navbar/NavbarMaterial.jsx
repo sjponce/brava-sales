@@ -75,7 +75,7 @@ const NavbarMaterial = () => {
           </Typography>
         </Logo>
         <Box gap={1} display="flex" alignItems="center">
-          <Tooltip title="Ecommerse" arrow>
+          <Tooltip title="Ecommerce" arrow>
             <IconButton onClick={() => navigate('/ecommerce')}>
               <Storefront />
             </IconButton>

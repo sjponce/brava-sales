@@ -6,6 +6,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import ProductCatalog from './components/ProductCatalog';
+import Cart from './components/Cart';
 
 const HomeEcommerce = () => {
   const theme = useTheme();
@@ -15,7 +16,7 @@ const HomeEcommerce = () => {
     <Container maxWidth="lg" sx={{ mb: 4 }}>
       <Box mb={5}>
         <img
-          src={isMobile ? 'https://i.ibb.co/LYpzdYn/Dise-o-banner-mobile.png' : 'https://i.ibb.co/KyXZhqL/Dise-o-banner-4k.png'}
+          src={isMobile ? 'https://i.ibb.co/f40bFVN/banner-mobile.jpg' : 'https://i.ibb.co/qjF6Kj1/banner-1.jpg'}
           alt="Ecommerce"
           style={{
             borderEndStartRadius: '10px',
@@ -27,6 +28,7 @@ const HomeEcommerce = () => {
         />
       </Box>
       <ProductCatalog />
+      <Cart />
     </Container>
   );
 };
