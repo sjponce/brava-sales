@@ -1,6 +1,13 @@
-import { DarkModeOutlined, FilterList, LightModeOutlined, Notifications, ShoppingCart } from '@mui/icons-material';
+import {
+  DarkModeOutlined,
+  FilterList,
+  LightModeOutlined,
+  Notifications,
+  ShoppingCart,
+} from '@mui/icons-material';
 import {
   Avatar,
+  Badge,
   Box,
   Divider,
   IconButton,
@@ -16,6 +23,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toggleTheme } from '@/redux/themeReducer';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import cart from '@/redux/cart/actions';
+import { selectCartProducts } from '@/redux/cart/selectors';
 
 const StyledToolbar = styled(Toolbar)({
   paddingRight: '20px',
@@ -44,9 +53,15 @@ const Navbar = ({ toggleDrawer }) => {
 
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
+  const cartProductStatus = useSelector(selectCartProducts);
+  // const openCartStatus = useSelector(selectOpenCart);
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
+  };
+
+  const handleOpenCart = () => {
+    dispatch(cart.openCart());
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -62,20 +77,26 @@ const Navbar = ({ toggleDrawer }) => {
     <Stack position="fixed" sx={{ zIndex: 1 }}>
       <StyledToolbar
         sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5, opacity: 0.9 }}
-        disableGutters
-      >
+        disableGutters>
         <IconButton onClick={() => toggleDrawer(true)}>
           <FilterList />
         </IconButton>
         <Logo>
-          <Typography variant="overline" sx={{ display: { xs: 'none', sm: 'flex', opacity: '0.7' }, mr: 2, ml: 1 }}>
+          <Typography
+            variant="overline"
+            sx={{ display: { xs: 'none', sm: 'flex', opacity: '0.7' }, mr: 2, ml: 1 }}>
             aderis
           </Typography>
         </Logo>
         <Box gap={1} display="flex" alignItems="center">
           <Divider orientation="vertical" flexItem variant="middle" />
-          <IconButton>
-            <ShoppingCart />
+          <IconButton onClick={handleOpenCart}>
+            <Badge
+              badgeContent={cartProductStatus.length}
+              color="secondary"
+              invisible={cartProductStatus.length === 0}>
+              <ShoppingCart />
+            </Badge>
           </IconButton>
           <IconButton>
             <Notifications />
@@ -93,8 +114,7 @@ const Navbar = ({ toggleDrawer }) => {
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
-          MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-        >
+          MenuListProps={{ 'aria-labelledby': 'basic-button' }}>
           <MenuItem onClick={handleClose}>Perfil</MenuItem>
           <MenuItem onClick={() => setDialogOpen(true)}>Cerrar sesión</MenuItem>
         </Menu>
