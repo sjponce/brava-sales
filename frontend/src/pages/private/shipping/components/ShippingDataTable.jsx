@@ -242,7 +242,7 @@ const ShippingDataTable = () => {
 
   return (
     <Box display="flex" height="100%">
-      <DataTable columns={columns} rows={rows} />
+      <DataTable columns={columns} rows={rows} data-test-id="shipping-data-table" />
       <Loading isLoading={shippingState?.isLoading} />
       <EditShippingModal shipping={selectedRow} open={open} handlerOpen={setOpen} />
       <CustomDialog
