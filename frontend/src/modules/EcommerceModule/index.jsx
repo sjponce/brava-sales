@@ -1,5 +1,5 @@
-import EcommerceLayout from '@/components/EcommerceLayout/EcommerseLayout';
+import EcommerceLayout from '@/components/EcommerceLayout/EcommerceLayout';
 
-const EcommerseModule = () => <EcommerceLayout />;
+const EcommerceModule = () => <EcommerceLayout />;
 
-export default EcommerseModule;
+export default EcommerceModule;

@@ -7,43 +7,21 @@ const INITIAL_KEY_STATE = {
   isSuccess: false,
 };
 
-const INITIAL_STEP_STATE = {
-  currentStep: 0,
-  options: {
-    orderOptions: {},
-    paymentOptions: { discountType: 'discount' },
-  },
+const INITIAL_CART_STATE = {
+  products: [],
+  open: false,
 };
 
 const INITIAL_STATE = {
   current: {
     result: null,
   },
-  list: {
-    result: {
-      items: [],
-      pagination: {
-        current: 1,
-        pageSize: 10,
-        total: 1,
-        showSizeChanger: false,
-      },
-    },
-    isLoading: false,
-    isSuccess: false,
-  },
-  createPayment: INITIAL_KEY_STATE,
-  createMPLink: INITIAL_KEY_STATE,
-  stepper: INITIAL_STEP_STATE,
-  create: INITIAL_KEY_STATE,
-  update: INITIAL_KEY_STATE,
-  delete: INITIAL_KEY_STATE,
-  read: INITIAL_KEY_STATE,
+  cart: { ...INITIAL_CART_STATE },
   search: { ...INITIAL_KEY_STATE, result: [] },
 };
 
 // eslint-disable-next-line default-param-last
-const salesReducer = (state = INITIAL_STATE, action) => {
+const cartReducer = (state = INITIAL_STATE, action) => {
   const { payload, keyState } = action;
   switch (action.type) {
     case actionTypes.RESET_STATE:
@@ -96,39 +74,49 @@ const salesReducer = (state = INITIAL_STATE, action) => {
           ...INITIAL_STATE[keyState],
         },
       };
-    case actionTypes.UPDATE_ORDER_OPTIONS:
+    case actionTypes.ADD_TO_CART: {
+      const productExists = state.cart.products.some(
+        (product) => product.id === payload.id && product.color === payload.color
+      );
+
+      if (productExists) {
+        return state;
+      }
       return {
         ...state,
-        stepper: {
-          ...state.stepper,
-          options: {
-            ...state.stepper.options,
-            orderOptions: payload,
-          },
+        cart: {
+          ...state.cart,
+          products: [...state.cart.products, payload],
         },
       };
-    case actionTypes.UPDATE_PAYMENT_OPTIONS:
+    }
+    case actionTypes.REMOVE_FROM_CART:
       return {
         ...state,
-        stepper: {
-          ...state.stepper,
-          options: {
-            ...state.stepper.options,
-            paymentOptions: payload,
-          },
+        cart: {
+          ...state.cart,
+          products: state.cart.products.filter(
+            (product) => !(product.id === payload.id && product.color === payload.color)
+          ),
         },
       };
-    case actionTypes.SET_CURRENT_STEP:
+    case actionTypes.RESET_CART:
       return {
         ...state,
-        stepper: {
-          ...state.stepper,
-          currentStep: payload,
+        cart: {
+          ...INITIAL_CART_STATE,
+        },
+      };
+    case actionTypes.OPEN_CART:
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          open: !state.cart.open,
         },
       };
     default:
       return state;
   }
 };
-
-export default salesReducer;
+export default cartReducer;

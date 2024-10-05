@@ -111,7 +111,7 @@ const OrderProductsTab = ({ saleData }) => {
                     <Typography variant="subtitle2">{`${p.product.stockId} ${p.color}`}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Button variant="text" fullWidth onClick={() => openDialog(p._id)}>
+                    <Button variant="text" fullWidth onClick={() => openDialog(p.product._id)}>
                       Asignar stock
                     </Button>
                   </TableCell>
