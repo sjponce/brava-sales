@@ -10,14 +10,15 @@ import {
   Typography,
 } from '@mui/material';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import sales from '@/redux/sales/actions';
 import Loading from '@/components/Loading';
 import { getCurrentStep } from '@/redux/sales/selectors';
+import { selectCartProducts } from '@/redux/cart/selectors';
 
-const SummaryDataStep = ({ watch, handleSubmit }) => {
+const SummaryDataStep = ({ watch, handleSubmit, setValue }) => {
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -27,17 +28,20 @@ const SummaryDataStep = ({ watch, handleSubmit }) => {
 
   const createSalesState = useSelector((store) => store.sales.create);
   const currentStep = useSelector(getCurrentStep);
+  const products = useSelector(selectCartProducts);
 
   const createSalesOrder = async (data) => {
     const orderData = {
       orderDate: new Date(),
       products: data.products,
       totalAmount: data.totalAmount,
-      discount: data.discount,
+      discount: data.discount || 0,
       installmentsCount: data.installments,
       finalAmount: data.finalAmount,
       customer: data.customer._id,
       shippingAddress: data.customer.address,
+      responsible: data.responsible,
+      ecommerce: true,
     };
     try {
       dispatch(
@@ -56,21 +60,40 @@ const SummaryDataStep = ({ watch, handleSubmit }) => {
     }
   };
 
+  const parseProducts = () => {
+    const parseData = products.map((product) => ({
+      product: product.id,
+      color: product.color,
+      stockId: product.stockId,
+      idStock: product.idStock,
+      price: product.price,
+      sizes: product.sizes,
+    }));
+    setValue('products', parseData);
+  };
+
+  useEffect(() => {
+    parseProducts();
+  }, [products]);
+
   const preSubmit = (e) => {
     e.preventDefault();
-    console.log('watch', watch());
     setDialogOpen(true);
   };
 
   const onSubmit = async (data) => {
     createSalesOrder(data);
+    console.log('createSalesOrder', data);
+    dispatch(sales.setCurrentStep(currentStep + 1));
   };
 
   return (
     <Box
-      sx={{ overflowY: 'auto', height: '55vh' }}
+      sx={{ overflowY: 'auto', height: '70vh' }}
       component="form"
       onSubmit={preSubmit}
+      mt={2}
+      mb={1}
       id="step-3"
       display="flex"
       flexDirection={{ xs: 'column', md: 'row' }}
@@ -97,11 +120,11 @@ const SummaryDataStep = ({ watch, handleSubmit }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {watch('products')?.map((product) => (
+            {products.map((product) => (
               <React.Fragment key={`${product.stockId} ${product.color}`}>
                 <TableRow>
                   <TableCell colSpan={3}>
-                    <Typography variant="subtitle2">{`${product.stockId} ${product.color}`}</Typography>
+                    <Typography variant="subtitle2">{`${product.name} ${product.color}`}</Typography>
                   </TableCell>
                 </TableRow>
                 {product.sizes.map((item) => (
@@ -179,7 +202,7 @@ const SummaryDataStep = ({ watch, handleSubmit }) => {
         </Table>
       </TableContainer>
       <CustomDialog
-        title="Crear orden de venta"
+        title="Confirmar pedido"
         text="Esta acción no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onCancel={handleDialogCancel}

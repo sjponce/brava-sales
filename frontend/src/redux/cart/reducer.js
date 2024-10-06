@@ -100,6 +100,22 @@ const cartReducer = (state = INITIAL_STATE, action) => {
           ),
         },
       };
+    case actionTypes.UPDATE_PRODUCT_IN_CART:
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          products: state.cart.products.map((product) => {
+            if (product.id === payload.id && product.color === payload.color) {
+              return {
+                ...product,
+                sizes: payload.sizes,
+              };
+            }
+            return product;
+          }),
+        },
+      };
     case actionTypes.RESET_CART:
       return {
         ...state,
