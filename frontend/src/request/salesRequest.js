@@ -183,7 +183,6 @@ export const salesRequest = {
       return errorHandler(error);
     }
   },
-
   post: async ({ entity, jsonData }) => {
     try {
       const response = await axios.post(entity, jsonData);
@@ -288,6 +287,18 @@ export const salesRequest = {
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  listAllStockReservations: async ({ entity }) => {
+    try {
+      const response = await axios.get(`${entity}/reserve-stock`);
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
       });
       return response.data;
     } catch (error) {

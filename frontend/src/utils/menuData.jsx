@@ -1,6 +1,6 @@
 import {
   AirportShuttleOutlined, FeedOutlined, HomeOutlined,
-  InsertChartOutlined, LocalAtmRounded, PeopleAltOutlined,
+  InsertChartOutlined, LocalAtmRounded, LocalShippingOutlined, PeopleAltOutlined,
   SellOutlined, ShoppingBagOutlined, WorkOutlineRounded,
 } from '@mui/icons-material';
 
@@ -60,9 +60,9 @@ export const menuMaterial = [
       },
       {
         id: 3,
-        title: 'Promociones',
-        url: 'offers',
-        icon: <LocalAtmRounded />,
+        title: 'Entregas',
+        url: 'shipping',
+        icon: <LocalShippingOutlined />,
       },
     ],
   },

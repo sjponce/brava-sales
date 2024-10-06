@@ -2,7 +2,6 @@ import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import SalesOrdersDataTable from './components/SalesOrderDataTable';
-// import AddSalesOrderModal from './components/AddSalesOrderModal';
 import AddOrderSalesModal from './components/AddSalesOrderModal';
 
 const SalesOrders = () => {

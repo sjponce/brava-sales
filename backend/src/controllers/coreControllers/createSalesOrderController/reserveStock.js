@@ -9,7 +9,6 @@ const reserveStock = async (req, res) => {
   const cookie = `token=${req.cookies.token}`;
 
   try {
-
     const salesOrder = await SalesOrder.findById(orderId).populate('products.reservations').exec();
     if (!salesOrder) {
       return res.status(404).json({
@@ -28,7 +27,7 @@ const reserveStock = async (req, res) => {
       });
     }
 
-    const product = salesOrder.products?.find((p) => p._id.toString() === productId);
+    const product = salesOrder.products?.find((p) => p.product.toString() === productId);
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -39,11 +38,7 @@ const reserveStock = async (req, res) => {
 
     const idStock = product.idStock;
 
-    if (
-      !['Pending', 'Partially reserved', 'Partially shipped', 'Partially delivered'].includes(
-        salesOrder.status
-      )
-    ) {
+    if (!['Pending', 'Partially shipped', 'Partially delivered'].includes(salesOrder.status)) {
       return res.status(400).json({
         success: false,
         result: null,
@@ -105,6 +100,8 @@ const reserveStock = async (req, res) => {
     const stockReservation = new StockReservation({
       sizes: reservationDetails,
       status: 'Reserved',
+      product: productId,
+      salesOrder: salesOrder._id,
     });
 
     await stockReservation.save();
