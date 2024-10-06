@@ -38,8 +38,8 @@ const SummaryDataStep = ({ watch, handleSubmit, setValue }) => {
       discount: data.discount || 0,
       installmentsCount: data.installments,
       finalAmount: data.finalAmount,
-      customer: data.customer._id,
-      shippingAddress: data.customer.address,
+      customer: data.customer?._id,
+      shippingAddress: data.customer?.address,
       responsible: data.responsible,
       ecommerce: true,
     };

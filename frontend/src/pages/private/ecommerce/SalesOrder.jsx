@@ -92,6 +92,7 @@ const SalesOrder = ({ open, handlerOpen }) => {
     if (customerData) {
       setValue('customer', customerData);
     }
+    console.log(customerData);
   }, [customerData]);
 
   return (
@@ -132,7 +133,7 @@ const SalesOrder = ({ open, handlerOpen }) => {
         </Stepper>
         <Box display="flex" height="100%">
           {currentStep === steps.length ? (
-            <Box display="flex" justifyContent="space-between" flexDirection="column">
+            <Box display="flex" justifyContent="space-between" flexDirection="column" width="100%">
               <Box display="flex" height="70vh" justifyContent="center" alignItems="center">
                 {createOrderState.isLoading && (
                   <CircularProgress color="primary" sx={{ fontSize: 200 }} />
@@ -146,7 +147,7 @@ const SalesOrder = ({ open, handlerOpen }) => {
                   </Typography>
                 )}
                 {!createOrderState.isLoading && !createOrderState.isSuccess && (
-                  <Typography color="primary" variant="h5">
+                  <Typography color="primary.light" variant="h5" align="center">
                     No se pudo generar el pedido, intente nuevamente más tarde.
                   </Typography>
                 )}
