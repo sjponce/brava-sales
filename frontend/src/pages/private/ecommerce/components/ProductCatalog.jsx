@@ -13,11 +13,12 @@ import {
   Dialog,
   DialogContent,
 } from '@mui/material';
-import { AddShoppingCart } from '@mui/icons-material';
+import { AddShoppingCart, RemoveShoppingCart } from '@mui/icons-material';
 import stock from '@/redux/stock/actions';
 import getColors from '@/utils/getColors';
 import TwoColorCircle from '@/components/TwoColorCircle';
 import cart from '@/redux/cart/actions';
+import { selectCartProducts } from '@/redux/cart/selectors';
 
 const StyledCard = styled(Card)(() => ({
   height: '100%',
@@ -40,6 +41,7 @@ const ProductCatalog = () => {
   const dispatch = useDispatch();
   const [allProducts, setAllProducts] = useState([]);
   const [imageProducts, setImageProducts] = useState([]);
+  const cartProducts = useSelector(selectCartProducts);
 
   const [expandedImage, setExpandedImage] = useState('');
 
@@ -58,12 +60,13 @@ const ProductCatalog = () => {
     dispatch(stock.listAll({ entity: 'stock' }));
   };
 
-  const handleImageByColor = (stockId, imageUrl, color) => {
+  const handleImageByColor = (stockId, imageUrl, color, id) => {
     setImageProducts((prevImages) => ({
       ...prevImages,
       [stockId]: {
         imageUrl,
         color,
+        id,
       },
     }));
   };
@@ -73,13 +76,28 @@ const ProductCatalog = () => {
       id: product._id,
       stockId: product.stockId,
       color: imageProducts[product.stockId].color,
+      imageUrl: imageProducts[product.stockId].imageUrl,
+      idStock: imageProducts[product.stockId].id,
       name: product.promotionalName,
       price: product.price,
-      imageUrl: imageProducts[product.stockId].imageUrl,
+      optionSizes: product.sizes,
       sizes: [],
     };
     dispatch(cart.addToCart(dataProduct));
   };
+
+  const handleRemoveFromCart = (product) => {
+    const productToRemove = {
+      id: product._id,
+      color: imageProducts[product.stockId]?.color,
+    };
+    dispatch(cart.removeFromCart(productToRemove));
+  };
+
+  const isProductInCart = (product) => cartProducts.some(
+    (cartProduct) => cartProduct.id === product._id
+    && cartProduct.color === imageProducts[product.stockId]?.color
+  );
 
   useEffect(() => {
     if (!productState?.result) return;
@@ -89,6 +107,7 @@ const ProductCatalog = () => {
       acc[item.stockId] = {
         imageUrl: item.variations[0]?.imageUrl,
         color: item.variations[0]?.color,
+        id: item.variations[0]?.id,
       };
       return acc;
     }, {});
@@ -117,7 +136,7 @@ const ProductCatalog = () => {
                 </Typography>
                 <Typography marginBottom={2}>{product.description}</Typography>
                 <Typography variant="h5" color="textSecondary">
-                  ${product.price}
+                  $ {product.price}
                 </Typography>
               </StyledCardContent>
               <CardContent>
@@ -132,7 +151,8 @@ const ProductCatalog = () => {
                             onClick={() => handleImageByColor(
                               product.stockId,
                               variation.imageUrl,
-                              variation.color
+                              variation.color,
+                              variation.id
                             )}>
                             <TwoColorCircle
                               color1={getColors(colors[0])}
@@ -143,11 +163,19 @@ const ProductCatalog = () => {
                       );
                     })}
                   </Box>
-                  <Tooltip title="Agregar a carrito">
-                    <IconButton size="small" onClick={() => handleAddToCart(product)}>
-                      <AddShoppingCart />
-                    </IconButton>
-                  </Tooltip>
+                  {isProductInCart(product) ? (
+                    <Tooltip title="Quitar de carrito">
+                      <IconButton size="small" onClick={() => handleRemoveFromCart(product)}>
+                        <RemoveShoppingCart />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Agregar a carrito">
+                      <IconButton size="small" onClick={() => handleAddToCart(product)}>
+                        <AddShoppingCart />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </Box>
               </CardContent>
             </StyledCard>

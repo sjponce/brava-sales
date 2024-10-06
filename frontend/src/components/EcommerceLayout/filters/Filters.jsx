@@ -1,15 +1,17 @@
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ArrowBackIosNew, ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
   Box,
   Collapse,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemText,
   ListSubheader,
   Toolbar,
+  Tooltip,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import crud from '@/redux/crud/actions';
 
@@ -55,11 +57,17 @@ const Filters = ({ open, toggleDrawer }) => {
 
   return (
     <Drawer anchor="left" open={open} variant="temporary" onClose={() => toggleDrawer(false)}>
-      <Toolbar />
-      <Box sx={{ overflow: 'auto', width: drawerWidth }}>
+      <Box sx={{ overflow: 'auto', width: { xs: '100vw', sm: drawerWidth }, display: 'flex', flexDirection: 'column' }}>
+        <Toolbar>
+          <Tooltip title="Ocultar" arrow>
+            <IconButton aria-label="hide" onClick={() => toggleDrawer()} sx={{ ml: 'auto' }}>
+              <ArrowBackIosNew />
+            </IconButton>
+          </Tooltip>
+        </Toolbar>
         <List subheader={<ListSubheader>Filtrar por tags</ListSubheader>}>
           {Object.keys(tags).map((category) => (
-            <>
+            <React.Fragment key={category}>
               <ListItemButton onClick={() => handleCategoryClick(category)}>
                 <ListItemText primary={capitalizeFirstLetter(category)} />
                 {openCategories[category] ? <ExpandLess /> : <ExpandMore />}
@@ -67,13 +75,13 @@ const Filters = ({ open, toggleDrawer }) => {
               <Collapse in={openCategories[category]} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {tags[category].map((tag) => (
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton key={tag} sx={{ pl: 4 }}>
                       <ListItemText primary={tag} />
                     </ListItemButton>
                   ))}
                 </List>
               </Collapse>
-            </>
+            </React.Fragment>
           ))}
         </List>
       </Box>

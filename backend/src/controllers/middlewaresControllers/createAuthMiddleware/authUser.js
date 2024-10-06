@@ -52,6 +52,7 @@ const authUser = async (
           phone: userEntity.phone,
           photo: userEntity.photo,
           forcePasswordReset: user.forcePasswordReset,
+          ...(user.role === 'customer' ? { customer: userEntity._id } : { seller: userEntity._id }),
         },
         message: 'Usuario autenticado.',
       });

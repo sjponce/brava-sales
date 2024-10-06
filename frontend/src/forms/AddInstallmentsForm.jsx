@@ -6,19 +6,20 @@ import {
 import { MONTHLY_INTEREST_RATE, QTY_INSTALLMENTS } from '@/utils/constants';
 
 const AddInstallmentsForm = ({ control, watch, setValue }) => {
-  const calculateInterest = () => (watch('installments') - 1) * MONTHLY_INTEREST_RATE;
+  const calculateInterest = (quantity) => (quantity - 1) * MONTHLY_INTEREST_RATE;
 
   const calculateInstallment = (installments) => {
     const totalWithDiscount = watch('totalWithDiscount');
-    const interest = calculateInterest();
+    const interest = calculateInterest(installments);
     const totalWithInterest = totalWithDiscount * (1 + interest);
     const installmentAmount = totalWithInterest / installments;
     return installmentAmount;
   };
 
   useEffect(() => {
+    if (!watch('totalWithDiscount')) setValue('totalWithDiscount', watch('totalAmount'));
     const totalWithDiscount = watch('totalWithDiscount');
-    const interest = calculateInterest();
+    const interest = calculateInterest(watch('installments'));
     const finalAmount = totalWithDiscount * (1 + interest);
     setValue('finalAmount', parseFloat(finalAmount?.toFixed(2)));
   }, [watch('installments'), watch('totalWithDiscount')]);
@@ -30,6 +31,7 @@ const AddInstallmentsForm = ({ control, watch, setValue }) => {
       borderRadius={2.5}
       borderColor="background.paper"
       display="flex"
+      mb={2}
       color="primary"
       flexDirection="column">
       <Controller

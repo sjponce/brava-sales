@@ -38,6 +38,10 @@ const cart = {
     type: actionTypes.REMOVE_FROM_CART,
     payload: data,
   }),
+  updateProductInCart: (data) => ({
+    type: actionTypes.UPDATE_PRODUCT_IN_CART,
+    payload: data,
+  }),
   saveCart:
     ({ jsonData }) => async (dispatch) => {
       dispatch({
