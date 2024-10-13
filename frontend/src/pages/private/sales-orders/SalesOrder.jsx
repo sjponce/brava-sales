@@ -29,6 +29,7 @@ const SalesOrders = () => {
           variant="text"
           size="large"
           color="primary"
+          data-test-id="AddButton"
           startIcon={<AddCircle />}>
           <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
             Nueva Orden de Venta
