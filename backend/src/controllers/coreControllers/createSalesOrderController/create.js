@@ -89,6 +89,9 @@ const create = async (req, res) => {
       discount: salesOrderData.discount,
       promotion: salesOrderData.promotion,
       products,
+      responsible: salesOrderData.responsible,
+      ecommerce: salesOrderData.ecommerce,
+      shippingMethod: salesOrderData.shippingMethod,
     }).save();
 
     // Creating new installments for the sales order

@@ -15,6 +15,8 @@ import {
   Select,
   Box,
   Typography,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,10 +46,6 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
   const handleDeleteRow = (index) => {
     remove(index);
   };
-
-  useEffect(() => {
-    console.log('products', watch('products'));
-  }, [watch('products')]);
 
   const sumQuantity = (quantity) => {
     if (!quantity) return 0;
@@ -120,28 +118,38 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                     renderInput={(params) => (
                       <TextField {...params} required label="Producto" margin="none" />
                     )}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>
+                        {option.stockId}
+                      </li>
+                    )}
                   />
                 </TableCell>
                 <TableCell sx={{ borderBottom: 'none' }}>
-                  <Select
-                    size="small"
-                    value={watch(`products.${index}.color`) || ''}
-                    onChange={(event) => {
-                      const selectedVariation = currentOptions[`variations-${index}`].find(
-                        (variation) => variation.color === event.target.value
-                      );
-                      setValue(`products.${index}.color`, event.target.value);
-                      setValue(`products.${index}.idStock`, selectedVariation.id);
-                    }}
-                    required
-                    margin="none"
-                    sx={{ width: '160px' }}>
-                    {(currentOptions[`variations-${index}`] || []).map((variation) => (
-                      <MenuItem key={variation.id} value={variation.color}>
-                        {variation.color}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <FormControl fullWidth>
+                    <InputLabel size="small" id="color-select">Color</InputLabel>
+                    <Select
+                      size="small"
+                      label="Color"
+                      labelId="color-select"
+                      value={watch(`products.${index}.color`) || ''}
+                      onChange={(event) => {
+                        const selectedVariation = currentOptions[`variations-${index}`].find(
+                          (variation) => variation.color === event.target.value
+                        );
+                        setValue(`products.${index}.color`, event.target.value);
+                        setValue(`products.${index}.idStock`, selectedVariation.id);
+                      }}
+                      required
+                      margin="none"
+                      sx={{ width: '160px' }}>
+                      {(currentOptions[`variations-${index}`] || []).map((variation) => (
+                        <MenuItem key={variation.id} value={variation.color}>
+                          {variation.color}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </TableCell>
                 <TableCell sx={{ borderBottom: 'none' }} align="right">
                   $
@@ -160,30 +168,35 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
               </TableRow>
               <TableRow>
                 <TableCell size="small">
-                  <Select
-                    size="small"
-                    value={watch(`products.${index}.sizes`)?.map((item) => item.size) || []}
-                    onChange={(event) => {
-                      const selectedSizes = event.target.value;
-                      const currentSizes = watch(`products.${index}.sizes`) || [];
-                      const newSizes = selectedSizes.map((size) => {
-                        const existingSize = currentSizes.find((item) => item.size === size);
-                        return existingSize || { size, quantity: 0 };
-                      });
+                  <FormControl fullWidth>
+                    <InputLabel size="small" id="size-select">Numeración</InputLabel>
+                    <Select
+                      size="small"
+                      label="Numeración"
+                      labelId="size-select"
+                      value={watch(`products.${index}.sizes`)?.map((item) => item.size) || []}
+                      onChange={(event) => {
+                        const selectedSizes = event.target.value;
+                        const currentSizes = watch(`products.${index}.sizes`) || [];
+                        const newSizes = selectedSizes.map((size) => {
+                          const existingSize = currentSizes.find((item) => item.size === size);
+                          return existingSize || { size, quantity: 0 };
+                        });
 
-                      newSizes.sort((a, b) => String(a.size).localeCompare(String(b.size)));
+                        newSizes.sort((a, b) => String(a.size).localeCompare(String(b.size)));
 
-                      setValue(`products.${index}.sizes`, newSizes);
-                    }}
-                    required
-                    sx={{ width: '160px' }}
-                    multiple>
-                    {(currentOptions[`sizes-${index}`] || []).map((size) => (
-                      <MenuItem key={size} value={size}>
-                        {size}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                        setValue(`products.${index}.sizes`, newSizes);
+                      }}
+                      required
+                      sx={{ width: '160px' }}
+                      multiple>
+                      {(currentOptions[`sizes-${index}`] || []).map((size) => (
+                        <MenuItem key={size} value={size}>
+                          {size}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </TableCell>
                 <TableCell colSpan={4}>
                   <Box display="flex" gap={2}>

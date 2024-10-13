@@ -52,6 +52,7 @@ const AddSalesDiscountForm = ({ control, watch, setValue }) => {
           color="primary"
           exclusive
           value={currentOptions?.discountType}
+          defaultValue={currentOptions?.discountType}
           onChange={handlerUpdateOptions}
           aria-label="payment type">
           <ToggleButton value="discount" aria-label="Descuento">

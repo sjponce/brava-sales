@@ -9,10 +9,10 @@ import {
   ListSubheader,
   Toolbar,
   Button,
-  Tooltip,
+  Tooltip, Typography,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { ArrowForwardIos, RemoveShoppingCart } from '@mui/icons-material';
+import { ArrowForwardIos, ProductionQuantityLimits, RemoveShoppingCart } from '@mui/icons-material';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts, selectOpenCart } from '@/redux/cart/selectors';
 
@@ -27,44 +27,73 @@ const Cart = ({ setOpen }) => {
     dispatch(cart.openCart());
   };
 
+  const handleResetCart = () => {
+    dispatch(cart.resetState());
+  };
+
   const handleRemoveFromCart = (product) => {
     dispatch(cart.removeFromCart(product));
   };
 
+  const handleOpen = () => {
+    dispatch(cart.openCart());
+    setOpen(true);
+  };
+
   return (
     <Drawer anchor="right" open={cartOpenStatus} variant="temporary" onClose={() => toggleDrawer()}>
-      <Box sx={{ overflow: 'auto', width: { xs: '100vw', sm: drawerWidth }, display: 'flex', flexDirection: 'column' }}>
+      <Box
+        sx={{
+          overflow: 'auto',
+          width: { xs: '100vw', sm: drawerWidth },
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
         <Toolbar>
-          <Tooltip title="Ocultar" arrow>
-            <IconButton aria-label="hide" onClick={() => toggleDrawer()}>
-              <ArrowForwardIos />
-            </IconButton>
-          </Tooltip>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <Tooltip title="Ocultar" arrow>
+              <IconButton aria-label="hide" onClick={() => toggleDrawer()}>
+                <ArrowForwardIos />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Vaciar carrito" arrow>
+              <IconButton data-test-id="CloseIcon" onClick={handleResetCart} color="error">
+                <ProductionQuantityLimits />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Toolbar>
-        <List subheader={<ListSubheader>Productos en carrito</ListSubheader>}>
+        <List subheader={(
+          <ListSubheader>
+            <Typography variant="h6" color="primary">
+              Productos en carrito
+            </Typography>
+          </ListSubheader>
+        )}
+        >
           <>
             {cartProductsStatus.map((product) => (
-              <ListItem
-                key={`${product.stockId} ${product.color}`}
-                sx={{ padding: 2 }}
-              >
+              <ListItem key={`${product.stockId} ${product.color}`} sx={{ padding: 2 }}>
                 <Avatar src={product.imageUrl} sx={{ width: 64, height: 64, marginRight: 2 }} />
                 <ListItemText primary={product.name} secondary={`$ ${product.price}`} />
-                <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveFromCart(product)}>
-                  <RemoveShoppingCart />
-                </IconButton>
+                <Tooltip title="Quitar" arrow>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleRemoveFromCart(product)}>
+                    <RemoveShoppingCart />
+                  </IconButton>
+                </Tooltip>
               </ListItem>
             ))}
           </>
         </List>
       </Box>
       <Button
-        type="primary"
         size="large"
+        color="success"
         fullWidth
-        disabled={(cartProductsStatus.length === 0)}
-        onClick={() => setOpen(true)}
-        >
+        disabled={cartProductsStatus.length === 0}
+        onClick={handleOpen}>
         Formular pedido
       </Button>
     </Drawer>

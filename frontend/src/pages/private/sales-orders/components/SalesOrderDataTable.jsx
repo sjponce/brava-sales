@@ -12,6 +12,7 @@ import translateStatus from '@/utils/translateSalesStatus';
 import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 import stock from '@/redux/stock/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
+import getProductImageMap from '@/utils/getProductImageMap';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ const SalesOrderDataTable = () => {
   const deleteSalesOrderState = useSelector((store) => store.sales.delete);
   const reserveStockState = useSelector((store) => store.sales.reserveStock);
   const stockProductsState = useSelector((store) => store.stock.getStockProducts);
+  const products = useSelector((store) => store.stock.listAll)?.result?.items?.result;
 
   useEffect(() => {
     dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
@@ -143,6 +145,12 @@ const SalesOrderDataTable = () => {
     fetchData();
   }, [location]);
 
+  useEffect(() => {
+    if (!products) return;
+    const productImgMap = getProductImageMap(products);
+    dispatch(stock.setProductImageMap(productImgMap));
+  }, [products]);
+
   return (
     <Box display="flex" height="100%">
       <DataTable columns={columns} rows={rows} />
@@ -150,7 +158,7 @@ const SalesOrderDataTable = () => {
       <Loading
         isLoading={
           salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
-          || reserveStockState?.isLoading || stockProductsState?.isLoading
+          || reserveStockState?.isLoading || stockProductsState?.isLoading || false
         }
       />
     </Box>

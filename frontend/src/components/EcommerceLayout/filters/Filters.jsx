@@ -20,13 +20,13 @@ const drawerWidth = 300;
 const Filters = ({ open, toggleDrawer }) => {
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
-  const tagsState = useSelector((store) => store.crud.listAll);
+  const tagsState = useSelector((store) => store.crud.list);
   const [openCategories, setOpenCategories] = useState({});
 
   // TODO: Derivar a backend la categorizacion de los tags
   useEffect(() => {
     if (!tagsState?.result) return;
-    const newTags = tagsState.result?.items?.result.map((item) => ({ ...item, id: item._id }));
+    const newTags = tagsState.result?.items?.map((item) => ({ ...item, id: item._id }));
     const groupedTags = newTags.reduce((acc, tag) => {
       if (!acc[tag.category]) {
         acc[tag.category] = [];
@@ -35,11 +35,11 @@ const Filters = ({ open, toggleDrawer }) => {
       return acc;
     }, {});
     setTags(groupedTags);
-  }, [tagsState]);
+  }, [tagsState?.isSuccess]);
 
   const updateTags = () => {
     if (tagsState?.isLoading) return;
-    dispatch(crud.listAll({ entity: 'tag' }));
+    dispatch(crud.list({ entity: 'tag', options: { limit: 1000 } }));
   };
 
   useEffect(() => {

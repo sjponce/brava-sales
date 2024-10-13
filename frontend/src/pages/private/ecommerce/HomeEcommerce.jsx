@@ -1,18 +1,51 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Box,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import ProductCatalog from './components/ProductCatalog';
 import Cart from './components/Cart';
-import SalesOrder from './SalesOrder';
+import sales from '@/redux/sales/actions';
+import AddSalesOrderModal from '../sales-orders/components/AddSalesOrderModal';
+import ModalSalesOrderDetails from '../sales-orders/components/ModalSalesOrderDetails';
+import Loading from '@/components/Loading';
+import crud from '@/redux/crud/actions';
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
+import OrdersDialog from './components/OrdersDialog';
 
 const HomeEcommerce = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  const [openDetails, setOpenDetails] = React.useState(false);
+  const [selectedRow, setSelectedRow] = React.useState({ id: '' });
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const readSalesOrderState = useSelector((store) => store.sales.read);
+  const updateSalesOrderState = useSelector((store) => store.sales.update);
+  const currentUser = useSelector(selectCurrentAdmin);
+
+  const handleDetails = async (id) => {
+    setSelectedRow({ ...selectedRow, id });
+    await dispatch(sales.read({ entity: 'sales', id }));
+    setOpenDetails(true);
+  };
+
+  const updatedPayment = useSelector((state) => state.sales.createPayment);
+  const crudUpdate = useSelector((state) => state.crud.update);
+
+  useEffect(() => {
+    dispatch(crud.filter({ entity: 'salesOrder', options: { filter: 'customer', equal: currentUser.customer } }));
+  }, [readSalesOrderState]);
+
+  useEffect(() => {
+    if (!updatedPayment.result && !crudUpdate?.result) return;
+    if (updatedPayment.isLoading && crudUpdate?.isLoading) return;
+    dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
+  }, [updatedPayment, crudUpdate]);
 
   return (
     <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -31,7 +64,15 @@ const HomeEcommerce = () => {
       </Box>
       <ProductCatalog />
       <Cart setOpen={setOpen} />
-      <SalesOrder open={open} handlerOpen={setOpen} />
+      <AddSalesOrderModal
+        open={open}
+        handlerOpen={setOpen}
+        handlerDetails={handleDetails}
+        ecommerce
+      />
+      <OrdersDialog handleAction={handleDetails} />
+      <ModalSalesOrderDetails open={openDetails} handlerOpen={setOpenDetails} />
+      <Loading isLoading={readSalesOrderState?.isLoading || updateSalesOrderState?.isLoading} />
     </Container>
   );
 };

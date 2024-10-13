@@ -196,6 +196,10 @@ const stock = {
         });
       }
     },
+  setProductImageMap: (data) => ({
+    type: actionTypes.SET_PRODUCT_IMAGE_MAP,
+    payload: data,
+  }),
 };
 
 export default stock;

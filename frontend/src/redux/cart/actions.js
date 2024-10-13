@@ -61,6 +61,12 @@ const cart = {
   openCart: () => ({
     type: actionTypes.OPEN_CART,
   }),
+  openFilters: () => ({
+    type: actionTypes.OPEN_FILTERS,
+  }),
+  openOrderDialog: () => ({
+    type: actionTypes.OPEN_ORDER_DIALOG,
+  }),
 };
 
 export default cart;

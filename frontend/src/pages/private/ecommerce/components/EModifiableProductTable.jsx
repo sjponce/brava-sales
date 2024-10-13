@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts } from '@/redux/cart/selectors';
 
-const ModifiableProductTable = ({ setValue, watch }) => {
+const EModifiableProductTable = ({ setValue, watch }) => {
   const products = useSelector(selectCartProducts);
   const dispatch = useDispatch();
 
@@ -140,4 +140,4 @@ const ModifiableProductTable = ({ setValue, watch }) => {
   );
 };
 
-export default ModifiableProductTable;
+export default EModifiableProductTable;

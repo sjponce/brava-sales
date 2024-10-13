@@ -18,6 +18,12 @@ const INITIAL_STATE = {
   },
   cart: { ...INITIAL_CART_STATE },
   search: { ...INITIAL_KEY_STATE, result: [] },
+  orderDialog: {
+    open: false,
+  },
+  filters: {
+    open: false,
+  },
 };
 
 // eslint-disable-next-line default-param-last
@@ -129,6 +135,20 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         cart: {
           ...state.cart,
           open: !state.cart.open,
+        },
+      };
+    case actionTypes.OPEN_FILTERS:
+      return {
+        ...state,
+        filters: {
+          open: !state.filters.open,
+        },
+      };
+    case actionTypes.OPEN_ORDER_DIALOG:
+      return {
+        ...state,
+        orderDialog: {
+          open: !state.orderDialog.open,
         },
       };
     default:

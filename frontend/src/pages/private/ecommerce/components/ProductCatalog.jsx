@@ -19,6 +19,7 @@ import getColors from '@/utils/getColors';
 import TwoColorCircle from '@/components/TwoColorCircle';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts } from '@/redux/cart/selectors';
+import getProductImageMap from '@/utils/getProductImageMap';
 
 const StyledCard = styled(Card)(() => ({
   height: '100%',
@@ -118,6 +119,12 @@ const ProductCatalog = () => {
     updateTable();
   }, []);
 
+  useEffect(() => {
+    if (!productState?.result) return;
+    const productImgMap = getProductImageMap(productState?.result.items.result);
+    dispatch(stock.setProductImageMap(productImgMap));
+  }, [productState?.isSuccess]);
+
   return (
     <>
       <Grid container spacing={4}>
@@ -165,13 +172,13 @@ const ProductCatalog = () => {
                   </Box>
                   {isProductInCart(product) ? (
                     <Tooltip title="Quitar de carrito">
-                      <IconButton size="small" onClick={() => handleRemoveFromCart(product)}>
+                      <IconButton size="small" onClick={() => handleRemoveFromCart(product)} sx={{ color: 'error.light' }}>
                         <RemoveShoppingCart />
                       </IconButton>
                     </Tooltip>
                   ) : (
                     <Tooltip title="Agregar a carrito">
-                      <IconButton size="small" onClick={() => handleAddToCart(product)}>
+                      <IconButton size="small" onClick={() => handleAddToCart(product)} sx={{ color: 'success.light' }}>
                         <AddShoppingCart />
                       </IconButton>
                     </Tooltip>

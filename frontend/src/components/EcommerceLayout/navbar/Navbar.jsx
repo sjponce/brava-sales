@@ -1,7 +1,7 @@
 import {
-  DarkModeOutlined,
+  DarkMode,
   FilterList,
-  LightModeOutlined,
+  LightMode,
   LocalMall,
   Notifications,
   ShoppingCart,
@@ -56,6 +56,7 @@ const Navbar = ({ toggleDrawer }) => {
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
   const cartProductStatus = useSelector(selectCartProducts);
+  const orders = useSelector((store) => store.crud.filter)?.result?.result;
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
@@ -63,6 +64,10 @@ const Navbar = ({ toggleDrawer }) => {
 
   const handleOpenCart = () => {
     dispatch(cart.openCart());
+  };
+
+  const handleOpenOrderDialog = () => {
+    dispatch(cart.openOrderDialog());
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -94,28 +99,33 @@ const Navbar = ({ toggleDrawer }) => {
         <Box gap={1} display="flex" alignItems="center">
           <Divider orientation="vertical" flexItem variant="middle" />
           <Tooltip title="Carrito" arrow>
-            <IconButton onClick={handleOpenCart}>
+            <IconButton onClick={handleOpenCart} color="primary">
               <Badge
                 badgeContent={cartProductStatus.length}
-                color="secondary"
+                color="info"
                 invisible={cartProductStatus.length === 0}>
                 <ShoppingCart />
               </Badge>
             </IconButton>
           </Tooltip>
           <Tooltip title="Notificaciones" arrow>
-            <IconButton>
+            <IconButton color="warning">
               <Notifications />
             </IconButton>
           </Tooltip>
           <Tooltip title="Mis pedidos" arrow>
-            <IconButton>
-              <LocalMall />
+            <IconButton onClick={handleOpenOrderDialog} color="secondary">
+              <Badge
+                badgeContent={orders?.length}
+                color="info"
+                invisible={orders?.length === 0}>
+                <LocalMall />
+              </Badge>
             </IconButton>
           </Tooltip>
           <Tooltip title={`Modo ${theme === 'dark' ? 'oscuro' : 'claro'}`} arrow>
             <IconButton onClick={handleToggleTheme}>
-              {theme === 'dark' ? <LightModeOutlined /> : <DarkModeOutlined />}
+              {theme === 'dark' ? <LightMode /> : <DarkMode />}
             </IconButton>
           </Tooltip>
           <Divider orientation="vertical" flexItem variant="middle" />

@@ -17,7 +17,7 @@ import sales from '@/redux/sales/actions';
 import Loading from '@/components/Loading';
 import { getCurrentStep } from '@/redux/sales/selectors';
 
-const SummaryDataStep = ({ watch, handleSubmit }) => {
+const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -33,11 +33,14 @@ const SummaryDataStep = ({ watch, handleSubmit }) => {
       orderDate: new Date(),
       products: data.products,
       totalAmount: data.totalAmount,
-      discount: data.discount,
+      discount: data.discount || 0,
       installmentsCount: data.installments,
       finalAmount: data.finalAmount,
-      customer: data.customer._id,
-      shippingAddress: data.customer.address,
+      customer: data.customer?._id,
+      shippingAddress: data.customer?.address,
+      responsible: data.responsible,
+      ecommerce,
+      shippingMethod: data.shippingMethod,
     };
     try {
       dispatch(
@@ -68,11 +71,11 @@ const SummaryDataStep = ({ watch, handleSubmit }) => {
 
   return (
     <Box
-      sx={{ overflowY: 'auto', height: '55vh' }}
       component="form"
       onSubmit={preSubmit}
       id="step-3"
       display="flex"
+      height="99%"
       flexDirection={{ xs: 'column', md: 'row' }}
       gap={2}
       >
