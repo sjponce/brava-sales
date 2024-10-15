@@ -3,6 +3,7 @@ const sellerException = require('./exceptions/sellerException');
 
 const modelExceptions = {
   User: sellerException,
+  Customer: sellerException
 };
 
 module.exports = modelExceptions;
