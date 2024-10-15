@@ -89,6 +89,33 @@ const sales = {
         });
       }
     },
+  listAllStockReservations:
+    ({ entity }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'listAllStockReservations',
+        payload: null,
+      });
+
+      const data = await salesRequest.listAllStockReservations({ entity });
+
+      if (data.success === true) {
+        const result = {
+          items: data,
+        };
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'listAllStockReservations',
+          payload: result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'listAllStockReservations',
+          payload: null,
+        });
+      }
+    },
   create:
     ({ entity, jsonData, withUpload = false }) => async (dispatch) => {
       dispatch({
@@ -151,9 +178,7 @@ const sales = {
       }
     },
   update:
-    ({
-      entity, id, jsonData, withUpload = false,
-    }) => async (dispatch) => {
+    ({ entity, id, jsonData, withUpload = false }) => async (dispatch) => {
       dispatch({
         type: actionTypes.REQUEST_LOADING,
         keyState: 'update',
