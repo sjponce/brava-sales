@@ -1,4 +1,4 @@
-const SalesOrder = require("@/models/coreModels/SalesOrder");
+const SalesOrder = require("@/models/appModels/SalesOrder");
 
 const updateSalesOrderStatus = async (salesOrderId) => {
   try {

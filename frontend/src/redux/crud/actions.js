@@ -232,6 +232,39 @@ const crud = {
       });
     }
   },
+  filter:
+    ({ entity, options = {} }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'filter',
+        payload: null,
+      });
+
+      try {
+        const data = await request.filter({ entity, options });
+
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'filter',
+          payload: data,
+        });
+
+        dispatch({
+          type: actionTypes.CURRENT_ITEM,
+          payload: data,
+        });
+
+        return data;
+      } catch (error) {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'filter',
+          payload: null,
+        });
+
+        return null;
+      }
+    },
   search:
     ({ entity, options = {} }) => async (dispatch) => {
       dispatch({

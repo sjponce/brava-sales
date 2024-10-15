@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Installment = mongoose.model('Installment');
 const SalesOrder = mongoose.model('SalesOrder');
 const PriceHistory = mongoose.model('PriceHistory');
+const User = mongoose.model('User');
 const { MONTHLY_INTEREST_RATE } = require('../../../utils/constants');
 
 const getLatestPrice = async (productId) => {
@@ -27,7 +28,6 @@ const calculateFinalAmount = (totalAmount, discount, installmentCount) => {
   return totalWithDiscount + interest;
 };
 
-
 const create = async (req, res) => {
   try {
     // Creating a new document in the collection
@@ -36,6 +36,17 @@ const create = async (req, res) => {
     const installmentsCount = salesOrderData.installmentsCount ?? 1;
     const products = salesOrderData.products;
     const nextSalesOrderCode = await getNextSalesOrderCode();
+
+    if (salesOrderData.ecommerce) {
+      const user = await User.findById(salesOrderData.responsible);
+      if (user.role !== 'customer') {
+        return res.status(400).json({
+          success: false,
+          result: null,
+          message: 'Solo los clientes pueden realizar compras desde aquí',
+        });
+      }
+    }
 
     // Calculate total amount based on latest prices
     let totalAmount = 0;
@@ -78,6 +89,9 @@ const create = async (req, res) => {
       discount: salesOrderData.discount,
       promotion: salesOrderData.promotion,
       products,
+      responsible: salesOrderData.responsible,
+      ecommerce: salesOrderData.ecommerce,
+      shippingMethod: salesOrderData.shippingMethod,
     }).save();
 
     // Creating new installments for the sales order

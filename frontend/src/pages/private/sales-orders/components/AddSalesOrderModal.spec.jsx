@@ -25,6 +25,9 @@ describe('AddSalesOrderModal Component', () => {
           listAll: {
             result: mockCustomers,
           },
+          read: {
+            result: { id: 1, name: 'Customer 1' },
+          },
         },
       },
     });

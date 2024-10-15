@@ -28,6 +28,7 @@ import sales from '@/redux/sales/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import translateStatus from '@/utils/translateSalesStatus';
 import crud from '@/redux/crud/actions';
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -37,6 +38,7 @@ const StyledModal = styled(Modal)({
 
 const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
   const dispatch = useDispatch();
+  const currentUser = useSelector(selectCurrentAdmin);
 
   const createPayment = (data) => {
     const body = {
@@ -152,8 +154,6 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
   };
 
   const handleDialogAccept = () => {
-    console.log('asdsad');
-
     dispatch(
       crud.update({
         entity: 'payment',
@@ -200,10 +200,10 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
                 variant="contained"
                 color="primary"
                 disabled={
-                  isLoading ||
-                  !isValid ||
-                  (watch('paymentMethod') !== 'MercadoPago' && !watch('photo')) ||
-                  !watch('paymentMethod')
+                  isLoading
+                  || !isValid
+                  || (watch('paymentMethod') !== 'MercadoPago' && !watch('photo'))
+                  || !watch('paymentMethod')
                 }
                 size="medium">
                 <Typography variant="button">Añadir pago</Typography>
@@ -321,25 +321,33 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
                       </TableCell>
                       <TableCell p={8}>
                         <Box display="flex" justifyContent="center">
-                          <IconButton
-                            disabled={!p.photo}
-                            onClick={() => window.open(p.photo, '_blank')}>
-                            <Image color={p.photo ? '' : 'disabled'} />
-                          </IconButton>
-                          <IconButton
-                            disabled={p.status === 'Approved'}
-                            onClick={() => handleApproval(p._id, 'Approved')}
-                            size="small">
-                            <Check color={p.status !== 'Approved' ? '' : 'disabled'} />
-                            <Tooltip title="Aprobar pago" />
-                          </IconButton>
-                          <IconButton
-                            disabled={p.status === 'Rejected'}
-                            onClick={() => handleApproval(p._id, 'Rejected')}
-                            size="small">
-                            <Cancel />
-                            <Tooltip title="Rechazar pago" />
-                          </IconButton>
+                          <Tooltip title="Ver comprovante">
+                            <IconButton
+                              disabled={!p.photo}
+                              onClick={() => window.open(p.photo, '_blank')}>
+                              <Image color={p.photo ? '' : 'disabled'} />
+                            </IconButton>
+                          </Tooltip>
+                          {currentUser.role !== 'customer' && (
+                            <>
+                              <Tooltip title="Aprobar pago">
+                                <IconButton
+                                  disabled={p.status === 'Approved'}
+                                  onClick={() => handleApproval(p._id, 'Approved')}
+                                  size="small">
+                                  <Check color={p.status !== 'Approved' ? '' : 'disabled'} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Rechazar pago">
+                                <IconButton
+                                  disabled={p.status === 'Rejected'}
+                                  onClick={() => handleApproval(p._id, 'Rejected')}
+                                  size="small">
+                                  <Cancel />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
                         </Box>
                       </TableCell>
                     </TableRow>

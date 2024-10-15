@@ -18,6 +18,12 @@ const INITIAL_STATE = {
   },
   cart: { ...INITIAL_CART_STATE },
   search: { ...INITIAL_KEY_STATE, result: [] },
+  orderDialog: {
+    open: false,
+  },
+  filters: {
+    open: false,
+  },
 };
 
 // eslint-disable-next-line default-param-last
@@ -100,6 +106,22 @@ const cartReducer = (state = INITIAL_STATE, action) => {
           ),
         },
       };
+    case actionTypes.UPDATE_PRODUCT_IN_CART:
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          products: state.cart.products.map((product) => {
+            if (product.id === payload.id && product.color === payload.color) {
+              return {
+                ...product,
+                sizes: payload.sizes,
+              };
+            }
+            return product;
+          }),
+        },
+      };
     case actionTypes.RESET_CART:
       return {
         ...state,
@@ -113,6 +135,20 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         cart: {
           ...state.cart,
           open: !state.cart.open,
+        },
+      };
+    case actionTypes.OPEN_FILTERS:
+      return {
+        ...state,
+        filters: {
+          open: !state.filters.open,
+        },
+      };
+    case actionTypes.OPEN_ORDER_DIALOG:
+      return {
+        ...state,
+        orderDialog: {
+          open: !state.orderDialog.open,
         },
       };
     default:

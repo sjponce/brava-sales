@@ -84,13 +84,12 @@ const NavbarMaterial = () => {
             {theme === 'dark' ? <LightModeOutlined /> : <DarkModeOutlined />}
           </IconButton>
           <Divider orientation="vertical" flexItem variant="middle" />
-          <IconButton onClick={handleClick}>
+          <IconButton onClick={handleClick} id="profile-menu">
             <Avatar src={user.photo} sx={{ width: 30, height: 30 }} />
           </IconButton>
         </Box>
-
         <Menu
-          id="basic-menu"
+          id="profile-menu"
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}

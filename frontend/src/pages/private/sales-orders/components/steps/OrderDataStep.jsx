@@ -5,9 +5,11 @@ import AddSalesOrderForm from '@/forms/AddSalesOrderForm';
 import ModifiableProductTable from '../ModifiableProductTable';
 import sales from '@/redux/sales/actions';
 import { getCurrentStep } from '@/redux/sales/selectors';
+import EModifiableProductTable from '@/pages/private/ecommerce/components/EModifiableProductTable';
+import { selectCartProducts } from '@/redux/cart/selectors';
 
 const OrderDataStep = ({
-  register, watch, control, setValue,
+  register, watch, control, setValue, ecommerce = false,
 }) => {
   const [productError, setProductError] = useState(null);
   const dispatch = useDispatch();
@@ -29,10 +31,28 @@ const OrderDataStep = ({
     return errorMessage;
   };
 
+  const products = useSelector(selectCartProducts);
   const currentStep = useSelector(getCurrentStep);
+
+  const parseProducts = () => {
+    const parseData = products.map((product) => ({
+      product: product.id,
+      color: product.color,
+      stockId: product.stockId,
+      idStock: product.idStock,
+      price: product.price,
+      sizes: product.sizes,
+    }));
+    setValue('products', parseData);
+    dispatch(sales.setCurrentStep(currentStep + 1));
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (ecommerce) {
+      parseProducts();
+      return;
+    }
     const formData = watch();
     const productsValidation = validateProducts(formData.products);
     if (productsValidation) {
@@ -44,15 +64,19 @@ const OrderDataStep = ({
   };
 
   return (
-    <Box sx={{ overflowY: 'auto', height: '55vh' }} component="form" id="step-1" onSubmit={onSubmit}>
-      <AddSalesOrderForm register={register} setValue={setValue} watch={watch} />
+    <Box component="form" id="step-1" onSubmit={onSubmit}>
+      { !ecommerce && <AddSalesOrderForm register={register} setValue={setValue} watch={watch} />}
       <Box mb={1} mt={2}>
-        <ModifiableProductTable
-          register={register}
-          control={control}
-          watch={watch}
-          setValue={setValue}
-        />
+        {ecommerce ? (
+          <EModifiableProductTable watch={watch} setValue={setValue} />
+        ) : (
+          <ModifiableProductTable
+            register={register}
+            control={control}
+            watch={watch}
+            setValue={setValue}
+          />
+        )}
       </Box>
       {productError && (
         <Typography variant="body2" color="error" sx={{ mt: 2, mb: 2 }}>

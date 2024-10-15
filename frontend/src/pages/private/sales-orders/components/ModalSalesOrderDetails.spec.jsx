@@ -9,44 +9,48 @@ import { BrowserRouter as Router } from 'react-router-dom';
 jest.mock('@/redux/sales/selectors', () => ({
   selectCurrentItem: jest.fn(),
 }));
+  const mockStore = configureStore([]);
 
-const mockStore = configureStore([]);
+  describe('ModalSalesOrderDetails', () => {
+    let store;
+    let handlerOpen;
 
-describe('ModalSalesOrderDetails', () => {
-  let store;
-  let handlerOpen;
-
-  beforeEach(() => {
-    store = mockStore({
-      sales: {
-        currentItem: {
-          result: {
-            createdAt: '2023-10-01T00:00:00Z',
-            status: 'completed',
-            salesOrderCode: 'SO12345',
-            customer: { name: 'John Doe' },
-            totalAmount: 100,
-            discount: 10,
-            finalAmount: 90,
-            installments: [{ installmentNumber: 1, status: 'paid', dueDate: '2023-11-01', paymentDate: '2023-10-15', id: 1 }],
-            products: [{ product: { stockId: 'P123' }, color: 'Red', sizes: [{ id: 1, size: 'M', quantity: 2 }] }],
+    beforeEach(() => {
+      store = mockStore({
+        auth: {
+          current: {},
+        },
+        sales: {
+          currentItem: {
+            result: {
+              createdAt: '2023-10-01T00:00:00Z',
+              status: 'completed',
+              salesOrderCode: 'SO12345',
+              customer: { name: 'John Doe' },
+              totalAmount: 100,
+              discount: 10,
+              finalAmount: 90,
+              installments: [{ installmentNumber: 1, status: 'paid', dueDate: '2023-11-01', paymentDate: '2023-10-15', id: 1 }],
+              products: [{ product: { stockId: 'P123' }, color: 'Red', sizes: [{ id: 1, size: 'M', quantity: 2 }] }],
+            },
+          },
+          createPayment: {
+            result: {
+              _id: 1,
+            },
+          },
+          createMPLink: {
+            result: null,
           },
         },
-        createPayment: {
-          result: {
-            _id: 1,
-          },
-        },
-        createMPLink: {
-          result: null,
-        },
-      },
+        stock: {
+          productImageMap: {}
+        }
+      });
+
+      handlerOpen = jest.fn();
+      selectCurrentItem.mockReturnValue(store.getState().sales.currentItem);
     });
-
-    handlerOpen = jest.fn();
-    selectCurrentItem.mockReturnValue(store.getState().sales.currentItem);
-  });
-
   test('test_modal_closes_on_close_button_click', () => {
     render(
       <Provider store={store}>

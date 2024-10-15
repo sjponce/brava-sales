@@ -1,15 +1,17 @@
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ArrowBackIosNew, ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
   Box,
   Collapse,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemText,
   ListSubheader,
   Toolbar,
+  Tooltip,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import crud from '@/redux/crud/actions';
 
@@ -18,13 +20,13 @@ const drawerWidth = 300;
 const Filters = ({ open, toggleDrawer }) => {
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
-  const tagsState = useSelector((store) => store.crud.listAll);
+  const tagsState = useSelector((store) => store.crud.list);
   const [openCategories, setOpenCategories] = useState({});
 
   // TODO: Derivar a backend la categorizacion de los tags
   useEffect(() => {
     if (!tagsState?.result) return;
-    const newTags = tagsState.result?.items?.result.map((item) => ({ ...item, id: item._id }));
+    const newTags = tagsState.result?.items?.map((item) => ({ ...item, id: item._id }));
     const groupedTags = newTags.reduce((acc, tag) => {
       if (!acc[tag.category]) {
         acc[tag.category] = [];
@@ -33,11 +35,11 @@ const Filters = ({ open, toggleDrawer }) => {
       return acc;
     }, {});
     setTags(groupedTags);
-  }, [tagsState]);
+  }, [tagsState?.isSuccess]);
 
   const updateTags = () => {
     if (tagsState?.isLoading) return;
-    dispatch(crud.listAll({ entity: 'tag' }));
+    dispatch(crud.list({ entity: 'tag', options: { limit: 1000 } }));
   };
 
   useEffect(() => {
@@ -55,11 +57,17 @@ const Filters = ({ open, toggleDrawer }) => {
 
   return (
     <Drawer anchor="left" open={open} variant="temporary" onClose={() => toggleDrawer(false)}>
-      <Toolbar />
-      <Box sx={{ overflow: 'auto', width: drawerWidth }}>
+      <Box sx={{ overflow: 'auto', width: { xs: '100vw', sm: drawerWidth }, display: 'flex', flexDirection: 'column' }}>
+        <Toolbar>
+          <Tooltip title="Ocultar" arrow>
+            <IconButton aria-label="hide" onClick={() => toggleDrawer()} sx={{ ml: 'auto' }}>
+              <ArrowBackIosNew />
+            </IconButton>
+          </Tooltip>
+        </Toolbar>
         <List subheader={<ListSubheader>Filtrar por tags</ListSubheader>}>
           {Object.keys(tags).map((category) => (
-            <>
+            <React.Fragment key={category}>
               <ListItemButton onClick={() => handleCategoryClick(category)}>
                 <ListItemText primary={capitalizeFirstLetter(category)} />
                 {openCategories[category] ? <ExpandLess /> : <ExpandMore />}
@@ -67,13 +75,13 @@ const Filters = ({ open, toggleDrawer }) => {
               <Collapse in={openCategories[category]} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {tags[category].map((tag) => (
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton key={tag} sx={{ pl: 4 }}>
                       <ListItemText primary={tag} />
                     </ListItemButton>
                   ))}
                 </List>
               </Collapse>
-            </>
+            </React.Fragment>
           ))}
         </List>
       </Box>

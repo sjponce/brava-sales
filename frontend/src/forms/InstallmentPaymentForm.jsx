@@ -49,17 +49,16 @@ const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) =
   }, [updatedPaymentResult, reset]);
 
   return (
-    <Box height={60} p={1} display="flex" color="primary" mb={2} gap={2} alignItems="center">
+    <Box height={60} display="flex" color="primary" mb={2} gap={2} alignItems="center">
       <Controller
         name="paymentMethod"
         control={control}
         required
         render={({ field }) => (
-          <FormControl>
+          <FormControl fullWidth>
             <InputLabel id="installments">Método de pago</InputLabel>
             <Select
-              sx={{ width: 180 }}
-              fullHeight
+              fullWidth
               {...field}
               labelId="installments"
               label="Método de pago"
@@ -77,6 +76,7 @@ const InstallmentPaymentForm = ({ control, watch, setValue, register, reset }) =
         label="Monto"
         name="amount"
         type="text"
+        fullWidth
         variant="outlined"
         inputProps={{ step: '0.01' }}
         {...register('amount', {
