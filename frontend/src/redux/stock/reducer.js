@@ -83,6 +83,11 @@ const salesReducer = (state = INITIAL_STATE, action) => {
           ...INITIAL_STATE[keyState],
         },
       };
+    case actionTypes.SET_PRODUCT_IMAGE_MAP:
+      return {
+        ...state,
+        productImageMap: payload,
+      };
     default:
       return state;
   }

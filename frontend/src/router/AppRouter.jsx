@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useLocation, useRoutes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAppContext } from '@/context/appContext';
-import routes, { routesEcommerce } from './routes';
+import routes, { routesEcommerce, routesSellers } from './routes';
 
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
 
@@ -13,7 +13,14 @@ export default function AppRouter() {
   const { app } = appContextAction;
   const authUserState = useSelector(selectCurrentAdmin);
 
-  const router = authUserState.role === 'customer' ? routesEcommerce : routes;
+  let router;
+  if (authUserState.role === 'admin') {
+    router = routes;
+  } else if (authUserState.role === 'seller') {
+    router = routesSellers;
+  } else {
+    router = routesEcommerce;
+  }
 
   const routesList = [];
 

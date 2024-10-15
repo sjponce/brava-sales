@@ -13,8 +13,9 @@ import sales from '@/redux/sales/actions';
 import { getCurrentStep } from '@/redux/sales/selectors';
 import AddSalesDiscountForm from '@/forms/AddSalesDiscountForm';
 import AddInstallmentsForm from '@/forms/AddInstallmentsForm';
+import AddShippingForm from '@/forms/AddShippingForm';
 
-const PaymentDataStep = ({ control, watch, setValue }) => {
+const PaymentDataStep = ({ control, watch, setValue, ecommerce }) => {
   const dispatch = useDispatch();
   const currentStep = useSelector(getCurrentStep);
 
@@ -29,17 +30,19 @@ const PaymentDataStep = ({ control, watch, setValue }) => {
 
   return (
     <Box
-      sx={{ overflowY: 'auto', height: '55vh' }}
       component="form"
       onSubmit={onSubmit}
       id="step-2"
+      height="99%"
       gap={2}
       display="flex"
       flexDirection={{ xs: 'column', md: 'row' }}
       >
       <Box width="100%">
-        <AddSalesDiscountForm control={control} watch={watch} setValue={setValue} />
+        { !ecommerce
+        && <AddSalesDiscountForm control={control} watch={watch} setValue={setValue} />}
         <AddInstallmentsForm control={control} watch={watch} setValue={setValue} />
+        <AddShippingForm control={control} watch={watch} setValue={setValue} />
       </Box>
       <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'visible' }}>
         <Table>

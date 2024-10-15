@@ -124,6 +124,18 @@ const SalesOrderSchema = new Schema(
         required: true,
       },
     },
+    responsible: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    ecommerce: {
+      type: Boolean,
+      default: false,
+    },
+    shippingMethod: {
+      type: String,
+    },
     removed: {
       type: Boolean,
       default: false,

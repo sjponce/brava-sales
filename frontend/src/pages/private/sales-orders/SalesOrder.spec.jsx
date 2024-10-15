@@ -1,64 +1,44 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Provider } from 'react-redux';
+import '@testing-library/jest-dom';
 import SalesOrders from './SalesOrder';
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from '@/redux/rootReducer';
-import { BrowserRouter as Router } from 'react-router-dom';
 
-describe('SalesOrders Component', () => {
-  let store;
+// Mock the child components
+jest.mock('./components/SalesOrderDataTable', () => () => <div data-test-id="sales-order-data-table" />);
+jest.mock('./components/AddSalesOrderModal', () => ({ open, handlerOpen }) => (
+  <div data-testid="add-sales-order-modal">
+    {open ? 'Modal Open' : 'Modal Closed'}
+    <button onClick={() => handlerOpen(false)}>Close Modal</button>
+  </div>
+));
 
-  beforeEach(() => {
-    store = configureStore({
-      reducer: rootReducer,
-      preloadedState: {
-        crud: {
-          listAll: {
-            result: {
-              items: [],
-            },
-          },
-        },
-      },
-    });
+describe('SalesOrders', () => {
+  test('renders SalesOrders component', () => {
+    render(<SalesOrders />);
+    expect(screen.getByText('Ordenes de venta')).toBeInTheDocument();
+    expect(screen.getByText('Nueva Orden de Venta')).toBeInTheDocument();
+    expect(screen.getByTestId('sales-order-data-table')).toBeInTheDocument();
   });
 
-  test('test_open_add_sales_order_modal', async () => {
-    render(
-      <Provider store={store}>
-        <Router>
-          <SalesOrders />
-        </Router>
-      </Provider>
-    );
-
-    const button = screen.getByText(/Nueva Orden de Venta/i);
-    fireEvent.click(button);
-
-    setTimeout(() => {
-      expect(screen.getByText(/Crear Orden de Venta/i)).toBeInTheDocument();
-    }, 1000);
+  test('opens AddSalesOrderModal when "Nueva Orden de Venta" button is clicked', () => {
+    render(<SalesOrders />);
+    const addButton = screen.getByText('Nueva Orden de Venta');
+    fireEvent.click(addButton);
+    expect(screen.getByText('Modal Open')).toBeInTheDocument();
   });
 
-  test('test_close_add_sales_order_modal', async () => {
-    render(
-      <Provider store={store}>
-        <Router>
-          <SalesOrders />
-        </Router>
-      </Provider>
-    );
-
-    const button = screen.getByText(/Nueva Orden de Venta/i);
-    fireEvent.click(button);
-
-    const closeButton = screen.getByTestId("CloseIcon");
+  test('closes AddSalesOrderModal when close button is clicked', () => {
+    render(<SalesOrders />);
+    const addButton = screen.getByText('Nueva Orden de Venta');
+    fireEvent.click(addButton);
+    const closeButton = screen.getByText('Close Modal');
     fireEvent.click(closeButton);
+    expect(screen.getByText('Modal Closed')).toBeInTheDocument();
+  });
 
-    setTimeout(() => {
-      const closeButton = screen.getByRole('button', { name: /close/i });
-      fireEvent.click(closeButton);
-    }, 0);
+  test('AddButton has correct data-test-id', () => {
+    render(<SalesOrders />);
+    const addButton = screen.getByTestId('AddButton');
+    expect(addButton).toBeInTheDocument();
   });
 });
