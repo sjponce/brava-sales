@@ -97,6 +97,11 @@ const AddCustomerModal = ({
     setDialogOpen(false);
   };
 
+  const handleClose = () => {
+    reset();
+    handlerOpen(false);
+  };
+
   const onSubmit = async (data) => {
     if (isUpdate) {
       updateSeller(data);
@@ -124,7 +129,7 @@ const AddCustomerModal = ({
           <Typography variant="h4" color="primary">
             {isUpdate ? 'Editar cliente ' : 'Crear cliente'}
           </Typography>
-          <IconButton onClick={() => handlerOpen(false)}>
+          <IconButton onClick={() => handleClose()}>
             <Close />
           </IconButton>
         </Box>

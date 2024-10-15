@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentItem } from '@/redux/docs/selectors';
+import docs from '@/redux/docs/actions';
 
 const GlobalDownloadManager = () => {
+  const dispatch = useDispatch();
   const generatedDoc = useSelector(selectCurrentItem)?.result?.doc;
   const docInfo = useSelector(selectCurrentItem)?.result?.docInfo;
   useEffect(() => {
@@ -18,6 +20,7 @@ const GlobalDownloadManager = () => {
       document.body.removeChild(link);
 
       URL.revokeObjectURL(url);
+      dispatch(docs.resetState());
     }
   }, [generatedDoc]);
 
