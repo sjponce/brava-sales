@@ -5,7 +5,7 @@ const listAllStockReservations = async (req, res) => {
   try {
     const reservations = await StockReservation.find()
       .populate('salesOrder')
-      .populate('product')
+      .populate('products')
       .populate({
         path: 'salesOrder',
         populate: {

@@ -27,6 +27,7 @@ import { toggleTheme } from '@/redux/themeReducer';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts } from '@/redux/cart/selectors';
+import { selectCurrentAdmin } from '@/redux/auth/selectors';
 
 const StyledToolbar = styled(Toolbar)({
   paddingRight: '20px',
@@ -57,6 +58,7 @@ const Navbar = ({ toggleDrawer }) => {
   const theme = useSelector((state) => state.theme);
   const cartProductStatus = useSelector(selectCartProducts);
   const orders = useSelector((store) => store.crud.filter)?.result?.result;
+  const currentUser = useSelector(selectCurrentAdmin);
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
@@ -67,6 +69,7 @@ const Navbar = ({ toggleDrawer }) => {
   };
 
   const handleOpenOrderDialog = () => {
+    if (!currentUser.customer) return;
     dispatch(cart.openOrderDialog());
   };
 

@@ -55,12 +55,6 @@ const SalesOrderSchema = new Schema(
             },
           },
         ],
-        reservations: [
-          {
-            type: Schema.Types.ObjectId,
-            ref: 'StockReservation',
-          },
-        ],
       },
     ],
     totalAmount: {
@@ -127,7 +121,6 @@ const SalesOrderSchema = new Schema(
     responsible: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     ecommerce: {
       type: Boolean,

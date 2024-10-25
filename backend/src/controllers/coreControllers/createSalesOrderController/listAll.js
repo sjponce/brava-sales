@@ -15,10 +15,6 @@ const listAll = async (req, res) => {
           path: 'products.product',
           model: 'Product',
         })
-        .populate({
-          path: 'products.reservations',
-          model: 'StockReservation',
-        })
         .populate('customer')
         .exec();
       if (salesOrder) {
