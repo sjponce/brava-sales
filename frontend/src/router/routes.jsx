@@ -95,6 +95,82 @@ const routes = {
   ],
 };
 
+export const routesSellers = {
+  expense: [],
+  default: [
+    {
+      path: '/login',
+      element: <Navigate to="/" />,
+    },
+    {
+      path: '/verify/*',
+      element: <Navigate to="/" />,
+    },
+    {
+      path: '/resetpassword/*',
+      element: <Navigate to="/" />,
+    },
+    {
+      path: '/logout',
+      element: <Logout />,
+    },
+    {
+      path: '/ecommerce',
+      element: <Ecommerce />,
+      children: [
+        {
+          path: '/ecommerce',
+          element: <HomeEcommerce />,
+        },
+      ],
+    },
+    {
+      path: '/',
+      element: <Dashboard />,
+      children: [
+        {
+          path: '/',
+          element: <Home />,
+        },
+        {
+          path: '*',
+          element: <CommingSoon />,
+        },
+        {
+          path: '/sales-orders',
+          element: <SalesOrder />,
+          children: [
+            {
+              path: '/sales-orders/success',
+              element: <SalesOrder />,
+            },
+            {
+              path: '/sales-orders/failure',
+              element: <SalesOrder />,
+            },
+            {
+              path: '/sales-orders/pending',
+              element: <SalesOrder />,
+            },
+          ],
+        },
+        {
+          path: '/customers',
+          element: <Customers />,
+        },
+        {
+          path: '/products',
+          element: <Products />,
+        },
+        {
+          path: '/shipping',
+          element: <Shipping />,
+        },
+      ],
+    },
+  ],
+};
+
 export const routesEcommerce = {
   expense: [],
   default: [
