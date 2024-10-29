@@ -7,7 +7,9 @@ import Customers from '@/pages/private/customers/Customers';
 import Products from '@/pages/private/products/Products';
 import Home from '@/pages/private/home/Home';
 import HomeEcommerce from '@/pages/private/ecommerce/HomeEcommerce';
+import Reports from '@/pages/private/reports/Reports';
 import NotFound from '@/components/NotFound';
+import { element } from 'prop-types';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
 const CommingSoon = lazy(() => import('@/pages/private/CommingSoon.jsx'));
@@ -90,6 +92,10 @@ const routes = {
           path: '/shipping',
           element: <Shipping />,
         },
+        {
+          path: '/reports',
+          element: <Reports />,
+        }
       ],
     },
   ],
