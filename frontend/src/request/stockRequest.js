@@ -21,7 +21,6 @@ export const stockRequest = {
     }
   },
   update: async ({ entity, id, jsonData }) => {
-    console.log('jsonData', jsonData);
     try {
       const response = await axios.put(`${entity}/update/${id}`, jsonData);
       successHandler(response, {

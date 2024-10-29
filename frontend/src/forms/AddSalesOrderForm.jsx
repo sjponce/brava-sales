@@ -31,6 +31,11 @@ const AddSalesOrderForm = ({ setValue, watch }) => {
             renderInput={(params) => (
               <TextField {...params} required variant="outlined" label="Cliente" margin="normal" />
             )}
+            renderOption={(props, option) => (
+              <li {...props} key={option._id}>
+                {option.name}
+              </li>
+            )}
           />
           {selectedCustomer && (
             <Box alignSelf="end">

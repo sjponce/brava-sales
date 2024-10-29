@@ -1,7 +1,8 @@
 import {
-  DarkModeOutlined,
+  DarkMode,
   FilterList,
-  LightModeOutlined,
+  LightMode,
+  LocalMall,
   Notifications,
   ShoppingCart,
 } from '@mui/icons-material';
@@ -15,6 +16,7 @@ import {
   MenuItem,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
   styled,
 } from '@mui/material';
@@ -54,7 +56,7 @@ const Navbar = ({ toggleDrawer }) => {
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
   const cartProductStatus = useSelector(selectCartProducts);
-  // const openCartStatus = useSelector(selectOpenCart);
+  const orders = useSelector((store) => store.crud.filter)?.result?.result;
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
@@ -62,6 +64,10 @@ const Navbar = ({ toggleDrawer }) => {
 
   const handleOpenCart = () => {
     dispatch(cart.openCart());
+  };
+
+  const handleOpenOrderDialog = () => {
+    dispatch(cart.openOrderDialog());
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -78,9 +84,11 @@ const Navbar = ({ toggleDrawer }) => {
       <StyledToolbar
         sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5, opacity: 0.9 }}
         disableGutters>
-        <IconButton onClick={() => toggleDrawer(true)}>
-          <FilterList />
-        </IconButton>
+        <Tooltip title="Filtrar" arrow>
+          <IconButton onClick={() => toggleDrawer(true)}>
+            <FilterList />
+          </IconButton>
+        </Tooltip>
         <Logo>
           <Typography
             variant="overline"
@@ -90,20 +98,36 @@ const Navbar = ({ toggleDrawer }) => {
         </Logo>
         <Box gap={1} display="flex" alignItems="center">
           <Divider orientation="vertical" flexItem variant="middle" />
-          <IconButton onClick={handleOpenCart}>
-            <Badge
-              badgeContent={cartProductStatus.length}
-              color="secondary"
-              invisible={cartProductStatus.length === 0}>
-              <ShoppingCart />
-            </Badge>
-          </IconButton>
-          <IconButton>
-            <Notifications />
-          </IconButton>
-          <IconButton onClick={handleToggleTheme}>
-            {theme === 'dark' ? <LightModeOutlined /> : <DarkModeOutlined />}
-          </IconButton>
+          <Tooltip title="Carrito" arrow>
+            <IconButton onClick={handleOpenCart} color="primary">
+              <Badge
+                badgeContent={cartProductStatus.length}
+                color="info"
+                invisible={cartProductStatus.length === 0}>
+                <ShoppingCart />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Notificaciones" arrow>
+            <IconButton color="warning">
+              <Notifications />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Mis pedidos" arrow>
+            <IconButton onClick={handleOpenOrderDialog} color="secondary">
+              <Badge
+                badgeContent={orders?.length}
+                color="info"
+                invisible={orders?.length === 0}>
+                <LocalMall />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={`Modo ${theme === 'dark' ? 'oscuro' : 'claro'}`} arrow>
+            <IconButton onClick={handleToggleTheme}>
+              {theme === 'dark' ? <LightMode /> : <DarkMode />}
+            </IconButton>
+          </Tooltip>
           <Divider orientation="vertical" flexItem variant="middle" />
           <IconButton onClick={handleClick}>
             <Avatar src={user.photo} sx={{ width: 30, height: 30 }} />

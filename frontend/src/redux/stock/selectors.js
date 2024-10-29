@@ -18,3 +18,5 @@ export const selectUpdatedItem = createSelector([selectStock], (stock) => stock.
 export const selectReadItem = createSelector([selectStock], (stock) => stock.read);
 
 export const getStockProducts = createSelector([selectStock], (stock) => stock.getStockProducts);
+
+export const getProductImages = (state) => state.stock.productImageMap;
