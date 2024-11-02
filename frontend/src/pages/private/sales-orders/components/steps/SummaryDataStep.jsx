@@ -61,7 +61,6 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
 
   const preSubmit = (e) => {
     e.preventDefault();
-    console.log('watch', watch());
     setDialogOpen(true);
   };
 

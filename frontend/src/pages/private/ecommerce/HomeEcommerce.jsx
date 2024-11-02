@@ -38,7 +38,9 @@ const HomeEcommerce = () => {
   const crudUpdate = useSelector((state) => state.crud.update);
 
   useEffect(() => {
-    dispatch(crud.filter({ entity: 'salesOrder', options: { filter: 'customer', equal: currentUser.customer } }));
+    if (currentUser.customer) {
+      dispatch(crud.filter({ entity: 'salesOrder', options: { filter: 'customer', equal: currentUser.customer } }));
+    }
   }, [readSalesOrderState]);
 
   useEffect(() => {

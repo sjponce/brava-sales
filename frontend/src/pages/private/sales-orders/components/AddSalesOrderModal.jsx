@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Close, ProductionQuantityLimits } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { getCurrentStep } from '@/redux/sales/selectors';
@@ -25,7 +25,6 @@ import crud from '@/redux/crud/actions';
 import stock from '@/redux/stock/actions';
 import SumaryDataStep from './steps/SummaryDataStep';
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
-import cart from '@/redux/cart/actions';
 import FinalMessaje from './FinalMessaje';
 
 const StyledModal = styled(Modal)({
@@ -95,12 +94,6 @@ const AddSalesOrderModal = ({ open, handlerOpen, ecommerce = false, handlerDetai
     handlerOpen(false);
   };
 
-  const handleResetCart = () => {
-    dispatch(cart.resetState());
-    dispatch(sales.resetState());
-    handlerOpen(false);
-  };
-
   const handleSeeOrder = () => {
     const { _id } = createOrderState.result.salesOrder;
     handleClose();
@@ -141,13 +134,6 @@ const AddSalesOrderModal = ({ open, handlerOpen, ecommerce = false, handlerDetai
             {ecommerce ? 'Configurar pedido' : 'Crear orden de venta'}
           </Typography>
           <Box>
-            {ecommerce && (
-              <Tooltip title="Vaciar carrito" arrow>
-                <IconButton data-test-id="CloseIcon" onClick={handleResetCart}>
-                  <ProductionQuantityLimits />
-                </IconButton>
-              </Tooltip>
-            )}
             <Tooltip title="Cerrar" arrow>
               <IconButton data-test-id="CloseIcon" onClick={handleClose}>
                 <Close />

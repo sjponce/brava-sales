@@ -194,7 +194,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
               register={register}
               reset={reset}
             />
-            <Box display="flex" justifyContent="flex-end" fullWidth mr={2}>
+            <Box display="flex" justifyContent="flex-end" mr={2}>
               <Button
                 type="submit"
                 variant="contained"

@@ -5,11 +5,11 @@ const SalesOrder = mongoose.model('SalesOrder');
 const StockReservation = mongoose.model('StockReservation');
 
 const reserveStock = async (req, res) => {
-  const { orderId, productId } = req.body;
+  const { orderId, products } = req.body;
   const cookie = `token=${req.cookies.token}`;
 
   try {
-    const salesOrder = await SalesOrder.findById(orderId).populate('products.reservations').exec();
+    const salesOrder = await SalesOrder.findById(orderId).exec();
     if (!salesOrder) {
       return res.status(404).json({
         success: false,
@@ -27,112 +27,154 @@ const reserveStock = async (req, res) => {
       });
     }
 
-    const product = salesOrder.products?.find((p) => p.product.toString() === productId);
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        result: null,
-        message: 'No se encontro el producto en la orden',
+    // Traer todas las reservas existentes para la orden
+    const existingReservations = await StockReservation.find({ order: orderId }).exec();
+
+    // Sumarizar las reservas por producto y tamaño
+    const reservedQuantities = {};
+    existingReservations.forEach(reservation => {
+      reservation.products.forEach(product => {
+        product.sizes.forEach(size => {
+          const key = `${product.idStock}-${size.size}`;
+          if (!reservedQuantities[key]) {
+            reservedQuantities[key] = 0;
+          }
+          reservedQuantities[key] += size.quantity;
+        });
       });
-    }
-
-    const idStock = product.idStock;
-
-    if (!['Pending', 'Partially shipped', 'Partially delivered'].includes(salesOrder.status)) {
-      return res.status(400).json({
-        success: false,
-        result: null,
-        message: 'Este producto ya fue reservado totalmente',
-      });
-    }
-
-    const stockResponse = await axios.post(
-      `${process.env.BASE_API}/stock/getStockProducts`,
-      [idStock],
-      {
-        headers: {
-          cookie,
-        },
-      }
-    );
-
-    const stockData = stockResponse?.data?.result[idStock];
-    if (!stockData) {
-      return res.status(500).json({
-        success: false,
-        result: null,
-        message: 'No hay stock registrado',
-      });
-    }
-
-    const reservationDetails = product.sizes
-      .map((size) => {
-        const stockSize = stockData?.find((s) => s.number === Number(size.size));
-        const alreadyReserved = product.reservations.reduce((acc, reservation) => {
-          const reservedSize = reservation.sizes?.find((reserved) => reserved.size === size.size);
-          return reservedSize ? acc + reservedSize.quantity : acc;
-        }, 0);
-
-        const availableStock = stockSize?.stock ?? 0;
-
-        const quantityToReserve = Math.min(size.quantity - alreadyReserved, availableStock);
-
-        const totalReserved = alreadyReserved + quantityToReserve;
-
-        if (quantityToReserve === 0) return null;
-
-        return {
-          size: size.size,
-          quantity: quantityToReserve,
-          pending: size.quantity - totalReserved,
-        };
-      })
-      .filter((detail) => detail !== null);
-
-    if (reservationDetails.length === 0) {
-      return res.status(400).json({
-        success: false,
-        result: null,
-        message: 'No hay stock disponible para reservar',
-      });
-    }
-
-    const stockReservation = new StockReservation({
-      sizes: reservationDetails,
-      status: 'Reserved',
-      product: productId,
-      salesOrder: salesOrder._id,
     });
 
-    await stockReservation.save();
-    product.reservations.push(stockReservation._id);
+    // Crear nuevas reservas solo si las cantidades solicitadas no exceden las cantidades disponibles
+    const stockReservations = [];
+    const movementDetails = [];
+    const newProducts = [];
 
-    await salesOrder.save();
-    await updateSalesOrderStatus(orderId);
+    for (const productReservation of products) {
+      const { sizes, idStock, color, stockId } = productReservation;
+      const product = salesOrder.products.find(p => p.idStock === idStock);
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          result: null,
+          message: `Producto ${stockId} ${color} no encontrado en la orden de venta`,
+        });
+      }
 
-    const stockMovementResponse = await axios.post(
-      `${process.env.BASE_API}/stock/movement`,
-      {
-        type: 'output',
-        details: reservationDetails.map((size) => ({
+      // Obtener datos de stock del sistema de stock
+      const stockResponse = await axios.post(
+        `${process.env.BASE_API}/stock/getStockProducts`,
+        [idStock],
+        {
+          headers: {
+            cookie,
+          },
+        }
+      );
+
+      if (stockResponse.status !== 200) {
+        return res.status(500).json({
+          success: false,
+          result: null,
+          message: 'Error al obtener datos de stock',
+        });
+      }
+
+      const stockData = stockResponse.data.result[idStock];
+      const newSizes = [];
+        
+      for (const size of sizes) {
+        const key = `${idStock}-${size.size}`;
+        const alreadyReserved = reservedQuantities[key] || 0;
+        const orderQuantity = product.sizes.find(s => s.size === size.size)?.quantity || 0;
+
+        // Comprobar que las cantidades reservadas no excedan las cantidades solicitadas en la orden
+        if (alreadyReserved + size.quantity > orderQuantity) {
+          return res.status(400).json({
+            success: false,
+            result: null,
+            message: `Cantidad solicitada para el tamaño ${size.size} del producto ${stockId} ${color} excede la cantidad demandada`,
+          });
+        }
+
+        // Comprobar que las cantidades reservadas no excedan las cantidades disponibles en el sistema de stock
+        const stockSize = stockData.find(s => s.number === Number(size.size));
+        if (!stockSize) {
+          return res.status(500).json({
+            success: false,
+            result: null,
+            message: `No hay stock suficiente del producto ${stockId} ${color}`,
+          });
+        }
+
+        if (size.quantity > stockSize.stock) {
+          return res.status(400).json({
+            success: false,
+            result: null,
+            message: `Cantidad solicitada para el tamaño ${size.size} excede la cantidad disponible en el stock`,
+          });
+        }
+
+        newSizes.push({
+          size: size.size,
+          quantity: size.quantity,
+          pending: orderQuantity - (alreadyReserved + size.quantity),
+        });
+
+        // Actualizar las cantidades reservadas
+        reservedQuantities[key] = alreadyReserved + size.quantity;
+
+        // Agregar detalles del movimiento de stock
+        movementDetails.push({
           productId: idStock,
           number: Number(size.size),
           quantity: size.quantity,
-        })),
-      },
-      {
-        headers: {
-          cookie,
-        },
+        });
       }
-    );
 
-    await salesOrder.save();
+      newProducts.push({
+        ...productReservation,
+        sizes: newSizes,
+      });
+    }
+
+    stockReservations.push(new StockReservation({
+      products: newProducts,
+      salesOrder: orderId,
+    }));
+    
+
+    // Guardar todas las reservas en la base de datos
+    await StockReservation.insertMany(stockReservations);
+
+    // Registrar el movimiento de stock
+    const movementData = {
+      type: 'output',
+      details: movementDetails,
+    };
+
+    const responseMovement = await axios.post(`${process.env.BASE_API}/stock/movement`, movementData, {
+      headers: { cookie },
+    });
+
+    if (responseMovement.status !== 200) {
+      return res.status(500).json({
+        success: false,
+        result: null,
+        message: 'Error al registrar movimiento de stock',
+      });
+    }
+
+    // Actualizar el estado de la orden de venta
+    await updateSalesOrderStatus(orderId);
+    // comparar las cantidades de la orden con las cantidades reservadas
+    
+
     return res.status(200).json({
       success: true,
-      result: stockMovementResponse.data,
-      message: 'Reserva agregada exitosamente',
+      result: null,
+      message: 'Reservas agregadas exitosamente',
     });
+
   } catch (error) {
     return res.status(500).json({
       success: false,

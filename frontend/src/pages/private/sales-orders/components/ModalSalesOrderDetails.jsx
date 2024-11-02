@@ -26,7 +26,6 @@ import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
-// import ModalInstallmentDetails from './ModalInstallmentDetails';
 import OrderDetailsTab from '@/pages/private/sales-orders/components/tabs/OrderDetailsTab';
 import OrderProductsTab from './tabs/OrderProductsTab';
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
@@ -225,11 +224,6 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
           text="Esta acción no se puede deshacer, ¿Desea continuar?"
           isOpen={openDetailsModal}
         />
-        {/* <ModalInstallmentDetails
-          installmentId={selectedRow}
-          open={openDetailsDialog}
-          handlerOpen={setOpenDetailsDialog}
-        /> */}
       </Box>
     </StyledModal>
   );

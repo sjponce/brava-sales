@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -9,18 +10,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { Add, Remove } from '@mui/icons-material';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import sales from '@/redux/sales/actions';
 import { getStockProducts } from '@/redux/stock/selectors';
 
 const OrderProductsTab = ({ saleData }) => {
   const stockData = useSelector(getStockProducts)?.result;
-  const [productsReservations, setProductsReservations] = useState({});
+  const reservationsData = useSelector((store) => store.crud.filter)?.result?.result;
+  const [reservedProducts, setReservedProducts] = useState({});
   const [productsStock, setProductsStock] = useState({});
-  const [dialogData, setDialogData] = useState({ open: false, productId: '' });
+  const [dialogData, setDialogData] = useState({ open: false });
+  const [quantities, setQuantities] = useState({});
   const dispatch = useDispatch();
 
   const calculateStockAvailable = () => {
@@ -34,40 +39,86 @@ const OrderProductsTab = ({ saleData }) => {
     setProductsStock(stockMap);
   };
 
+  const handleQuantityChange = (productId, size, value, max) => {
+    let newValue = Number.isNaN(value) ? 0 : value;
+    if (newValue > max) newValue = max;
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [productId]: {
+        ...prevQuantities[productId],
+        [size]: newValue,
+      },
+    }));
+  };
+
+  const incrementQuantity = (productId, size, pending) => {
+    const currentQuantity = quantities[productId]?.[size] ?? 0;
+    if (currentQuantity < pending) {
+      handleQuantityChange(productId, size, currentQuantity + 1, pending);
+    }
+  };
+
+  const decrementQuantity = (productId, size) => {
+    const currentQuantity = quantities[productId]?.[size] ?? 0;
+    if (currentQuantity > 0) {
+      handleQuantityChange(productId, size, currentQuantity - 1, currentQuantity);
+    }
+  };
+
   const handleCancel = () => {
-    setDialogData({ open: false, productId: '' });
+    setDialogData({ open: false });
   };
 
-  const openDialog = (productId) => {
-    setDialogData({ open: true, productId });
+  const preSubmit = (e) => {
+    e.preventDefault();
+    if (Object.values(quantities)
+      .some((product) => Object.values(product).some((quantity) => quantity > 0))) {
+      setDialogData({ open: true });
+    }
   };
 
-  const handleAccept = async (productId) => {
-    setDialogData({ open: false, productId: null });
-    const jsonData = { orderId: saleData._id, productId };
+  const handleAccept = async () => {
+    setDialogData({ open: false });
+    const products = saleData.products.map((product) => ({
+      productId: product._id,
+      sizes: Object.keys(quantities[product.idStock] ?? {})
+        .filter((size) => quantities[product.idStock][size] > 0)
+        .map((size) => ({
+          size,
+          quantity: quantities[product.idStock][size],
+        })),
+      color: product.color,
+      idStock: product.idStock,
+      stockId: product.product.stockId
+    }));
+    const jsonData = {
+      orderId: saleData._id,
+      products,
+    };
     try {
       await dispatch(sales.reserveStock({ jsonData }));
     } finally {
       setDialogData({ open: false, productId: null });
+      setQuantities({});
     }
   };
 
   const calculateReservationsForAllProducts = () => {
     const productReservationsMap = {};
-    saleData.products.forEach((product) => {
-      const reservedMap = {};
-      product.reservations.forEach((reservation) => {
-        reservation.sizes.forEach((size) => {
-          if (reservedMap[size.size]) {
-            reservedMap[size.size] += size.quantity;
-          } else {
-            reservedMap[size.size] = size.quantity;
+    reservationsData.forEach((reservation) => {
+      reservation.products.forEach((product) => {
+        if (!productReservationsMap[product.idStock]) {
+          productReservationsMap[product.idStock] = {};
+        }
+        product.sizes.forEach((size) => {
+          if (!productReservationsMap[product.idStock][size.size]) {
+            productReservationsMap[product.idStock][size.size] = 0;
           }
+          productReservationsMap[product.idStock][size.size] += size.quantity;
         });
       });
-      productReservationsMap[product._id] = reservedMap;
     });
-    setProductsReservations(productReservationsMap);
+    setReservedProducts(productReservationsMap);
   };
 
   useEffect(() => {
@@ -76,7 +127,7 @@ const OrderProductsTab = ({ saleData }) => {
   }, [saleData, stockData]);
 
   return (
-    <Box>
+    <Box component="form" onSubmit={preSubmit}>
       <TableContainer
         component={Paper}
         sx={{ borderRadius: 2.5, overflow: { xs: 'auto', md: 'auto' } }}>
@@ -99,7 +150,7 @@ const OrderProductsTab = ({ saleData }) => {
                 <Typography variant="overline">Stock</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography variant="overline">Reservado</Typography>
+                <Typography variant="overline">Reservar</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -107,13 +158,8 @@ const OrderProductsTab = ({ saleData }) => {
             {saleData?.products?.map((p) => (
               <React.Fragment key={p._id}>
                 <TableRow>
-                  <TableCell colSpan={5}>
+                  <TableCell colSpan={6}>
                     <Typography variant="subtitle2">{`${p.product.stockId} ${p.color}`}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="text" fullWidth onClick={() => openDialog(p.product._id)}>
-                      Asignar stock
-                    </Button>
                   </TableCell>
                 </TableRow>
                 {p.sizes.map((item) => (
@@ -126,7 +172,7 @@ const OrderProductsTab = ({ saleData }) => {
                       <Typography variant="subtitle2">{`${item.quantity}`}</Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography variant="subtitle2">{`${item.quantity - (productsReservations[p._id]?.[item.size] ?? 0)}`}</Typography>
+                      <Typography variant="subtitle2">{`${item.quantity - (reservedProducts[p.idStock]?.[item.size] ?? 0)}`}</Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Typography variant="subtitle2">
@@ -134,9 +180,30 @@ const OrderProductsTab = ({ saleData }) => {
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography variant="subtitle2">
-                        {productsReservations[p._id]?.[item.size] ?? 0}
-                      </Typography>
+                      <IconButton onClick={() => decrementQuantity(p.idStock, item.size)}>
+                        <Remove />
+                      </IconButton>
+                      <TextField
+                        value={quantities[p.idStock]?.[item.size] ?? 0}
+                        onChange={(e) => handleQuantityChange(
+                          p.idStock,
+                          item.size,
+                          Math.min(
+                            parseInt(e.target.value, 10),
+                            item.quantity - (reservedProducts[p.idStock]?.[item.size] ?? 0)
+                          )
+                        )}
+                        variant="outlined"
+                        size="small"
+                        style={{ width: '60px' }}
+                      />
+                      <IconButton onClick={() => incrementQuantity(
+                        p.idStock,
+                        item.size,
+                        item.quantity - (reservedProducts[p.idStock]?.[item.size] ?? 0)
+                      )}>
+                        <Add />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -145,12 +212,25 @@ const OrderProductsTab = ({ saleData }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box mt={2}>
+        <Button
+          variant="contained"
+          fullWidth
+          type="submit"
+          disabled={
+            Object.values(quantities)
+              .every((product) => Object.values(product).every((quantity) => quantity === 0))
+          }
+          color="primary">
+          Reservar stock
+        </Button>
+      </Box>
       <CustomDialog
         isOpen={dialogData.open}
         title="Confirmar reserva de stock"
         text="¿Desea asignar el stock disponible al producto seleccionado?"
         onCancel={() => handleCancel()}
-        onAccept={() => handleAccept(dialogData.productId)}
+        onAccept={() => handleAccept()}
       />
     </Box>
   );
