@@ -2,7 +2,8 @@ const translations = {
     user: 'usuario',
     customer: 'cliente',
     seller: 'vendedor',
-    payment: 'pago'
+    payment: 'pago',
+    stockreservation: 'envio',
   };
 
 const translate = (model) => {
