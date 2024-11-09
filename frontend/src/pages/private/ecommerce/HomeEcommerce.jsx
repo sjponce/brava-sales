@@ -5,6 +5,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCatalog from './components/ProductCatalog';
 import Cart from './components/Cart';
@@ -48,6 +49,22 @@ const HomeEcommerce = () => {
     if (updatedPayment.isLoading && crudUpdate?.isLoading) return;
     dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
   }, [updatedPayment, crudUpdate]);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const searchParams = new URLSearchParams(location.search);
+      const installment = searchParams?.get('installment');
+      const salesOrder = searchParams?.get('salesOrder');
+      if (installment && salesOrder) {
+        await dispatch(sales.read({ entity: 'sales', id: salesOrder }));
+        setOpenDetails(true);
+      }
+    };
+
+    fetchData();
+  }, [location]);
 
   return (
     <Container maxWidth="lg" sx={{ mb: 4 }}>

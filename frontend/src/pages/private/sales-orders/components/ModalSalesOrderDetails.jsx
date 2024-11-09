@@ -76,6 +76,7 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
       const salesOrder = searchParams?.get('salesOrder');
       if (installment && salesOrder) {
         setSelectedRow(installment);
+        setCurrentOptions({ option: 'installment' });
         setOpenDetailsDialog(true);
       }
     };
