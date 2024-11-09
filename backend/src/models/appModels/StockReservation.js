@@ -3,27 +3,44 @@ const Schema = mongoose.Schema;
 
 const StockReservationSchema = new Schema(
   {
-    sizes: [
+    products: [
       {
-        size: {
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        idStock: {
+          type: Number,
+          required: true,
+        },
+        stockId: {
           type: String,
           required: true,
         },
-        quantity: {
-          type: Number,
+        color: {
+          type: String,
           required: true,
         },
-        pending: {
-          type: Number,
-          default: 0,
-        },
+        sizes: [
+          {
+            size: {
+              type: String,
+              required: true,
+            },
+            quantity: {
+              type: Number,
+              required: true,
+              min: 1,
+            },
+            pending: {
+              type: Number,
+              min: 0,
+            },
+          },
+        ],
       },
     ],
-    product: {
-      type: Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true,
-    },
     salesOrder: {
       type: Schema.Types.ObjectId,
       ref: 'SalesOrder',

@@ -59,7 +59,7 @@ const OrderDetailsTab = ({ saleData }) => {
           </TableHead>
           <TableBody>
             {saleData?.products?.map((p) => (
-              <React.Fragment key={p.product.stockId + p.product.color}>
+              <React.Fragment key={p.idStock}>
                 <TableRow>
                   <TableCell colSpan={3}>
                     <Box

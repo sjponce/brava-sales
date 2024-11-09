@@ -20,6 +20,7 @@ module.exports = {
     'linebreak-style': 'off',
     'comma-dangle': 'off',
     'object-curly-newline': 'off',
+    'no-array-index-key': 'off'
   },
   overrides: [
     {
@@ -41,6 +42,7 @@ module.exports = {
         'react/jsx-closing-bracket-location': 'off',
         'react/prop-types': 'off',
         'react/jsx-one-expression-per-line': 'off',
+        'react/no-array-index-key': 'off'
       },
     },
   ],

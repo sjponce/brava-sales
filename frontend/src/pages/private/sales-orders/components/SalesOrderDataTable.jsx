@@ -1,5 +1,5 @@
 import { Download, Visibility } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -13,6 +13,7 @@ import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 import stock from '@/redux/stock/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import getProductImageMap from '@/utils/getProductImageMap';
+import crud from '@/redux/crud/actions';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const SalesOrderDataTable = () => {
   const handleDetails = async (id) => {
     setSelectedRow({ ...selectedRow, id });
     await dispatch(sales.read({ entity: 'sales', id }));
+    await dispatch(crud.filter({ entity: 'stockReservation', options: { filter: 'salesOrder', equal: id } }));
     setOpenDetailsModal(true);
   };
 
@@ -60,9 +62,12 @@ const SalesOrderDataTable = () => {
   const reserveStockState = useSelector((store) => store.sales.reserveStock);
   const stockProductsState = useSelector((store) => store.stock.getStockProducts);
   const products = useSelector((store) => store.stock.listAll)?.result?.items?.result;
+  const filterState = useSelector((store) => store.crud.filter);
 
   useEffect(() => {
+    if (!reserveStockState?.isSuccess || selectedRow.id === '') return;
     dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
+    dispatch(crud.filter({ entity: 'stockReservation', options: { filter: 'salesOrder', equal: selectedRow.id } }));
   }, [reserveStockState]);
 
   const [rows, setRows] = useState([]);
@@ -118,12 +123,16 @@ const SalesOrderDataTable = () => {
         const { id } = params.row;
         return (
           <div className="actions">
-            <IconButton size="small" onClick={() => handleDetails(id)}>
-              <Visibility />
-            </IconButton>
-            <IconButton size="small" onClick={() => handleDownload(id)}>
-              <Download />
-            </IconButton>
+            <Tooltip title="Ver detalles" arrow>
+              <IconButton size="small" onClick={() => handleDetails(id)}>
+                <Visibility />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Descargar" arrow>
+              <IconButton size="small" onClick={() => handleDownload(id)}>
+                <Download />
+              </IconButton>
+            </Tooltip>
           </div>
         );
       },
@@ -158,7 +167,8 @@ const SalesOrderDataTable = () => {
       <Loading
         isLoading={
           salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
-          || reserveStockState?.isLoading || stockProductsState?.isLoading || false
+          || reserveStockState?.isLoading || stockProductsState?.isLoading
+          || filterState?.isLoading || false
         }
       />
     </Box>

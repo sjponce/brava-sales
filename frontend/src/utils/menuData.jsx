@@ -48,7 +48,7 @@ export const menuMaterial = [
       {
         id: 1,
         title: 'Viajes',
-        url: 'travels',
+        url: 'trips',
         icon: <AirportShuttleOutlined />,
       },
 
