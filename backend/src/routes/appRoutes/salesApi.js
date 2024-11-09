@@ -14,8 +14,6 @@ const setupRoutes = async () => {
   router.route('/sales/:id').get(catchErrors(salesMiddleware.listAll));
   router.route('/sales/create-payment').put(catchErrors(salesMiddleware.createPayment));
   router.route('/sales/create-mp-link').put(catchErrors(salesMiddleware.createMPLink));
-
-  // Add more stock routes here
 };
 
 setupRoutes();

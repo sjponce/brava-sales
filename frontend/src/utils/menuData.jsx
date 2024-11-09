@@ -39,6 +39,12 @@ export const menuMaterial = [
         url: 'products',
         icon: <SellOutlined />,
       },
+      {
+        id: 3,
+        title: 'Viajes',
+        url: 'trips',
+        icon: <LocalShippingOutlined />,
+      },
     ],
   },
   {

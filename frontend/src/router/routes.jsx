@@ -8,6 +8,7 @@ import Products from '@/pages/private/products/Products';
 import Home from '@/pages/private/home/Home';
 import HomeEcommerce from '@/pages/private/ecommerce/HomeEcommerce';
 import NotFound from '@/components/NotFound';
+import Trips from '@/pages/private/trips/Trips';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
 const CommingSoon = lazy(() => import('@/pages/private/CommingSoon.jsx'));
@@ -59,6 +60,10 @@ const routes = {
         {
           path: '/sellers',
           element: <Sellers />,
+        },
+        {
+          path: '/trips',
+          element: <Trips />,
         },
         {
           path: '/sales-orders',
@@ -165,6 +170,10 @@ export const routesSellers = {
         {
           path: '/shipping',
           element: <Shipping />,
+        },
+        {
+          path: '/trips',
+          element: <Trips />,
         },
       ],
     },

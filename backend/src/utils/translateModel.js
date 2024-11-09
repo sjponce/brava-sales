@@ -4,6 +4,7 @@ const translations = {
     seller: 'vendedor',
     payment: 'pago',
     stockreservation: 'envio',
+    trip: 'viaje',
   };
 
 const translate = (model) => {
