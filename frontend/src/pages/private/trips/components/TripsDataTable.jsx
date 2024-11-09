@@ -1,5 +1,5 @@
-import { Visibility, EditRounded, DeleteRounded } from '@mui/icons-material';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { DeleteRounded } from '@mui/icons-material';
+import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import DataTable from '@/components/dataTable/DataTable';
@@ -30,11 +30,6 @@ const TripsDataTable = () => {
     const newRows = tripState.result?.items?.result.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
   }, [tripState]);
-
-  const handleEdit = async (id) => {
-    setSelectedRow({ ...selectedRow, id });
-    await dispatch(crud.read({ entity: 'trip', id }));
-  };
 
   const handleDelete = (id, description) => {
     setSelectedRow({ ...selectedRow, id, description });
@@ -88,7 +83,7 @@ const TripsDataTable = () => {
       field: 'destinations',
       headerName: 'Destinos',
       width: 300,
-      renderCell: (params) => params.row.destinations?.map(d => d.city.name).join(', '),
+      renderCell: (params) => params.row.destinations?.map((d) => d.city.name).join(', '),
     },
     {
       field: 'actions',
