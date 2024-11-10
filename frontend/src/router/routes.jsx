@@ -208,22 +208,20 @@ export const routesEcommerce = {
           element: <HomeEcommerce />,
         },
         {
+          path: '/success',
+          element: <HomeEcommerce />,
+        },
+        {
+          path: '/failure',
+          element: <HomeEcommerce />,
+        },
+        {
+          path: '/pending',
+          element: <HomeEcommerce />,
+        },
+        {
           path: '/sales-orders',
           element: <HomeEcommerce />,
-          children: [
-            {
-              path: '/sales-orders/success',
-              element: <HomeEcommerce />,
-            },
-            {
-              path: '/sales-orders/failure',
-              element: <HomeEcommerce />,
-            },
-            {
-              path: '/sales-orders/pending',
-              element: <HomeEcommerce />,
-            },
-          ],
         },
       ],
     },
