@@ -90,7 +90,7 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                     size="small"
                     id={`products.${index}.product`}
                     value={watch(`products.${index}`)}
-                    style={{ width: '160px' }}
+                    style={{ width: '170px' }}
                     onChange={(_, newValue) => {
                       if (newValue) {
                         setValue(`products.${index}.product`, newValue._id);
@@ -142,7 +142,7 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                       }}
                       required
                       margin="none"
-                      sx={{ width: '160px' }}>
+                      sx={{ width: '170px' }}>
                       {(currentOptions[`variations-${index}`] || []).map((variation) => (
                         <MenuItem key={variation.id} value={variation.color}>
                           {variation.color}
@@ -188,7 +188,7 @@ const ModifiableProductTable = ({ setValue, watch, control }) => {
                         setValue(`products.${index}.sizes`, newSizes);
                       }}
                       required
-                      sx={{ width: '160px' }}
+                      sx={{ width: '170px' }}
                       multiple>
                       {(currentOptions[`sizes-${index}`] || []).map((size) => (
                         <MenuItem key={size} value={size}>

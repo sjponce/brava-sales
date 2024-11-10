@@ -28,6 +28,8 @@ const DataTable = ({
         toolbar: {
           showQuickFilter: true,
           quickFilterProps: { debounceMs: 500 },
+          csvOptions: { disableToolbarButton: true },
+          printOptions: { disableToolbarButton: true }
         },
       }}
       pageSizeOptions={[5, 7, 10, 15]}

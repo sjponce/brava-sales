@@ -44,15 +44,16 @@ const SalesOrderDataTable = () => {
 
   const location = useLocation();
 
-  const updatedPayment = useSelector((state) => state.sales.createPayment);
+  const createdPayment = useSelector((state) => state.sales.createPayment);
+  const updatedPayment = useSelector((state) => state.sales.updatePayment);
 
   const crudUpdate = useSelector((state) => state.crud.update);
 
   useEffect(() => {
-    if (!updatedPayment.result && !crudUpdate?.result) return;
-    if (updatedPayment.isLoading && crudUpdate?.isLoading) return;
+    if (!createdPayment?.result && !crudUpdate?.result && !updatedPayment?.result) return;
+    if (createdPayment?.isLoading && crudUpdate?.isLoading && updatedPayment?.isLoading) return;
     dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
-  }, [updatedPayment, crudUpdate]);
+  }, [updatedPayment, crudUpdate, createdPayment]);
 
   const salesOrderState = useSelector((store) => store.sales.listAll);
   const readSalesOrderState = useSelector((store) => store.sales.read);

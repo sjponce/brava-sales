@@ -125,7 +125,7 @@ export const menuMaterialSellers = [
       {
         id: 1,
         title: 'Viajes',
-        url: 'travels',
+        url: 'trips',
         icon: <AirportShuttleOutlined />,
       },
 

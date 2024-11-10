@@ -97,7 +97,7 @@ const DataTableProducts = () => {
     {
       field: 'promotionalName',
       headerName: 'Nombre',
-      width: 150,
+      width: 200,
     },
     {
       field: 'color',
@@ -108,7 +108,7 @@ const DataTableProducts = () => {
     {
       field: 'description',
       headerName: 'Descripción',
-      width: 250,
+      width: 500,
     },
     {
       field: 'price',
@@ -133,9 +133,9 @@ const DataTableProducts = () => {
             <IconButton disabled={isDisabled} size="small" onClick={() => handleEdit(_id)}>
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
+            {/* <IconButton disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
               <DeleteRounded />
-            </IconButton>
+            </IconButton> */}
           </div>
         );
       },

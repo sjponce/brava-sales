@@ -116,6 +116,33 @@ const sales = {
         });
       }
     },
+  updateStockReservationStatus:
+    ({ jsonData }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'updateStockReservationStatus',
+        payload: null,
+      });
+
+      const data = await salesRequest.updateStockReservationStatus({ jsonData });
+
+      if (data.success === true) {
+        const result = {
+          items: data,
+        };
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'updateStockReservationStatus',
+          payload: result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'updateStockReservationStatus',
+          payload: null,
+        });
+      }
+    },
   create:
     ({ entity, jsonData, withUpload = false }) => async (dispatch) => {
       dispatch({
@@ -265,6 +292,34 @@ const sales = {
         dispatch({
           type: actionTypes.REQUEST_FAILED,
           keyState: 'createPayment',
+          payload: null,
+        });
+      }
+    },
+  updatePayment:
+    ({ entity, body }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.RESET_ACTION,
+        keyState: 'updatePayment',
+      });
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'updatePayment',
+        payload: null,
+      });
+
+      const data = await salesRequest.updatePayment({ entity, body });
+
+      if (data.success === true) {
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'updatePayment',
+          payload: data.installment,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'updatePayment',
           payload: null,
         });
       }
