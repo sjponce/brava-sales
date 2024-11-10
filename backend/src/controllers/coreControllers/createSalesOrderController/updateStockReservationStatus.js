@@ -27,7 +27,7 @@ const updateStockReservationStatus = async (req, res) => {
 
     // Check if all items are shipped or if there are pending items
     const hasUnshippedItems = allStockReservations.some(
-      reservation => reservation.status !== 'Shipped'
+      reservation => reservation.status !== 'Delivered'
     );
 
     // Update sales order status based on stock reservations
