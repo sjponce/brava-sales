@@ -186,8 +186,8 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
         isOpen={dialogOpen}
         onCancel={handleDialogCancel}
         onAccept={handleSubmit(onSubmit)}
-      />
-      <Loading isLoading={!!createSalesState.isLoading} />
+      />{/* 
+      <Loading isLoading={!!createSalesState.isLoading} /> */}
     </Box>
   );
 };

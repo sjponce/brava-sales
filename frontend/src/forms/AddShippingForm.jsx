@@ -38,7 +38,7 @@ const AddShippingForm = ({ control }) => (
       defaultValue="tripDelivery"
       render={({ field }) => (
         <FormControl fullWidth>
-          <InputLabel id="shippingMethod">Método de envío</InputLabel>
+          <InputLabel id="shippingMethod">Método de envío preferido</InputLabel>
           <Select
             {...field}
             labelId="shippingMethod"

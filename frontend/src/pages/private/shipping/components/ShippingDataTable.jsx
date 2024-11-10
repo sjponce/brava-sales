@@ -22,7 +22,7 @@ const ShippingDataTable = () => {
   const [selectedRow, setSelectedRow] = useState({});
   const shippingState = useSelector((store) => store.sales.listAllStockReservations);
   const editShippingState = useSelector((store) => store.crud.update);
-
+  const approveShippingState = useSelector((store) => store.sales.updateStockReservationStatus);
   const [rows, setRows] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -42,7 +42,7 @@ const ShippingDataTable = () => {
     if (!shippingState?.result) return;
     const newRows = shippingState.result?.items?.result?.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
-  }, [shippingState, editShippingState]);
+  }, [shippingState, editShippingState, approveShippingState]);
 
   const updateTable = () => {
     if (shippingState?.isLoading) return;
@@ -81,13 +81,13 @@ const ShippingDataTable = () => {
 
   const approveShipping = async (row) => {
     await dispatch(
-      crud.update({ entity: 'stockReservation', id: row._id, jsonData: { status: 'Delivered' } })
+      sales.updateStockReservationStatus({ jsonData: { id: row._id, status: 'Delivered' } })
     );
   };
 
   const cancelShipping = async (row) => {
     await dispatch(
-      crud.update({ entity: 'stockReservation', id: row._id, jsonData: { status: 'Cancelled' } })
+      sales.updateStockReservationStatus({ jsonData: { id: row._id, status: 'Cancelled' } })
     );
   };
 
@@ -106,7 +106,7 @@ const ShippingDataTable = () => {
       field: 'status',
       headerName: 'Estado',
       sortable: true,
-      valueGetter: (params) => translateStatus(params.row.status)
+      valueGetter: (params) => translateStatus(params.row.status),
     },
     {
       field: 'products',
@@ -131,8 +131,7 @@ const ShippingDataTable = () => {
               transformOrigin={{
                 vertical: 'top',
                 horizontal: 'left',
-              }}
-            >
+              }}>
               <Box p={2}>
                 {currentProducts.map((product) => (
                   <Box key={product.idStock} mb={1}>
@@ -140,7 +139,8 @@ const ShippingDataTable = () => {
                       {product.stockId} - {product.color}
                     </Typography>
                     <Typography variant="body2">
-                      Talles: {product.sizes.map((size) => `${size.size} (${size.quantity})`).join(', ')}
+                      Talles:{' '}
+                      {product.sizes.map((size) => `${size.size} (${size.quantity})`).join(', ')}
                     </Typography>
                   </Box>
                 ))}
@@ -155,8 +155,11 @@ const ShippingDataTable = () => {
       headerName: 'Cant. total',
       sortable: true,
       width: 100,
-      valueGetter: (params) => params.row.products.reduce((total, product) => total + product.sizes
-        .reduce((sum, size) => sum + size.quantity, 0), 0),
+      valueGetter: (params) =>
+        params.row.products.reduce(
+          (total, product) => total + product.sizes.reduce((sum, size) => sum + size.quantity, 0),
+          0
+        ),
     },
     {
       field: 'clientName',
@@ -174,7 +177,7 @@ const ShippingDataTable = () => {
         return address
           ? `${address.street} ${address.streetNumber}, ${address.city}, ${address.state}`
           : 'N/A';
-      }
+      },
     },
     {
       field: 'departureDate',

@@ -28,7 +28,7 @@ const TripsDataTable = () => {
   useEffect(() => {
     if (!tripState?.result) return;
     const newRows = tripState.result?.items?.result.map((item) => ({ ...item, id: item._id }));
-    setRows(newRows);
+    setRows(newRows ?? []);
   }, [tripState]);
 
   const handleDelete = (id, description) => {
@@ -109,7 +109,7 @@ const TripsDataTable = () => {
     <Box display="flex" height="100%">
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
-        title={`Eliminar viaje: ${selectedRow.description}`}
+        title={`Eliminar viaje`}
         text="Esta acción no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onAccept={handleDialogAccept}
