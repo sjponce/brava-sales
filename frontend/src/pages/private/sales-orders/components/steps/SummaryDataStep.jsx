@@ -14,7 +14,6 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import sales from '@/redux/sales/actions';
-import Loading from '@/components/Loading';
 import { getCurrentStep } from '@/redux/sales/selectors';
 
 const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
@@ -186,8 +185,7 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
         isOpen={dialogOpen}
         onCancel={handleDialogCancel}
         onAccept={handleSubmit(onSubmit)}
-      />{/* 
-      <Loading isLoading={!!createSalesState.isLoading} /> */}
+      />
     </Box>
   );
 };
