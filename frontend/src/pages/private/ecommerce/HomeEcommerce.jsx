@@ -48,23 +48,19 @@ const HomeEcommerce = () => {
     if (!updatedPayment.result && !crudUpdate?.result) return;
     if (updatedPayment.isLoading && crudUpdate?.isLoading) return;
     dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
-  }, [updatedPayment, crudUpdate]);
+  }, [updatedPayment, crud, dispatch, selectedRow.id]);
 
   const location = useLocation();
 
   useEffect(() => {
+    if (!location.search) return;
     const fetchData = async () => {
       const searchParams = new URLSearchParams(location.search);
-      const installment = searchParams?.get('installment');
-      const salesOrder = searchParams?.get('salesOrder');
-      if (installment && salesOrder) {
-        await dispatch(sales.read({ entity: 'sales', id: salesOrder }));
-        setOpenDetails(true);
-      }
+      const salesOrder = searchParams.get('salesOrder');
+      handleDetails(salesOrder);
     };
-
     fetchData();
-  }, [location]);
+  }, [dispatch, location]);
 
   return (
     <Container maxWidth="lg" sx={{ mb: 4 }}>

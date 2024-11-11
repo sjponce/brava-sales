@@ -140,7 +140,7 @@ const DataTableCustomers = () => {
     {
       field: 'actions',
       headerName: 'Acción',
-      width: 100,
+      width: 150,
       printable: false,
       sortable: false,
       renderCell: (params) => {

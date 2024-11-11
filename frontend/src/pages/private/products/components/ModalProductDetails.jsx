@@ -16,8 +16,8 @@ import { useForm } from 'react-hook-form';
 import { selectCurrentItem } from '@/redux/stock/selectors';
 import ProductDetailsForm from '@/forms/ProductDetailsForm';
 import EditProductForm from '@/forms/EditProductForm';
-import stock from '@/redux/stock/actions';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import crud from '@/redux/crud/actions';
 
 const SytledModal = styled(Modal)({
   display: 'flex',
@@ -38,14 +38,14 @@ const ModalProductDetails = ({
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const updateProduct = async (data) => {
+    console.log(data);
     try {
       await dispatch(
-        stock.update({
-          entity: 'stock',
-          id: productData.result.id,
+        crud.update({
+          entity: 'product',
+          id: productData.result._id,
           jsonData: {
             ...data,
-            price: parseFloat(data.price),
           },
         }),
       );
@@ -63,7 +63,6 @@ const ModalProductDetails = ({
       setValue('imageUrl', productData.result.stockInfo[0]?.imageUrl);
       setValue('stock', productData.result.stockInfo[0]?.stock);
       setValue('productVariation', productData.result.stockInfo[0]?.productVariation);
-      // Hay que remplazarlo por los tags reales de la DB
       setValue('tags', productData.result.tags);
     }
   }, [productData]);

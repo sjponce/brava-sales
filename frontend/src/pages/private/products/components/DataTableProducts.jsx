@@ -1,4 +1,4 @@
-import { DeleteRounded, EditRounded, Visibility } from '@mui/icons-material';
+import { EditRounded, Visibility } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -32,10 +32,10 @@ const DataTableProducts = () => {
     setOpenDetailsModal(true);
   };
 
-  const handleDisable = (id, name) => {
-    setSelectedRow({ ...selectedRow, id, name });
-    setOpenCreateDialog(true);
-  };
+  // const handleDisable = (id, name) => {
+  //   setSelectedRow({ ...selectedRow, id, name });
+  //   setOpenCreateDialog(true);
+  // };
 
   const handleDialogCancel = () => {
     setOpenCreateDialog(false);
@@ -122,7 +122,7 @@ const DataTableProducts = () => {
       printable: false,
       sortable: false,
       renderCell: (params) => {
-        const { _id, promotionalName } = params.row;
+        const { _id } = params.row;
         const userState = useSelector((store) => store.auth.current);
         const isDisabled = userState.role !== 'admin';
         return (
@@ -133,9 +133,12 @@ const DataTableProducts = () => {
             <IconButton disabled={isDisabled} size="small" onClick={() => handleEdit(_id)}>
               <EditRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
+            {/*
+            <IconButton
+            disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
               <DeleteRounded />
             </IconButton>
+            */}
           </div>
         );
       },

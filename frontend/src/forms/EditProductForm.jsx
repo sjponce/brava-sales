@@ -3,35 +3,16 @@ import {
   Box,
   Chip,
   Divider,
-  IconButton,
   InputAdornment,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import { AddPhotoAlternateOutlined, HideImageOutlined } from '@mui/icons-material';
-import uploadImageToImgbb from '@/utils/uploadImageToImgbb';
 import tagsArray from '@/utils/tags';
 
 const EditProductForm = ({ register, setValue, watch }) => {
-  const handleImageChange = async (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const image = event.target.files[0];
-      const imageUrl = await uploadImageToImgbb(image);
-      setValue('imageUrl', imageUrl);
-    }
-  };
-
   const handlePriceChange = (event) => {
     const filteredValue = event.target.value.replace(/[^0-9.]/g, '');
     setValue('price', filteredValue);
-  };
-
-  const handleRemoveImage = (event) => {
-    event.preventDefault();
-    setValue('imageUrl', '');
-    const fileInput = document.getElementById('raised-button-file');
-    if (fileInput) fileInput.value = '';
   };
 
   return (
@@ -46,49 +27,18 @@ const EditProductForm = ({ register, setValue, watch }) => {
             bgcolor="background.paper"
             p={2}
             display="flex"
+            mt={2}
             flexDirection="column"
-            borderRadius={2.5}
-            maxWidth="232px">
-            <Box>
-              <img
-                src={watch('imageUrl') !== '' ? watch('imageUrl') : '/noImage.png'}
-                alt=""
-                style={{
-                  borderRadius: '10px',
-                  objectFit: 'cover',
-                  width: '200px',
-                  cursor: 'zoom-in',
-                }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" justifyContent="center" gap={3}>
-              <label htmlFor="raised-button-file">
-                <input
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  id="raised-button-file"
-                  type="file"
-                  data-testid="raised-button-file"
-                  onChange={handleImageChange}
-                />
-                <Tooltip
-                  title={
-                    watch('imageUrl') !== ''
-                      ? 'Quitar imagen de producto'
-                      : 'Agregar imagen de producto'
-                  }>
-                  <IconButton
-                    component="span"
-                    onClick={watch('imageUrl') !== '' ? handleRemoveImage : undefined}>
-                    {watch('imageUrl') !== '' ? (
-                      <HideImageOutlined />
-                    ) : (
-                      <AddPhotoAlternateOutlined />
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </label>
-            </Box>
+            borderRadius={2.5}>
+            <img
+              src={watch('imageUrl') !== '' ? watch('imageUrl') : '/noImage.png'}
+              alt=""
+              style={{
+                borderRadius: '10px',
+                objectFit: 'cover',
+                width: '200px',
+              }}
+            />
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" width="100%" gap={2} justifyContent="center">
@@ -100,7 +50,6 @@ const EditProductForm = ({ register, setValue, watch }) => {
           <TextField
             name="price"
             required
-            margin="normal"
             label="Precio"
             InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
