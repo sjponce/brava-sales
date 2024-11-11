@@ -97,7 +97,7 @@ const DataTableProducts = () => {
     {
       field: 'promotionalName',
       headerName: 'Nombre',
-      width: 150,
+      width: 200,
     },
     {
       field: 'color',
@@ -108,7 +108,7 @@ const DataTableProducts = () => {
     {
       field: 'description',
       headerName: 'Descripción',
-      width: 250,
+      width: 500,
     },
     {
       field: 'price',

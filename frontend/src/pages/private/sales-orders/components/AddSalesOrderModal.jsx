@@ -154,9 +154,6 @@ const AddSalesOrderModal = ({ open, handlerOpen, ecommerce = false, handlerDetai
           {currentStep === steps.length ? (
             <Box display="flex" justifyContent="space-between" flexDirection="column" width="100%">
               <Box display="flex" justifyContent="center" alignItems="center" height="68vh">
-                {createOrderState.isLoading && (
-                  <CircularProgress color="primary" sx={{ fontSize: 200 }} />
-                )}
                 <FinalMessaje orderState={createOrderState} ecommerce={ecommerce} />
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

@@ -11,6 +11,9 @@ const translateStatus = (status) => {
     OverDue: 'Vencido',
     Reserved: 'Reservado',
     'Partially reserved': 'Parcialmente reservado',
+    'Partially Shipped': 'Parcialmente entregado',
+    Completed: 'Completado',
+
   };
   return translations[status] || status;
 };

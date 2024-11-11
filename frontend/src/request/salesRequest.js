@@ -60,6 +60,18 @@ export const salesRequest = {
       return errorHandler(error);
     }
   },
+  updatePayment: async ({ entity, body }) => {
+    try {
+      const response = await axios.post(`${entity}/update-payment`, body);
+      successHandler(response, {
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
   createMPLink: async ({ entity, body }) => {
     try {
       const response = await axios.put(`${entity}/create-mp-link`, body);
@@ -296,6 +308,18 @@ export const salesRequest = {
   listAllStockReservations: async ({ entity }) => {
     try {
       const response = await axios.get(`${entity}/reserve-stock`);
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  updateStockReservationStatus: async ({ jsonData }) => {
+    try {
+      const response = await axios.post('sales/update-stock-reservation-status', jsonData);
       successHandler(response, {
         notifyOnSuccess: false,
         notifyOnFailed: false,
