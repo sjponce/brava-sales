@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CircularProgress,
   IconButton,
   Modal,
   Step,
