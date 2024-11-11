@@ -17,14 +17,14 @@ const Customers = () => {
   const userState = useSelector((store) => store.auth.current);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <Box display="flex" flexDirection="column" height="100%" maxWidth={{ lg: '85vw', md: '89vw', xs: '80vw' }}>
       <Box
         display="flex"
         justifyContent="space-between"
         width="100%"
         borderRadius={2}
         marginBottom="20px">
-        <Typography variant="h4">Clientes</Typography>
+        <Typography variant="h4" color="primary">Clientes</Typography>
         <Button
           onClick={handleClickOpen}
           disabled={userState.role !== 'admin'}

@@ -68,16 +68,16 @@ const NavbarMaterial = () => {
       >
         <Logo>
           <IconButton>
-            <img src="/bravaLogo.png" alt="logo" style={{ opacity: 0.6 }} />
+            <img src="/bravaLogo.png" alt="logo" />
           </IconButton>
-          <Typography variant="button" sx={{ display: { xs: 'none', sm: 'flex', opacity: '0.7' } }}>
+          <Typography variant="button" color="primary" sx={{ display: { xs: 'none', sm: 'flex' } }}>
             Brava sales
           </Typography>
         </Logo>
         <Box gap={1} display="flex" alignItems="center">
           <Tooltip title="Ecommerce" arrow>
             <IconButton onClick={() => navigate('/ecommerce')}>
-              <Storefront />
+              <Storefront color="secondary" />
             </IconButton>
           </Tooltip>
           <IconButton onClick={handleToggleTheme}>
