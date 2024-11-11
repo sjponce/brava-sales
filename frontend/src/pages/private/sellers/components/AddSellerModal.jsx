@@ -1,7 +1,4 @@
-import {
-  Box, Button, Divider, IconButton, Modal, Typography, styled,
-} from '@mui/material';
-import PropTypes from 'prop-types';
+import { Box, Button, Divider, IconButton, Modal, Typography, styled } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Close } from '@mui/icons-material';
@@ -17,18 +14,14 @@ const StyledModal = styled(Modal)({
   justifyContent: 'center',
 });
 
-const AddSellerModal = ({
-  idSeller, open, handlerOpen,
-}) => {
+const AddSellerModal = ({ idSeller, open, handlerOpen }) => {
   const roleOptions = [
     { label: 'Administrador', value: 'admin' },
     { label: 'Vendedor', value: 'seller' },
   ];
   const dispatch = useDispatch();
   const sellerData = useSelector(selectCurrentItem);
-  const {
-    register, handleSubmit, setValue, watch, reset,
-  } = useForm();
+  const { register, handleSubmit, setValue, watch, reset } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const isUpdate = !!idSeller.length;
@@ -41,7 +34,7 @@ const AddSellerModal = ({
             ...data,
             role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
-        }),
+        })
       );
     } catch (error) {
       console.log(error);
@@ -69,7 +62,7 @@ const AddSellerModal = ({
             ...data,
             role: roleOptions.find((role) => role.label === data.role)?.value ?? watch('role'),
           },
-        }),
+        })
       );
     } catch (error) {
       console.log(error);
@@ -104,7 +97,11 @@ const AddSellerModal = ({
   const { isLoading } = useSelector(selectCreatedItem);
 
   return (
-    <StyledModal open={open}>
+    <StyledModal
+      open={open}
+      onClose={handleClose}
+      disableEscapeKeyDown
+      aria-labelledby="modal-title">
       <Box
         width={{ xs: '100%', sm: 800 }}
         height="auto"
@@ -129,7 +126,7 @@ const AddSellerModal = ({
             watch={watch}
             roleOptions={roleOptions}
             isUpdate={isUpdate}
-            />
+          />
           <Button
             type="submit"
             variant="contained"
@@ -152,12 +149,6 @@ const AddSellerModal = ({
       </Box>
     </StyledModal>
   );
-};
-
-AddSellerModal.propTypes = {
-  idSeller: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  handlerOpen: PropTypes.func.isRequired,
 };
 
 export default AddSellerModal;

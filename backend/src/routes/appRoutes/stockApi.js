@@ -14,8 +14,6 @@ const setupRoutes = async () => {
   router.route('/stock/:id').get(catchErrors(stockMiddleware.read));
   router.route('/stock/getStockProducts').post(catchErrors(stockMiddleware.getStockProducts));
   router.route('/stock/movement').post(catchErrors(stockMiddleware.registerStockMovement));
-
-  // Add more stock routes here
 };
 
 setupRoutes();

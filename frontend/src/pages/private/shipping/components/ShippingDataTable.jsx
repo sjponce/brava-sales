@@ -1,7 +1,7 @@
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Popover, Tooltip, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Check, Cancel, EditRounded, Start } from '@mui/icons-material';
+import { Check, Cancel, EditRounded, Start, Visibility } from '@mui/icons-material';
 import DataTable from '@/components/dataTable/DataTable';
 import Loading from '@/components/Loading';
 import sales from '@/redux/sales/actions';
@@ -22,14 +22,27 @@ const ShippingDataTable = () => {
   const [selectedRow, setSelectedRow] = useState({});
   const shippingState = useSelector((store) => store.sales.listAllStockReservations);
   const editShippingState = useSelector((store) => store.crud.update);
-
+  const approveShippingState = useSelector((store) => store.sales.updateStockReservationStatus);
   const [rows, setRows] = useState([]);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentProducts, setCurrentProducts] = useState([]);
+
+  const handleClick = (event, products) => {
+    setAnchorEl(event.currentTarget);
+    setCurrentProducts(products);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setCurrentProducts([]);
+  };
 
   useEffect(() => {
     if (!shippingState?.result) return;
     const newRows = shippingState.result?.items?.result?.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
-  }, [shippingState, editShippingState]);
+  }, [shippingState, editShippingState, approveShippingState]);
 
   const updateTable = () => {
     if (shippingState?.isLoading) return;
@@ -68,13 +81,13 @@ const ShippingDataTable = () => {
 
   const approveShipping = async (row) => {
     await dispatch(
-      crud.update({ entity: 'stockReservation', id: row._id, jsonData: { status: 'Delivered' } })
+      sales.updateStockReservationStatus({ jsonData: { id: row._id, status: 'Delivered' } })
     );
   };
 
   const cancelShipping = async (row) => {
     await dispatch(
-      crud.update({ entity: 'stockReservation', id: row._id, jsonData: { status: 'Cancelled' } })
+      sales.updateStockReservationStatus({ jsonData: { id: row._id, status: 'Cancelled' } })
     );
   };
 
@@ -85,86 +98,92 @@ const ShippingDataTable = () => {
   const columns = [
     {
       field: 'salesOrder',
-      headerName: 'Orden de venta',
+      headerName: 'N° Venta',
       sortable: true,
-      renderCell: (params) => {
-        const {
-          salesOrder: { salesOrderCode },
-        } = params.row;
-        return <span>{salesOrderCode}</span>;
-      },
+      valueGetter: (params) => params.row.salesOrder?.salesOrderCode,
     },
     {
       field: 'status',
       headerName: 'Estado',
       sortable: true,
+      valueGetter: (params) => translateStatus(params.row.status),
+    },
+    {
+      field: 'products',
+      headerName: 'Productos',
+      sortable: true,
+      width: 100,
       renderCell: (params) => {
-        const { status } = params.row;
+        const { products } = params.row;
         return (
-          <Box display="flex" alignItems="center">
-            <span>{translateStatus(status)}</span>
+          <Box display="flex" alignItems="center" width="100%" justifyContent="center">
+            <IconButton onClick={(event) => handleClick(event, products)}>
+              <Visibility />
+            </IconButton>
+            <Popover
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}>
+              <Box p={2}>
+                {currentProducts.map((product) => (
+                  <Box key={product.idStock} mb={1}>
+                    <Typography variant="subtitle2">
+                      {product.stockId} - {product.color}
+                    </Typography>
+                    <Typography variant="body2">
+                      Talles:{' '}
+                      {product.sizes.map((size) => `${size.size} (${size.quantity})`).join(', ')}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Popover>
           </Box>
         );
       },
     },
     {
-      field: 'product',
-      headerName: 'Producto',
-      sortable: true,
-      width: 150,
-      renderCell: (params) => {
-        const shoeCode = params.row.product?.stockId || 'N/A';
-        return <span>{shoeCode}</span>;
-      },
-    },
-    {
-      field: 'sizeTypes',
-      headerName: 'Talles',
-      sortable: false,
-      width: 200,
-      renderCell: (params) => {
-        const sizeTypes = params.row.sizes.map((size) => size.size).join(', ');
-        return <span>{sizeTypes}</span>;
-      },
-    },
-    {
       field: 'totalShoes',
-      headerName: 'Total de zapatos',
+      headerName: 'Cant. total',
       sortable: true,
-      width: 150,
-      renderCell: (params) => {
-        const totalShoes = params.row.sizes.reduce((acc, size) => acc + size.quantity, 0);
-        return <span>{totalShoes}</span>;
-      },
+      width: 100,
+      valueGetter: (params) =>
+        params.row.products.reduce(
+          (total, product) => total + product.sizes.reduce((sum, size) => sum + size.quantity, 0),
+          0
+        ),
     },
     {
       field: 'clientName',
       headerName: 'Cliente',
       sortable: true,
-      width: 200,
-      renderCell: (params) => {
-        const clientName = params.row.salesOrder?.customer?.name || 'N/A';
-        return <span>{clientName}</span>;
-      },
+      width: 150,
+      valueGetter: (params) => params.row.salesOrder?.customer?.name,
     },
     {
       field: 'clientAddress',
       headerName: 'Dirección',
-      sortable: false,
-      width: 250,
-      renderCell: (params) => {
+      width: 200,
+      valueGetter: (params) => {
         const address = params.row.salesOrder?.customer?.address;
-        const fullAddress = address
+        return address
           ? `${address.street} ${address.streetNumber}, ${address.city}, ${address.state}`
           : 'N/A';
-        return <span>{fullAddress}</span>;
       },
     },
     {
       field: 'departureDate',
-      headerName: 'Fecha de salida',
+      headerName: 'Salida',
       sortable: true,
-      width: 150,
+      width: 100,
       renderCell: (params) => {
         const { departureDate } = params.row;
         return <span>{departureDate ? formatDate(departureDate) : '-'}</span>;
@@ -172,9 +191,9 @@ const ShippingDataTable = () => {
     },
     {
       field: 'arrivalDate',
-      headerName: 'Fecha de llegada',
+      headerName: 'Llegada',
       sortable: true,
-      width: 150,
+      width: 100,
       renderCell: (params) => {
         const { arrivalDate } = params.row;
         return <span>{arrivalDate ? formatDate(arrivalDate) : '-'}</span>;
@@ -185,10 +204,7 @@ const ShippingDataTable = () => {
       headerName: 'Método de envío',
       sortable: true,
       width: 150,
-      renderCell: (params) => {
-        const shippingMethod = params.row.shippingMethod || 'N/A';
-        return <span>{translateShippingMethod(shippingMethod)}</span>;
-      },
+      valueGetter: (params) => translateShippingMethod(params.row.shippingMethod),
     },
     {
       field: 'shippingCode',
@@ -213,15 +229,19 @@ const ShippingDataTable = () => {
           <div className="actions">
             {status === 'Reserved' && (
               <>
-                <IconButton onClick={() => handleEdit(params.row)} size="small">
-                  <EditRounded />
-                </IconButton>
-                <IconButton
-                  disabled={!canStart}
-                  onClick={() => handleStart(params.row)}
-                  size="small">
-                  <Start />
-                </IconButton>
+                <Tooltip title="Editar envío">
+                  <IconButton onClick={() => handleEdit(params.row)} size="small">
+                    <EditRounded />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Iniciar envío">
+                  <IconButton
+                    disabled={!canStart}
+                    onClick={() => handleStart(params.row)}
+                    size="small">
+                    <Start />
+                  </IconButton>
+                </Tooltip>
               </>
             )}
             {status === 'Shipped' && (

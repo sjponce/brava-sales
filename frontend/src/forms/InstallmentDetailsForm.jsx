@@ -24,7 +24,6 @@ import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import sales from '@/redux/sales/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import translateStatus from '@/utils/translateSalesStatus';
-import crud from '@/redux/crud/actions';
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
 
 const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
@@ -76,7 +75,8 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
     (i) => i._id === installmentId
   );
   const payedAmount = installment?.payments?.reduce(
-    (sum, currentPayment) => sum + currentPayment.amount,
+    (sum, currentPayment) =>
+      currentPayment.status === 'Approved' ? sum + currentPayment.amount : sum,
     0
   );
   const paymentDifference = (installment?.amount ?? 0) - payedAmount;
@@ -145,26 +145,19 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
   };
 
   const handleDialogAccept = () => {
-    dispatch(
-      crud.update({
-        entity: 'payment',
-        id: selectedRow.id,
-        jsonData: {
-          status: selectedRow.status,
-        },
-      })
-    );
+    const body = {
+      paymentData: {
+        paymentId: selectedRow.id,
+        status: selectedRow.status
+      },
+      installmentId,
+    };
+    dispatch(sales.updatePayment({ entity: 'sales', body }));
     setStatusDialogOpen(false);
   };
 
   return (
-    <Box
-      height="auto"
-      borderRadius={2.5}
-      p={2}
-      pt={0}
-      display="flex"
-      flexDirection="column">
+    <Box height="auto" borderRadius={2.5} p={2} pt={0} display="flex" flexDirection="column">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Button startIcon={<ArrowBackIosNew />} onClick={handleClose}>
           Volver
@@ -172,11 +165,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
         <Typography variant="overline">{`Detalle de cuota ${installment?.installmentNumber}`}</Typography>
       </Box>
       <Box display="flex" mt={2} mb={2} justifyContent="space-between" gap={2}>
-        <Box
-          component="form"
-          id="step-1"
-          onSubmit={preSubmit}
-          width="100%">
+        <Box component="form" id="step-1" onSubmit={preSubmit} width="100%">
           <Paper sx={{ borderRadius: 2.5, padding: 2, height: '100%' }}>
             <InstallmentPaymentForm
               control={control}
@@ -192,10 +181,10 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
                 color="primary"
                 fullWidth
                 disabled={
-                  isLoading
-                  || !isValid
-                  || (watch('paymentMethod') !== 'MercadoPago' && !watch('photo'))
-                  || !watch('paymentMethod')
+                  isLoading ||
+                  !isValid ||
+                  (watch('paymentMethod') !== 'MercadoPago' && !watch('photo')) ||
+                  !watch('paymentMethod')
                 }
                 size="medium">
                 <Typography variant="button">Añadir pago</Typography>

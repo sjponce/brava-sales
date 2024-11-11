@@ -65,6 +65,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const handleDialogCancel = () => {
     setDialogOpen(false);
+    setStatusDialogOpen(false);
   };
   const handleClose = () => {
     handlerOpen(false);
@@ -194,7 +195,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
               register={register}
               reset={reset}
             />
-            <Box display="flex" justifyContent="flex-end" fullWidth mr={2}>
+            <Box display="flex" justifyContent="flex-end" mr={2}>
               <Button
                 type="submit"
                 variant="contained"
@@ -217,7 +218,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
               onCancel={handleDialogCancel}
             />
             <CustomDialog
-              title={`${selectedRow.status === 'Rejected' ? 'Aprobar' : 'Rechazar'} Pago`}
+              title={`${selectedRow.status === 'Rejected' ? 'Rechazar' : 'Aprobar'} Pago`}
               text="Esta acción no se puede deshacer, ¿Desea continuar?"
               isOpen={statusDialogOpen}
               onAccept={handleDialogAccept}

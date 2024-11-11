@@ -59,7 +59,7 @@ const OrderDetailsTab = ({ saleData }) => {
           </TableHead>
           <TableBody>
             {saleData?.products?.map((p) => (
-              <React.Fragment key={p.product.stockId + p.product.color}>
+              <React.Fragment key={p.idStock}>
                 <TableRow>
                   <TableCell colSpan={3}>
                     <Box
@@ -72,15 +72,14 @@ const OrderDetailsTab = ({ saleData }) => {
                         cursor: 'pointer',
                         '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.1)' },
                       }}
-                      onClick={() => handleImageClick(productImageMap[p.idStock])}>
-                      <Avatar
-                        src={productImageMap[p.idStock]}
-                        sx={{ width: 48, height: 48 }}
-                        />
-                      <Typography variant="subtitle2">{
-                        currentUser?.role !== 'customer' ? `${p.product.stockId} ${p.color}`
-                          : `${p.product.promotionalName} ${p.color}`
-                      }
+                      onClick={() => (productImageMap
+                        ? handleImageClick(productImageMap[p?.idStock])
+                        : console.warn('error'))}>
+                      <Avatar src={productImageMap ? productImageMap[p?.idStock] : ''} sx={{ width: 48, height: 48 }} />
+                      <Typography variant="subtitle2">
+                        {currentUser?.role !== 'customer'
+                          ? `${p.product.stockId} ${p.color}`
+                          : `${p.product.promotionalName} ${p.color}`}
                       </Typography>
                     </Box>
                   </TableCell>
