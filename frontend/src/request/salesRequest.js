@@ -321,8 +321,8 @@ export const salesRequest = {
     try {
       const response = await axios.post('sales/update-stock-reservation-status', jsonData);
       successHandler(response, {
-        notifyOnSuccess: false,
-        notifyOnFailed: false,
+        notifyOnSuccess: true,
+        notifyOnFailed: true,
       });
       return response.data;
     } catch (error) {

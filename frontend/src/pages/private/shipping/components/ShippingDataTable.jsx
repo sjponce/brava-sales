@@ -42,7 +42,7 @@ const ShippingDataTable = () => {
     if (!shippingState?.result) return;
     const newRows = shippingState.result?.items?.result?.map((item) => ({ ...item, id: item._id }));
     setRows(newRows);
-  }, [shippingState, editShippingState, approveShippingState]);
+  }, [shippingState, editShippingState]);
 
   const updateTable = () => {
     if (shippingState?.isLoading) return;
@@ -93,7 +93,7 @@ const ShippingDataTable = () => {
 
   useEffect(() => {
     updateTable();
-  }, [editShippingState]);
+  }, [editShippingState, approveShippingState]);
 
   const columns = [
     {
@@ -227,7 +227,7 @@ const ShippingDataTable = () => {
         const canStart = departureDate && arrivalDate && shippingMethod;
         return (
           <div className="actions">
-            {status === 'Reserved' && (
+            {(status === 'Reserved' || status === 'Cancelled') && (
               <>
                 <Tooltip title="Editar envío">
                   <IconButton onClick={() => handleEdit(params.row)} size="small">

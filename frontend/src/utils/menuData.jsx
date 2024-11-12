@@ -72,13 +72,13 @@ export const menuMaterial = [
     listItems: [
       {
         id: 1,
-        title: 'De productos',
+        title: 'productos',
         url: 'productsReport',
         icon: <InsertChartOutlined color="primary" />,
       },
       {
         id: 2,
-        title: 'De clientes',
+        title: 'clientes',
         url: 'clientsReport',
         icon: <InsertChartOutlined color="primary" />,
       },
