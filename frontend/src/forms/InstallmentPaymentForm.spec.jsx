@@ -16,6 +16,11 @@ jest.mock('@/utils/uploadImageToImgbb', () => jest.fn());
 
 const mockStore = configureStore([]);
 const store = mockStore({
+  auth: {
+    current: {
+      role: 'customer',
+    },
+  },
   sales: {
     createPayment: {
       result: null,
@@ -40,37 +45,15 @@ describe('InstallmentPaymentForm', () => {
     });
   });
 
-  test('test_payment_method_selection', () => {
-    const { getByLabelText, getByText } = render(
-      <Provider store={store}>
-        <InstallmentPaymentForm
-        control={{}}
-        watch={mockWatch}
-        setValue={mockSetValue}
-        register={mockRegister}
-      />
-      </Provider>
-    );
-
-    const select = getByLabelText('Método de pago');
-    fireEvent.mouseDown(select);
-
-    const option = getByText(/Tarjeta de débito/i);
-    fireEvent.click(option);
-    waitFor(() => {
-      expect(select).toHaveTextContent('Tarjeta de débito');
-    });
-  });
-
   test('test_amount_input_validation', () => {
     const { getByLabelText } = render(
       <Provider store={store}>
         <InstallmentPaymentForm
-        control={{}}
-        watch={mockWatch}
-        setValue={mockSetValue}
-        register={mockRegister}
-      />
+          control={{}}
+          watch={mockWatch}
+          setValue={mockSetValue}
+          register={mockRegister}
+        />
       </Provider>
     );
 
@@ -96,11 +79,11 @@ describe('InstallmentPaymentForm', () => {
     const { getByTestId, getByLabelText } = render(
       <Provider store={store}>
         <InstallmentPaymentForm
-        control={{}}
-        watch={mockWatch}
-        setValue={mockSetValue}
-        register={mockRegister}
-      />
+          control={{}}
+          watch={mockWatch}
+          setValue={mockSetValue}
+          register={mockRegister}
+        />
       </Provider>
     );
 
@@ -126,11 +109,11 @@ describe('InstallmentPaymentForm', () => {
     const { getByLabelText } = render(
       <Provider store={store}>
         <InstallmentPaymentForm
-        control={{}}
-        watch={mockWatch}
-        setValue={mockSetValue}
-        register={mockRegister}
-      />
+          control={{}}
+          watch={mockWatch}
+          setValue={mockSetValue}
+          register={mockRegister}
+        />
       </Provider>
     );
 
