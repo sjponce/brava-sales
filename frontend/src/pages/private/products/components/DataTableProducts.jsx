@@ -134,10 +134,11 @@ const DataTableProducts = () => {
               <EditRounded />
             </IconButton>
             {/*
-            <IconButton disabled={isDisabled}
-            onClick={() => handleDisable(_id, promotionalName)} size="small">
+            <IconButton
+            disabled={isDisabled} onClick={() => handleDisable(_id, promotionalName)} size="small">
               <DeleteRounded />
-            </IconButton> */}
+            </IconButton>
+            */}
           </div>
         );
       },
