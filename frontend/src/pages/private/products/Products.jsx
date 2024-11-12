@@ -9,7 +9,7 @@ const Products = () => (
       width="100%"
       borderRadius={2}
       marginBottom="20px">
-      <Typography variant="h4">Productos</Typography>
+      <Typography variant="h4" color="primary">Productos</Typography>
     </Box>
     <DataTableProducts />
   </Box>

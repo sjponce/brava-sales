@@ -53,7 +53,8 @@ const OrderProductsTab = ({ saleData }) => {
 
   const incrementQuantity = (productId, size, pending) => {
     const currentQuantity = quantities[productId]?.[size] ?? 0;
-    if (currentQuantity < pending) {
+    const stockQuantity = productsStock[productId]?.[size] ?? 0;
+    if (currentQuantity < pending && currentQuantity < stockQuantity) {
       handleQuantityChange(productId, size, currentQuantity + 1, pending);
     }
   };
@@ -190,7 +191,8 @@ const OrderProductsTab = ({ saleData }) => {
                           item.size,
                           Math.min(
                             parseInt(e.target.value, 10),
-                            item.quantity - (reservedProducts[p.idStock]?.[item.size] ?? 0)
+                            item.quantity - (reservedProducts[p.idStock]?.[item.size] ?? 0),
+                            productsStock[p.idStock]?.[item.size] ?? 0
                           )
                         )}
                         variant="outlined"

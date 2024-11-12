@@ -30,9 +30,9 @@ const EditShippingForm = ({ control, register, watch, setValue, shippingMethodOp
         />
 
         <DatePicker
-          label="Fecha de llegada"
-          value={watch('arrivalDate')}
-          onChange={(newValue) => setValue('arrivalDate', newValue)}
+          label="Fecha de Salida"
+          value={watch('departureDate')}
+          onChange={(newValue) => setValue('departureDate', newValue)}
           slotProps={{
             textField: {
               readOnly: true,
@@ -42,15 +42,15 @@ const EditShippingForm = ({ control, register, watch, setValue, shippingMethodOp
         />
 
         <DatePicker
-          label="Fecha de salida"
-          value={watch('departureDate')}
-          onChange={(newValue) => setValue('departureDate', newValue)}
+          label="Fecha de Legada"
+          value={watch('arrivalDate')}
+          onChange={(newValue) => setValue('arrivalDate', newValue)}
           slotProps={{
             textField: {
               readOnly: true,
             }
           }}
-          minDate={watch('arrivalDate') || today}
+          minDate={watch('departureDate') || today}
         />
 
         <TextField
