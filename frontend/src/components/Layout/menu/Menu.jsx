@@ -20,7 +20,7 @@ const Menu = () => {
     <div className="menu">
       {switchMenu().map((item) => (
         <div className="item" key={item.id}>
-          <Typography variant="caption" className="title" sx={{ opacity: 0.6 }}>
+          <Typography variant="caption" className="title" sx={{ opacity: 0.6 }} color="primary">
             {item.title}
           </Typography>
           {item.listItems.map((listItem) => (

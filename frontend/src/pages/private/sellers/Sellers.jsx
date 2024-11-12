@@ -25,7 +25,7 @@ const Sellers = () => {
         width="100%"
         borderRadius={2}
         marginBottom="20px">
-        <Typography variant="h4">Vendedores</Typography>
+        <Typography variant="h4" color="primary">Vendedores</Typography>
         <Button
           onClick={handleClickOpen}
           disabled={userState.role !== 'admin'}

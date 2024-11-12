@@ -9,7 +9,7 @@ const Shipping = () => (
       width="100%"
       borderRadius={2}
       marginBottom="20px">
-      <Typography variant="h4">Entregas</Typography>
+      <Typography variant="h4" color="primary">Entregas</Typography>
     </Box>
     <ShippingDataTable />
   </Box>

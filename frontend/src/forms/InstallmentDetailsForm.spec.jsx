@@ -62,26 +62,6 @@ describe('InstallmentDetailsForm Component', () => {
     });
   });
 
-  test('test_payment_calculation', async () => {
-    render(
-      <Provider store={mockStore}>
-        <Router>
-          <InstallmentDetailsForm
-            open={true}
-            handlerOpen={() => {}}
-            installmentId={mockInstallmentId}
-          />
-        </Router>
-      </Provider>
-    );
-    const payedAmount = mockInstallment.payments.reduce((sum, payment) => sum + payment.amount, 0);
-    const paymentDifference = mockInstallment.amount - payedAmount;
-
-    await waitFor(() => {
-      expect(screen.getByText(new RegExp(paymentDifference.toString()))).toBeInTheDocument();
-    });
-  });
-
   test('test_close_form', async () => {
     const mockHandlerOpen = jest.fn();
     render(

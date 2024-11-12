@@ -46,6 +46,7 @@ describe('salesReducer', () => {
     update: INITIAL_KEY_STATE,
     delete: INITIAL_KEY_STATE,
     listAllStockReservations: INITIAL_KEY_STATE,
+    updateStockReservationStatus: INITIAL_KEY_STATE,
     read: INITIAL_KEY_STATE,
     search: { ...INITIAL_KEY_STATE, result: [] },
   };

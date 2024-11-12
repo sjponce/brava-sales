@@ -22,7 +22,7 @@ const Trips = () => {
         width="100%"
         borderRadius={2}
         marginBottom="20px">
-        <Typography variant="h4">Viajes</Typography>
+        <Typography variant="h4" color="primary">Viajes</Typography>
         <Button
           onClick={handleClickOpen}
           variant="text"

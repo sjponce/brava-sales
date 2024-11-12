@@ -23,7 +23,7 @@ const SalesOrders = () => {
         width="100%"
         borderRadius={2}
         marginBottom="20px">
-        <Typography variant="h4">Ordenes de venta</Typography>
+        <Typography variant="h4" color="primary">Ordenes de venta</Typography>
         <Button
           onClick={handleClickOpen}
           variant="text"
