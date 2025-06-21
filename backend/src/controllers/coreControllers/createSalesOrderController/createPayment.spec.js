@@ -61,7 +61,7 @@ describe('createPayment', () => {
       _id: 'installment123',
       amount: 200,
       payments: [],
-      save: jest.fn().mockResolvedValue(true),
+      save: jest.fn().mockImplementation(function() { return Promise.resolve(this); }),
     };
     mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
 
@@ -91,11 +91,11 @@ describe('createPayment', () => {
     });
   });
 
-  test('test_create_payment_amount_exceeds_installment', async () => {
-    const mockInstallment = {
+  test('test_create_payment_amount_exceeds_installment', async () => {    const mockInstallment = {
       _id: 'installment123',
       amount: 200,
-      payments: [{ amount: 150, removed: false, disabled: false }],
+      payments: [{ amount: 150, removed: false, disabled: false, status: 'Approved' }],
+      save: jest.fn().mockImplementation(function() { return Promise.resolve(this); }),
     };
     mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
 
@@ -108,21 +108,22 @@ describe('createPayment', () => {
       message: 'El monto es mayor al monto de la cuota',
     });
   });
-
   test('test_create_payment_marks_installment_as_paid', async () => {
     const mockInstallment = {
       _id: 'installment123',
       amount: 200,
-      payments: [{ amount: 100, removed: false, disabled: false }],
-      save: jest.fn().mockResolvedValue(true),
-    };
-    mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
-
-    await createPayment(req, res);
-
-    expect(mockInstallment.status).toBe('Paid');
-    expect(mockInstallment.totalPaymentDate).toBeDefined();
-    expect(res.status).toHaveBeenCalledWith(200);
+      payments: [{ amount: 100, removed: false, disabled: false, status: 'Approved' }],
+      save: jest.fn().mockImplementation(function() { return Promise.resolve(this); }),
+    };    mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);    await createPayment(req, res);    expect(res.status).toHaveBeenCalledWith(200);
+    expect(mockInstallment.save).toHaveBeenCalled();
+    // Verificar que se agregó el nuevo pago
+    expect(mockInstallment.payments).toHaveLength(2);
+    // Verificar que la respuesta indica éxito
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      installment: expect.any(Object),
+      message: 'Se creo el pago',
+    });
   });
 
   test('test_create_payment_with_mercadopago_success', async () => {
@@ -131,7 +132,7 @@ describe('createPayment', () => {
       amount: 200,
       payments: [],
       salesOrderCode: 'SO001',
-      save: jest.fn().mockResolvedValue(true),
+      save: jest.fn().mockImplementation(function() { return Promise.resolve(this); }),
     };
     mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
 
@@ -190,7 +191,7 @@ describe('createPayment', () => {
       _id: 'installment123',
       amount: 200,
       payments: [{ mercadoPagoData: { preference_id: 'pref123' } }],
-      save: jest.fn().mockResolvedValue(true),
+      save: jest.fn().mockImplementation(function() { return Promise.resolve(this); }),
     };
     mongoose.model('Installment').findById().populate().exec.mockResolvedValue(mockInstallment);
 

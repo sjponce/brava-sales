@@ -137,25 +137,30 @@ const ProductsReport = () => {
             />
           </Box>
         </Box>
-        {filteredChartData.labels ? (
-          <Bar
-            data={filteredChartData}
-            options={{
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    callback: (value) => (showRevenue
-                      ? `${value.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}`
-                      : value),
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          {filteredChartData.labels ? (
+            <Bar
+              data={filteredChartData}
+              options={{
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      callback: (value) => (showRevenue
+                        ? `${value.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}`
+                        : value),
+                    },
                   },
                 },
-              },
-            }}
-          />
-        ) : (
-          <Typography variant="body1">Cargando datos...</Typography>
-        )}
+              }}
+              height="100%"
+            />
+          ) : (
+            <Typography variant="body1">Cargando datos...</Typography>
+          )}
+        </Box>
         <Autocomplete
           multiple
           size="small"
