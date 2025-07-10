@@ -73,9 +73,7 @@ const createPayment = async (req, res) => {
           message: 'Los datos de mercado pago no coinciden con los datos de la cuota',
         });
       }
-    }
-
-    let status = mercadoPagoData?.status ?? 'Pending';
+    }    let status = mercadoPagoData?.status ?? 'Pending';
 
     if (status === 'approved') {
       status = 'Approved';
@@ -87,15 +85,7 @@ const createPayment = async (req, res) => {
       status = 'Rejected';
     }
 
-    const newPayment = await new Payment({
-      amount: paymentData.amount,
-      paymentMethod: paymentData.paymentMethod,
-      mercadoPagoData,
-      status,
-      photo: paymentData.photo,
-    }).save();
-    installment.payments.push(newPayment);
-    const totalPayment = installment.payments.reduce((totalAmount, currentPayment) => {
+    const currentTotalPayment = installment.payments.reduce((totalAmount, currentPayment) => {
       if (
         currentPayment.removed ||
         currentPayment.disabled ||
@@ -106,13 +96,32 @@ const createPayment = async (req, res) => {
       return totalAmount + currentPayment.amount;
     }, 0);
 
-    if (totalPayment - installment.amount > 1) {
+    if (currentTotalPayment + Number(paymentData.amount) - installment.amount > 1) {
       return res.status(409).json({
         success: false,
         result: null,
         message: 'El monto es mayor al monto de la cuota',
       });
     }
+
+    const newPayment = await new Payment({
+      amount: paymentData.amount,
+      paymentMethod: paymentData.paymentMethod,
+      mercadoPagoData,
+      status,
+      photo: paymentData.photo,    }).save();
+    installment.payments.push(newPayment);
+    
+    const totalPayment = installment.payments.reduce((totalAmount, currentPayment) => {
+      if (
+        currentPayment.removed ||
+        currentPayment.disabled ||
+        currentPayment.status !== 'Approved'
+      ) {
+        return totalAmount;
+      }
+      return totalAmount + currentPayment.amount;
+    }, 0);
 
     const isTotallyPaid = totalPayment >= installment.amount;
     if (isTotallyPaid) {
