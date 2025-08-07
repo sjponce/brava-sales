@@ -155,11 +155,10 @@ const ShippingDataTable = () => {
       headerName: 'Cant. total',
       sortable: true,
       width: 100,
-      valueGetter: (params) =>
-        params.row.products.reduce(
-          (total, product) => total + product.sizes.reduce((sum, size) => sum + size.quantity, 0),
-          0
-        ),
+      valueGetter: (params) => params.row.products.reduce(
+        (total, product) => total + product.sizes.reduce((sum, size) => sum + size.quantity, 0),
+        0
+      ),
     },
     {
       field: 'clientName',

@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import AddCustomerModal from './components/AddCustomerModal';
 import DataTableCustomers from './components/DataTableCustomers';
 
@@ -14,31 +13,34 @@ const Customers = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const userState = useSelector((store) => store.auth.current);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" maxWidth={{ lg: '85vw', md: '89vw', xs: '80vw' }}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        borderRadius={2}
-        marginBottom="20px">
-        <Typography variant="h4" color="primary">Clientes</Typography>
-        <Button
-          onClick={handleClickOpen}
-          disabled={userState.role !== 'admin'}
-          variant="text"
-          size="large"
-          color="primary"
-          startIcon={<AddCircle />}>
-          <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nuevo cliente
-          </Typography>
-        </Button>
-      </Box>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Typography variant="overline" color="primary" align="center">
+        Clientes
+      </Typography>
       <AddCustomerModal open={open} handlerOpen={handleClose} idCustomer="" />
       <DataTableCustomers />
+      <Button
+        variant="outlined"
+        color="success"
+        fullWidth
+        onClick={handleClickOpen}
+        sx={{
+          bottom: 1,
+          borderRadius: 3,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          boxShadow: 'none',
+          bgcolor: 'background.default',
+          ':hover': {
+            bgcolor: 'background.alternative',
+          },
+          alignSelf: 'center',
+        }}
+      >
+        <AddCircle sx={{ fontSize: 32 }} color="success" />
+      </Button>
     </Box>
   );
 };

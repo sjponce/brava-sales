@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import AddTripModal from './components/AddTripModal';
 import TripsDataTable from './components/TripsDataTable';
 
@@ -9,6 +10,7 @@ const Trips = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+  const userState = useSelector((store) => store.auth.current);
 
   const handleClose = () => {
     setOpen(false);
@@ -16,26 +18,30 @@ const Trips = () => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        borderRadius={2}
-        marginBottom="20px">
-        <Typography variant="h4" color="primary">Viajes</Typography>
-        <Button
-          onClick={handleClickOpen}
-          variant="text"
-          size="large"
-          color="primary"
-          startIcon={<AddCircle />}>
-          <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nuevo viaje
-          </Typography>
-        </Button>
-      </Box>
       <AddTripModal open={open} handlerOpen={handleClose} idTrip="" />
+      <Typography variant="overline" color="primary" align="center">Viajes</Typography>
       <TripsDataTable />
+      <Button
+        variant="outlined"
+        color="success"
+        fullWidth
+        onClick={handleClickOpen}
+        disabled={userState.role !== 'admin'}
+        sx={{
+          bottom: 1,
+          borderRadius: 3,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          boxShadow: 'none',
+          bgcolor: 'background.default',
+          ':hover': {
+            bgcolor: 'background.alternative',
+          },
+          alignSelf: 'center',
+        }}
+      >
+        <AddCircle sx={{ fontSize: 32 }} color="success" />
+      </Button>
     </Box>
   );
 };

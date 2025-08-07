@@ -57,20 +57,18 @@ const TripsDataTable = () => {
   const columns = [
     {
       field: 'startDate',
-      headerName: 'Fecha inicio',
-      width: 150,
+      headerName: 'Inicio',
       renderCell: (params) => formatDate(params.row.startDate),
     },
     {
       field: 'endDate',
-      headerName: 'Fecha fin',
-      width: 150,
+      headerName: 'Fin',
       renderCell: (params) => formatDate(params.row.endDate),
     },
     {
       field: 'seller',
       headerName: 'Vendedor',
-      width: 200,
+      width: 150,
       renderCell: (params) => `${params.row.seller?.name || ''}`,
     },
     {
@@ -88,7 +86,6 @@ const TripsDataTable = () => {
     {
       field: 'actions',
       headerName: 'Acciones',
-      width: 150,
       sortable: false,
       renderCell: (params) => {
         const { id, description } = params.row;
@@ -109,7 +106,7 @@ const TripsDataTable = () => {
     <Box display="flex" height="100%">
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
-        title={`Eliminar viaje`}
+        title="Eliminar viaje"
         text="Esta acción no se puede deshacer, ¿Desea continuar?"
         isOpen={dialogOpen}
         onAccept={handleDialogAccept}

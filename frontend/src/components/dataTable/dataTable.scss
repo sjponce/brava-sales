@@ -1,7 +1,8 @@
 .dataTable {
     .dataGrid {
-        padding: 20px;
-        border-radius: 10px;
+        padding: 15px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
 
         .MuiDataGrid-toolbarContainer {
             flex-direction: row-reverse;

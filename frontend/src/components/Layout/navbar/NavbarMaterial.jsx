@@ -63,7 +63,7 @@ const NavbarMaterial = () => {
   return (
     <Stack position="sticky">
       <StyledToolbar
-        sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5 }}
+        sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, marginX: { xs: 'none', sm: 1.5 }, marginY: 1.5 }}
         disableGutters
       >
         <Logo>

@@ -4,7 +4,7 @@ const getLatestPrice = require('./getLatestPrice');
 const listAll = async (req, res, axiosInstance) => {
   try {
     axiosInstance;
-    const apiUrl = `${process.env.STOCK_API}/product/byNameMap`;
+    const apiUrl = `${process.env.STOCK_API}/product/byNameMapWithStock`;
     const stockCall = await axiosInstance.get(apiUrl);
     const stockData = stockCall.data;
     const salesData = await getSalesProducts();
@@ -38,6 +38,7 @@ const listAll = async (req, res, axiosInstance) => {
             id: stockItem.id,
             color: stockItem.color,
             imageUrl: stockItem.imageUrl,
+            stock: stockItem.stock,
           })),
         };
 

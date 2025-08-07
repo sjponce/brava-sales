@@ -77,13 +77,22 @@ const DataTableProducts = () => {
       renderCell: (params) => {
         const { _id, variations } = params.row;
         return (
-          <Box display="flex" width="100%" onClick={() => handleDetails(_id)} alignItems="center">
+          <Box
+            display="flex"
+            width="100%"
+            height="100%"
+            onClick={() => handleDetails(_id)}
+            alignItems="center"
+            justifyContent="center"
+            sx={{ py: 1 }}
+          >
             <img
               src={variations?.length ? variations[0].imageUrl : '/noImage.png'}
-              alt=""
+              alt="Producto"
               style={{
-                width: '100%',
-                borderRadius: '5px',
+                width: '60px',
+                height: '60px',
+                borderRadius: '15px',
                 cursor: 'pointer',
                 objectFit: 'cover',
               }}
@@ -108,7 +117,14 @@ const DataTableProducts = () => {
     {
       field: 'description',
       headerName: 'Descripción',
+      sortable: false,
       width: 500,
+    },
+    {
+      field: 'stock',
+      headerName: 'Stock',
+      width: 100,
+      valueGetter: (params) => `${params.row.variations[0]?.stock || 0}`,
     },
     {
       field: 'price',
