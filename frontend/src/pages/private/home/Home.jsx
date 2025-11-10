@@ -170,7 +170,7 @@ export const Home = () => {
         return total + discountAmount;
       }, 0);
 
-    // Pagos pendientes - suma de órdenes no pagadas completamente
+    // Pagos pendientes - suma de órdenes no pagadas completamente (FALTA CONTEMPLAR CUOTAS)
     const pendingPayments = salesOrders
       .filter((order) => order.paymentStatus !== 'Paid')
       .reduce((total, order) => total + (order.finalAmount || order.totalAmount || 0), 0);
@@ -351,7 +351,7 @@ export const Home = () => {
       <Grid container spacing={2} mb={3}>
         <Grid item xs={12} sm={6} md={3}>
           <MetricCard
-            title="Gastos"
+            title="Costo de oportunidad"
             value={formatCurrency(metrics.totalExpenses)}
             subtitle="Descuentos aplicados"
             icon={<Money />}

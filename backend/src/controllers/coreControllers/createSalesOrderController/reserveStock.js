@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const updateSalesOrderStatus = require('./updateSalesOrderStatus');
+const NotificationHelpers = require('../../../helpers/NotificationHelpers');
 const SalesOrder = mongoose.model('SalesOrder');
 const StockReservation = mongoose.model('StockReservation');
 
@@ -166,6 +167,22 @@ const reserveStock = async (req, res) => {
 
     // Actualizar el estado de la orden de venta
     await updateSalesOrderStatus(orderId);
+    
+    // Enviar notificación de stock reservado
+    try {
+      const populatedSalesOrder = await SalesOrder.findById(orderId).populate('customer').exec();
+      if (populatedSalesOrder && stockReservations.length > 0) {
+        await NotificationHelpers.onStockReserved(
+          stockReservations[0], // Usar la primera reserva como referencia
+          populatedSalesOrder,
+          req.admin?._id || req.user?._id
+        );
+      }
+    } catch (notificationError) {
+      console.error('Error sending stock reserved notification:', notificationError);
+      // No fallar la operación principal por un error de notificación
+    }
+    
     // comparar las cantidades de la orden con las cantidades reservadas
     
 

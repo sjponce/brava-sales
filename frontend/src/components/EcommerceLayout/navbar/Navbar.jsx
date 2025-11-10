@@ -25,6 +25,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toggleTheme } from '@/redux/themeReducer';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import NotificationCenter from '@/components/NotificationCenter/NotificationCenter';
+import useNotifications from '@/hooks/useNotifications';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts } from '@/redux/cart/selectors';
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
@@ -53,12 +55,14 @@ const Navbar = ({ toggleDrawer }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
   const cartProductStatus = useSelector(selectCartProducts);
   const orders = useSelector((store) => store.crud.filter)?.result?.result;
   const currentUser = useSelector(selectCurrentAdmin);
+  const { unreadCount } = useNotifications();
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
@@ -71,6 +75,14 @@ const Navbar = ({ toggleDrawer }) => {
   const handleOpenOrderDialog = () => {
     if (!currentUser.customer) return;
     dispatch(cart.openOrderDialog());
+  };
+
+  const handleNotificationClick = () => {
+    setNotificationOpen(true);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationOpen(false);
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -112,8 +124,10 @@ const Navbar = ({ toggleDrawer }) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Notificaciones" arrow>
-            <IconButton color="warning">
-              <Notifications />
+            <IconButton onClick={handleNotificationClick} color="warning">
+              <Badge badgeContent={unreadCount} color="error" invisible={unreadCount === 0}>
+                <Notifications />
+              </Badge>
             </IconButton>
           </Tooltip>
           <Tooltip title="Mis pedidos" arrow>
@@ -152,6 +166,10 @@ const Navbar = ({ toggleDrawer }) => {
         isOpen={dialogOpen}
         onCancel={() => setDialogOpen(false)}
         onAccept={() => navigate('/logout')}
+      />
+      <NotificationCenter
+        open={notificationOpen}
+        onClose={handleNotificationClose}
       />
     </Stack>
   );

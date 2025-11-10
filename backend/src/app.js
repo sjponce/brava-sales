@@ -15,6 +15,8 @@ const stockApiRouter = require('./routes/appRoutes/stockApi');
 
 const docsApiRouter = require('./routes/appRoutes/docsApi');
 
+const notificationApiRouter = require('./routes/appRoutes/notificationRoutes');
+
 const salesApiRouter = require('./routes/appRoutes/salesApi');
 
 const appApiRouter = require('./routes/appRoutes/appApi');
@@ -48,6 +50,11 @@ app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
 app.use('/api', userAuth.isValidAuthToken, salesApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
 app.use('/api', userAuth.isValidAuthToken, docsApiRouter);
+app.use('/api/notifications', userAuth.isValidAuthToken, notificationApiRouter);
+
+// SOLO PARA TESTING - REMOVER EN PRODUCCIÓN
+const testNotificationApiRouter = require('./routes/appRoutes/testNotificationRoutes');
+app.use('/api/test-notifications', userAuth.isValidAuthToken, testNotificationApiRouter);
 
 app.get('/', (req, res) => {
   res.send('Brava sales!!');
