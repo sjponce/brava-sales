@@ -105,8 +105,8 @@ class PaymentNotificationJob {
         
         // Enviar notificación si es múltiplo de 7 días (semanal) O si es el primer día para testing
         // MODO TESTING: Descomenta la línea siguiente para enviar todas las notificaciones
-        const shouldSendNotification = true; // TESTING MODE
-        // const shouldSendNotification = daysSinceCreated % 7 === 0 || daysSinceCreated === 0; // PRODUCTION MODE
+        // const shouldSendNotification = true; // TESTING MODE
+        const shouldSendNotification = daysSinceCreated % 7 === 0 || daysSinceCreated === 0; // PRODUCTION MODE
         
         if (shouldSendNotification) {
           await NotificationHelpers.onPaymentOverdue({

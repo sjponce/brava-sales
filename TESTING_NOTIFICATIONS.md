@@ -24,7 +24,7 @@
    - 🎯 **Se dispara**: Job automático diario
    - ⏰ **Frecuencia**: 3 días antes del vencimiento
 
-### 🔧 **Notificaciones Implementadas pero NO Conectadas**
+### 🔧 **Notificaciones Implementadas pero SIN CONECTAR**
 5. **PAYMENT_RECEIVED** - Pago recibido
 4. **ORDER_STATUS_CHANGED** - Cambio de estado
 7. **STOCK_SHIPPED** - Envío realizado
@@ -35,7 +35,7 @@
 
 ## 🧪 Métodos para Probar las Notificaciones
 
-### 1. **🎯 Usando Endpoints de Testing**
+### 1. **🎯 Usando Endpoints de Testing (terminal o postman)**
 
 Agregué endpoints especiales para probar cada tipo de notificación:
 
@@ -124,6 +124,12 @@ cron.schedule('0 9 * * *', async () => { // Diario a las 9 AM
 
 // A:
 cron.schedule('* * * * *', async () => { // Cada minuto
+```
+
+OPCIONAL: Activar modo testing en `PaymentNotificationJob.js` para enviar todas las notificaciones:
+```javascript
+const shouldSendNotification = true; // TESTING MODE
+// const shouldSendNotification = daysSinceCreated % 7 === 0 || daysSinceCreated === 0; // PRODUCTION MODE
 ```
 
 ---
