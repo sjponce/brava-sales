@@ -2,16 +2,13 @@ import { Box, Typography } from '@mui/material';
 import DataTableProducts from './components/DataTableProducts';
 
 const Products = () => (
-  <Box display="flex" flexDirection="column">
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      width="100%"
-      borderRadius={2}
-      marginBottom="20px">
-      <Typography variant="h4" color="primary">Productos</Typography>
+  <Box display="flex" flexDirection="column" height="100%" sx={{ flex: 1 }}>
+    <Typography variant="overline" color="primary" align="center">
+      Productos
+    </Typography>
+    <Box sx={{ flex: 1, minHeight: 0 }}>
+      <DataTableProducts />
     </Box>
-    <DataTableProducts />
   </Box>
 );
 

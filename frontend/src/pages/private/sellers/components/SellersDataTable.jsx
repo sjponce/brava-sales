@@ -141,7 +141,9 @@ const SellersDataTable = () => {
         return (
           <div className="actions">
             <IconButton disabled={isDisabled} onClick={() => handleEdit(id)} size="small">
-              <EditRounded />
+              <Tooltip title="Editar">
+                <EditRounded />
+              </Tooltip>
             </IconButton>
             <IconButton disabled={isDisabled} onClick={() => handleUpdatePassword(user._id)} size="small">
               <Tooltip title="Cambiar contraseña">
@@ -158,9 +160,8 @@ const SellersDataTable = () => {
       },
     },
   ];
-
   return (
-    <Box display="flex" height="100%">
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <DataTable columns={columns} rows={rows} />
       <CustomDialog
         title={`${selectedRow.enabled ? 'Deshabilitar' : 'Habilitar'}: ${selectedRow.name}`}

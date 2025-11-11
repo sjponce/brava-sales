@@ -17,27 +17,32 @@ const SalesOrders = () => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        borderRadius={2}
-        marginBottom="20px">
-        <Typography variant="h4" color="primary">Ordenes de venta</Typography>
-        <Button
-          onClick={handleClickOpen}
-          variant="text"
-          size="large"
-          color="primary"
-          data-test-id="AddButton"
-          startIcon={<AddCircle />}>
-          <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nueva Orden de Venta
-          </Typography>
-        </Button>
-      </Box>
+      <Typography variant="overline" color="primary" align="center">
+        Órdenes de Venta
+      </Typography>
       <AddOrderSalesModal open={open} handlerOpen={handleClose} idSalesOrder="" />
       <SalesOrdersDataTable />
+      <Button
+        variant="outlined"
+        color="success"
+        fullWidth
+        data-test-id="AddButton"
+        onClick={handleClickOpen}
+        sx={{
+          bottom: 1,
+          borderRadius: 3,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          boxShadow: 'none',
+          bgcolor: 'background.default',
+          ':hover': {
+            bgcolor: 'background.alternative',
+          },
+          alignSelf: 'center',
+        }}
+      >
+        <AddCircle sx={{ fontSize: 32 }} color="success" />
+      </Button>
     </Box>
   );
 };
