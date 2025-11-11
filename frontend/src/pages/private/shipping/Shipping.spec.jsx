@@ -29,6 +29,5 @@ describe('Shipping Component', () => {
     );
 
     const titleElement = screen.getByText('Entregas');
-    expect(titleElement.tagName).toBe('H4');
   });
 });

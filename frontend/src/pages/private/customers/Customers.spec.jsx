@@ -20,7 +20,7 @@ describe('Customers Component', () => {
       </Provider>
     );
 
-    const button = screen.getByText(/Nuevo cliente/i);
+    const button = screen.getByTestId("add-customer-button");
     fireEvent.click(button);
 
     setTimeout(() => {
@@ -46,7 +46,7 @@ describe('Customers Component', () => {
       </Provider>
     );
     setTimeout(() => {
-      const button = screen.getByText(/Nuevo cliente/i);
+      const button = screen.getByTestId("add-customer-button");
       expect(button).toBeDisabled();
     }, 0);
   });
@@ -58,7 +58,7 @@ describe('Customers Component', () => {
       </Provider>
     );
     
-    const button = screen.getByText(/Nuevo cliente/i);
+    const button = screen.getByTestId("add-customer-button");
     fireEvent.click(button);
 
     setTimeout(() => {
@@ -66,6 +66,6 @@ describe('Customers Component', () => {
       fireEvent.click(closeButton);
     }, 0);
 
-    expect(screen.queryByText(/Crear cliente/i)).not.toBeInTheDocument();
+    expect(screen.queryByTestId("SubmitButton")).not.toBeInTheDocument();
   });
 });

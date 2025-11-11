@@ -20,11 +20,11 @@ describe('Sellers Component', () => {
       </Provider>
     );
 
-    const button = screen.getByText(/Nuevo vendedor/i);
+    const button = screen.getByTestId("add-seller-button");
     fireEvent.click(button);
 
     setTimeout(() => {
-      expect(screen.getByText(/Crear vendendor/i)).toBeInTheDocument();
+      expect(screen.getByText(/Crear nuevo/i)).toBeInTheDocument();
     }, 0);
   });
 
@@ -48,7 +48,7 @@ describe('Sellers Component', () => {
       </Provider>
     );
     setTimeout(() => {
-      const button = screen.getByText(/Nuevo vendedor/i);
+      const button = screen.getByTestId("add-seller-button");
       expect(button).toBeDisabled();
     }, 0);
   });
@@ -60,7 +60,7 @@ describe('Sellers Component', () => {
       </Provider>
     );
     
-    const button = screen.getByText(/Nuevo vendedor/i);
+    const button = screen.getByTestId("add-seller-button");
     fireEvent.click(button);
 
     setTimeout(() => {
@@ -68,6 +68,6 @@ describe('Sellers Component', () => {
       fireEvent.click(closeButton);
     }, 0);
 
-    expect(screen.queryByText(/Crear vendendor/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Crear nuevo/i)).not.toBeInTheDocument();
   });
 });
