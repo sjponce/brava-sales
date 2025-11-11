@@ -27,6 +27,7 @@ const Sellers = () => {
       <Button
         variant="outlined"
         color="success"
+        data-test-id="add-seller-button"
         fullWidth
         onClick={handleClickOpen}
         disabled={userState.role !== 'admin'}

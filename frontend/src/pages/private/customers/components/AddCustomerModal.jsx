@@ -129,7 +129,7 @@ const AddCustomerModal = ({
           <Typography variant="h4" color="primary">
             {isUpdate ? 'Editar cliente ' : 'Crear cliente'}
           </Typography>
-          <IconButton onClick={() => handleClose()}>
+          <IconButton aria-label="close" onClick={() => handleClose()}>
             <Close />
           </IconButton>
         </Box>
@@ -145,6 +145,7 @@ const AddCustomerModal = ({
           <Button
             type="submit"
             variant="contained"
+            data-testid="SubmitButton"
             color="primary"
             disabled={isLoading}
             size="large"

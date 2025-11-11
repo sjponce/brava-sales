@@ -24,6 +24,7 @@ const Customers = () => {
       <Button
         variant="outlined"
         color="success"
+        data-test-id="add-customer-button"
         fullWidth
         onClick={handleClickOpen}
         sx={{

@@ -26,6 +26,7 @@ const SalesOrders = () => {
         variant="outlined"
         color="success"
         fullWidth
+        data-test-id="AddButton"
         onClick={handleClickOpen}
         sx={{
           bottom: 1,
