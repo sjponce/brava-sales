@@ -5,6 +5,7 @@ const SalesOrder = mongoose.model('SalesOrder');
 const PriceHistory = mongoose.model('PriceHistory');
 const User = mongoose.model('User');
 const { MONTHLY_INTEREST_RATE } = require('../../../utils/constants');
+const NotificationHelpers = require('../../../helpers/NotificationHelpers');
 
 const getLatestPrice = async (productId) => {
   const latestPrice = await PriceHistory.findOne({ product: productId })
@@ -116,6 +117,17 @@ const create = async (req, res) => {
       await SalesOrder.findByIdAndDelete(salesOrder._id);
       throw installmentError; // Re-throw the error to be caught by the outer catch block
     }
+
+    // Populate customer data para la notificación
+    const populatedSalesOrder = await SalesOrder.findById(salesOrder._id)
+      .populate('customer')
+      .exec();
+
+    // Disparar notificación de orden creada
+    await NotificationHelpers.onOrderCreated(
+      populatedSalesOrder, 
+      salesOrderData.responsible // Usuario que creó la orden
+    );
 
     // Returning successfull response
     return res.status(200).json({

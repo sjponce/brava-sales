@@ -30,6 +30,7 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import sales from '@/redux/sales/actions';
 import crud from '@/redux/crud/actions';
 
@@ -87,8 +88,8 @@ const ClientsReport = () => {
   const salesOrders = useSelector((store) => store.sales.listAll?.result?.items?.result);
   const [clientChartData, setClientChartData] = useState({});
   const [showRevenue, setShowRevenue] = useState(true);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(() => dayjs().startOf('day').subtract(3, 'month'));
+  const [endDate, setEndDate] = useState(() => dayjs().startOf('day'));
   const [selectedClients, setSelectedClients] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const dispatch = useDispatch();

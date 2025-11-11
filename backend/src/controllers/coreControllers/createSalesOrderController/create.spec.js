@@ -3,11 +3,19 @@ const mongoose = require('mongoose');
 const create = require('./create');
 const { getLatestPrice } = require('./create');
 
+// Mock NotificationHelpers
+jest.mock('../../../helpers/NotificationHelpers', () => ({
+  onOrderCreated: jest.fn().mockResolvedValue(true),
+}));
+
 jest.mock('mongoose', () => {
   const mSaveOrder = jest.fn().mockResolvedValue({
-    message: 'La Orden de venta se creo correctamente',
-    result: { salesOrder: { totalAmount: 800 } },
-    success: true,
+    _id: 'order123',
+    salesOrderCode: 'OV-001',
+    customer: 'customer1',
+    totalAmount: 800,
+    finalAmount: 500,
+    orderDate: new Date(),
   });
   const mSaveInstallment = function () {
     this.save = jest.fn().mockResolvedValue({});
@@ -25,9 +33,19 @@ jest.mock('mongoose', () => {
   };
 
   SalesOrderModel.findOne = jest.fn().mockReturnValue({
-    exec: jest.fn(),
+    exec: jest.fn().mockResolvedValue({ salesOrderCode: 'OV-000' }),
     sort: jest.fn().mockReturnThis(),
     limit: jest.fn().mockReturnThis(),
+  });
+
+  SalesOrderModel.findById = jest.fn().mockReturnValue({
+    populate: jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue({
+        _id: 'order123',
+        customer: { name: 'Test Customer' },
+        salesOrderCode: 'OV-001',
+      }),
+    }),
   });
 
   const InstallmentModel = function () {
@@ -71,6 +89,9 @@ describe('create', () => {
           { product: 'product2', sizes: [{ quantity: 3 }] },
         ],
         installmentsCount: 2,
+        discount: 0,
+        finalAmount: 840, // totalAmount: 800, con interés (2 cuotas): 800 + (800 * 0.05 * 1) = 840
+        responsible: 'user123',
       },
     };
     res = {
