@@ -136,10 +136,6 @@ const stock = {
           keyState: 'update',
           payload: data.result,
         });
-        dispatch({
-          type: actionTypes.CURRENT_ITEM,
-          payload: data.result,
-        });
       } else {
         dispatch({
           type: actionTypes.REQUEST_FAILED,
