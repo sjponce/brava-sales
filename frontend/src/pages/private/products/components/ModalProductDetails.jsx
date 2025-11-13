@@ -27,7 +27,7 @@ const SytledModal = styled(Modal)({
 });
 
 const ModalProductDetails = ({
-  open, handlerOpen, isUpdate,
+  open, handlerOpen, isUpdate, stockId,
 }) => {
   const productData = useSelector(selectCurrentItem);
 
@@ -39,7 +39,6 @@ const ModalProductDetails = ({
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const updateProduct = async (data) => {
-    // console.log(data);
     const dataProduct = {
       description: data.description,
       tags: data.tags,
@@ -63,15 +62,19 @@ const ModalProductDetails = ({
   useEffect(() => {
     if (productData?.result) {
       dispatch(crud.listAll({ entity: 'tag' }));
-      setValue('promotionalName', productData.result.promotionalName);
-      setValue('color', productData.result.stockInfo[0]?.color);
-      setValue('description', productData.result.description);
-      setValue('price', productData.result.price);
-      setValue('imageUrl', productData.result.stockInfo[0]?.imageUrl);
-      setValue('stock', productData.result.stockInfo[0]?.stock);
-      setValue('productVariation', productData.result.stockInfo[0]?.productVariation);
-      setValue('tags', productData.result.tags);
-      console.log(productData.result);
+      const product = {
+        ...productData?.result,
+        stockInfo: productData?.result?.stockInfo?.find(((item) => item.id === stockId))
+      };
+
+      setValue('promotionalName', product?.promotionalName);
+      setValue('color', product?.stockInfo?.color);
+      setValue('description', product?.description);
+      setValue('price', product?.price);
+      setValue('imageUrl', product?.stockInfo?.imageUrl);
+      setValue('stock', product?.stockInfo?.stock);
+      setValue('productVariation', product?.stockInfo?.productVariation);
+      setValue('tags', product?.tags?.filter((tag) => tag.category !== 'color'));
     }
   }, [productData]);
 
