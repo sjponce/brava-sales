@@ -7,13 +7,21 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import tagsArray from '@/utils/tags';
+import { useSelector } from 'react-redux';
 
 const EditProductForm = ({ register, setValue, watch }) => {
   const handlePriceChange = (event) => {
     const filteredValue = event.target.value.replace(/[^0-9.]/g, '');
     setValue('price', filteredValue);
   };
+  const tags = useSelector((store) => store.crud?.listAll?.result?.items?.result);
+  const sortedTags = Array.isArray(tags)
+    ? [...tags].sort((a, b) => {
+      if (a.category < b.category) return -1;
+      if (a.category > b.category) return 1;
+      return 0;
+    })
+    : [];
 
   return (
     <Box sx={{ overflowY: 'auto', height: '60vh', padding: 1 }}>
@@ -43,9 +51,7 @@ const EditProductForm = ({ register, setValue, watch }) => {
         </Box>
         <Box display="flex" flexDirection="column" width="100%" gap={2} justifyContent="center">
           <Typography variant="h5">
-            {watch('name')}
-            {' '}
-            {watch('color')}
+            {watch('promotionalName')}
           </Typography>
           <TextField
             name="price"
@@ -74,12 +80,14 @@ const EditProductForm = ({ register, setValue, watch }) => {
         multiple
         fullWidth
         id="tags-standard"
-        options={tagsArray}
+        options={sortedTags}
         getOptionLabel={(option) => option?.name || ''}
         groupBy={(option) => option?.category}
         defaultValue={watch('tags') || []}
-        filterSelectedOptions
-        isOptionEqualToValue={(option, value) => option.id === value.id}
+        onChange={(_, newValue) => {
+          setValue('tags', newValue);
+        }}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
         renderInput={(params) => (
           <TextField {...params} variant="outlined" label="Tags" margin="normal" />
         )}
@@ -87,11 +95,19 @@ const EditProductForm = ({ register, setValue, watch }) => {
           const { key, ...otherProps } = getTagProps({ index });
           return <Chip key={key} label={`${option.name}`} {...otherProps} />;
         })}
+        renderGroup={(params) => (
+          <li key={params.key}>
+            <Typography color="secondary" ml={2} variant="overline">
+              {params.group}
+            </Typography>
+            {params.children}
+          </li>
+        )}
         renderOption={(props, option) => {
           const { key, ...otherProps } = props;
           return (
             <Box component="li" key={key} {...otherProps}>
-              <Typography variant="subtitle1">{option.name}</Typography>
+              <Typography ml={2} variant="caption">{option.name}</Typography>
             </Box>
           );
         }}

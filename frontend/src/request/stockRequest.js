@@ -20,9 +20,9 @@ export const stockRequest = {
       return errorHandler(error);
     }
   },
-  update: async ({ entity, id, jsonData }) => {
+  update: async ({ id, jsonData }) => {
     try {
-      const response = await axios.put(`${entity}/update/${id}`, jsonData);
+      const response = await axios.put(`stock/update/${id}`, jsonData);
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,

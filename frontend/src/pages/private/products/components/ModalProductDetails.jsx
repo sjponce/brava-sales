@@ -18,6 +18,7 @@ import ProductDetailsForm from '@/forms/ProductDetailsForm';
 import EditProductForm from '@/forms/EditProductForm';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import crud from '@/redux/crud/actions';
+import stock from '@/redux/stock/actions';
 
 const SytledModal = styled(Modal)({
   display: 'flex',
@@ -38,14 +39,19 @@ const ModalProductDetails = ({
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const updateProduct = async (data) => {
-    console.log(data);
+    // console.log(data);
+    const dataProduct = {
+      description: data.description,
+      tags: data.tags,
+      price: parseFloat(data.price),
+    };
+
     try {
       await dispatch(
-        crud.update({
-          entity: 'product',
+        stock.update({
           id: productData.result._id,
           jsonData: {
-            ...data,
+            ...dataProduct,
           },
         }),
       );
@@ -56,14 +62,16 @@ const ModalProductDetails = ({
 
   useEffect(() => {
     if (productData?.result) {
+      dispatch(crud.listAll({ entity: 'tag' }));
       setValue('promotionalName', productData.result.promotionalName);
-      setValue('color', productData.result.color);
+      setValue('color', productData.result.stockInfo[0]?.color);
       setValue('description', productData.result.description);
       setValue('price', productData.result.price);
       setValue('imageUrl', productData.result.stockInfo[0]?.imageUrl);
       setValue('stock', productData.result.stockInfo[0]?.stock);
       setValue('productVariation', productData.result.stockInfo[0]?.productVariation);
       setValue('tags', productData.result.tags);
+      console.log(productData.result);
     }
   }, [productData]);
 
