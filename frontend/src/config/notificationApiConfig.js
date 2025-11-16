@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const NOTIFICATION_API_BASE_URL = 'http://localhost:8080/api/notifications';
+const NOTIFICATION_API_BASE_URL = 'https://localhost:443/api/notifications';
 
 export const notificationApi = {
   // Obtener notificaciones del usuario
