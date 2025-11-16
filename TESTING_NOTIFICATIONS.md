@@ -42,42 +42,42 @@ Agregué endpoints especiales para probar cada tipo de notificación:
 ```bash
 
 # 1. Cambio de estado de orden
-curl -X POST http://localhost:8080/api/test-notifications/test/order-status-changed \
+curl -X POST https://localhost:443/api/test-notifications/test/order-status-changed \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 2. Pago recibido
-curl -X POST http://localhost:8080/api/test-notifications/test/payment-received \
+curl -X POST https://localhost:443/api/test-notifications/test/payment-received \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 3. Stock reservado
-curl -X POST http://localhost:8080/api/test-notifications/test/stock-reserved \
+curl -X POST https://localhost:443/api/test-notifications/test/stock-reserved \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 4. Envío realizado  
-curl -X POST http://localhost:8080/api/test-notifications/test/stock-shipped \
+curl -X POST https://localhost:443/api/test-notifications/test/stock-shipped \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 5. Cliente registrado
-curl -X POST http://localhost:8080/api/test-notifications/test/customer-registered \
+curl -X POST https://localhost:443/api/test-notifications/test/customer-registered \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 6. Pago vencido (simula datos vencidos)
-curl -X POST http://localhost:8080/api/test-notifications/test/payment-overdue \
+curl -X POST https://localhost:443/api/test-notifications/test/payment-overdue \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 7. Cuota próxima a vencer
-curl -X POST http://localhost:8080/api/test-notifications/test/installment-due \
+curl -X POST https://localhost:443/api/test-notifications/test/installment-due \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 
 # 8. Ejecutar job de cron manualmente
-curl -X POST http://localhost:8080/api/test-notifications/test/payment-job \
+curl -X POST https://localhost:443/api/test-notifications/test/payment-job \
   -H "Content-Type: application/json" \
   -H "Cookie: token=TU_TOKEN_ADMIN"
 ```
