@@ -28,6 +28,9 @@ const userAuth = require('./controllers/coreControllers/userAuth');
 // create our Express app
 const app = express();
 
+// When running behind a proxy/ingress, this ensures req.secure reflects HTTPS
+app.set('trust proxy', 1);
+
 app.use(
   cors({
     origin: true,

@@ -19,7 +19,7 @@ const authUser = async (
         forcePasswordReset: user.forcePasswordReset,
       },
       process.env.JWT_SECRET,
-      { expiresIn: req.body.remember ? 5 * 24 + 'h' : '24h' }
+      { expiresIn: req.body.remember ? '120h' : '24h' }
     );
 
     await UserPasswordModel.findOneAndUpdate(
@@ -32,15 +32,33 @@ const authUser = async (
 
     res
       .status(200)
-      .cookie('token', token, {
-        maxAge: req.body.remember ? 5 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
-        sameSite: 'Lax',
-        httpOnly: true,
-        secure: false,
-        domain: req.hostname,
-        path: '/',
-        Partitioned: true,
-      })
+      .cookie('token', token, (function () {
+        const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+        const maxAge = req.body.remember ? 5 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+        const sameSite = isHttps ? 'None' : 'Lax';
+        const secure = !!isHttps;
+        const cookieDomain = process.env.COOKIE_DOMAIN;
+
+        const options = {
+          maxAge,
+          sameSite,
+          httpOnly: true,
+          secure,
+          path: '/',
+        };
+
+        // Only set domain if explicitly configured and not localhost
+        if (cookieDomain && cookieDomain !== 'localhost') {
+          options.domain = cookieDomain;
+        }
+
+        // Only set Partitioned when sent over HTTPS with SameSite=None
+        if (secure && sameSite === 'None') {
+          options.Partitioned = true;
+        }
+
+        return options;
+      })())
       .json({
         success: true,
         result: {
