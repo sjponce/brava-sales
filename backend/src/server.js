@@ -1,7 +1,10 @@
+/* eslint-disable no-undef */
 require('module-alias/register');
 const mongoose = require('mongoose');
 const { globSync } = require('glob');
 const path = require('path');
+const https = require('https');
+const fs = require('fs');
 
 // Make sure we are running node 7.6+
 const [major] = process.versions.node.split('.').map(Number.parseFloat);
@@ -34,9 +37,29 @@ const NotificationScheduler = require('./schedulers/NotificationScheduler');
 
 // Start our app!
 const app = require('./app');
-app.set('port', process.env.PORT || 8080);
-const server = app.listen(app.get('port'), () => {
-  console.log(`Express running → On PORT : ${server.address().port}`);
+app.set('port', process.env.PORT || 443);
+
+// Configurar HTTPS - buscar certificados en frontend/
+const certPath = path.join(__dirname, '../../frontend/localhost+2.pem');
+const keyPath = path.join(__dirname, '../../frontend/localhost+2-key.pem');
+
+let server;
+if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
+  const options = {
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath),
+  };
+  server = https.createServer(options, app);
+  console.log('🔒 HTTPS habilitado');
+} else {
+  // Usar require('http') para HTTP puro
+  const http = require('http');
+  server = http.createServer(app);
+  console.log('⚠️ Certificados no encontrados, usando HTTP');
+}
+
+server.listen(app.get('port'), () => {
+  console.log(`Express running → On PORT : ${app.get('port')}`);
   
   // Iniciar el scheduler después de que el servidor esté corriendo
   NotificationScheduler.start();
