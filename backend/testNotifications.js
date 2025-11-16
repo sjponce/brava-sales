@@ -24,7 +24,7 @@ const connectDB = async () => {
 };
 
 // Configurar axios para las pruebas
-const baseURL = `http://localhost:${process.env.PORT || 8080}/api`;
+const baseURL = `http://localhost:${process.env.PORT || 443}/api`;
 
 const testAPI = async (endpoint, description, data = {}) => {
   try {
