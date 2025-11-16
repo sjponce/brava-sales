@@ -3,13 +3,8 @@ require('module-alias/register');
 const mongoose = require('mongoose');
 const { globSync } = require('glob');
 const path = require('path');
-<<<<<<< HEAD
-const fs = require('fs');
-const https = require('https');
-=======
 const https = require('https');
 const fs = require('fs');
->>>>>>> de284660bd3746a44be08e7f71b15da2aadc5879
 
 // Make sure we are running node 20+
 const [major] = process.versions.node.split('.').map(Number.parseFloat);
@@ -41,23 +36,6 @@ const NotificationScheduler = require('./schedulers/NotificationScheduler');
 
 // Start Express
 const app = require('./app');
-<<<<<<< HEAD
-
-// ===== HTTPS CONFIG =====
-// Replace with the correct path to your SSL certs (from mkcert or Let's Encrypt)
-const sslOptions = {
-  key: fs.readFileSync(path.resolve(__dirname, 'localhost+2-key.pem')),
-  cert: fs.readFileSync(path.resolve(__dirname, 'localhost+2.pem')),
-};
-
-// Use environment variable for port or default to 443 for HTTPS
-const PORT = process.env.PORT || 443;
-
-const httpsServer = https.createServer(sslOptions, app);
-
-httpsServer.listen(PORT, () => {
-  console.log(`✅ HTTPS Server running → https://localhost:${PORT}`);
-=======
 app.set('port', process.env.PORT || 443);
 
 // Configurar HTTPS - buscar certificados en frontend/
@@ -83,6 +61,5 @@ server.listen(app.get('port'), () => {
   console.log(`Express running → On PORT : ${app.get('port')}`);
   
   // Iniciar el scheduler después de que el servidor esté corriendo
->>>>>>> de284660bd3746a44be08e7f71b15da2aadc5879
   NotificationScheduler.start();
 });
