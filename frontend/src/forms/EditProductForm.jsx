@@ -80,7 +80,7 @@ const EditProductForm = ({ register, setValue, watch }) => {
         multiple
         fullWidth
         id="tags-standard"
-        options={sortedTags}
+        options={sortedTags?.filter((tag) => tag.category !== 'color') || []}
         getOptionLabel={(option) => option?.name || ''}
         groupBy={(option) => option?.category}
         defaultValue={watch('tags') || []}

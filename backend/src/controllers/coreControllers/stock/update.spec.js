@@ -1,7 +1,5 @@
-// Mock getLatestPrice before requiring update
 jest.mock('./getLatestPrice', () => jest.fn());
 
-// Mock mongoose models before requiring the module under test
 const mockFindById = jest.fn();
 const mockFindByIdAndUpdate = jest.fn();
 const mockPriceHistoryInstance = {
