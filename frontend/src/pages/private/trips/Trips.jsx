@@ -2,8 +2,8 @@ import { Box, Button, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import AddTripModal from './components/AddTripModal';
-import TripsDataTable from './components/TripsDataTable';
+import AddTravelModal from './components/AddTravelModal';
+import TravelsDataTable from './components/TravelsDataTable';
 
 const Trips = () => {
   const [open, setOpen] = useState(false);
@@ -18,9 +18,9 @@ const Trips = () => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <AddTripModal open={open} handlerOpen={handleClose} idTrip="" />
+      <AddTravelModal open={open} handlerOpen={handleClose} idTrip="" />
       <Typography variant="overline" color="primary" align="center">Viajes</Typography>
-      <TripsDataTable />
+      <TravelsDataTable />
       <Button
         variant="outlined"
         color="success"

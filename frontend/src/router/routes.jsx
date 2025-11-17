@@ -10,6 +10,7 @@ import HomeEcommerce from '@/pages/private/ecommerce/HomeEcommerce';
 import Reports from '@/pages/private/reports/ClientsReport';
 import NotFound from '@/components/NotFound';
 import Trips from '@/pages/private/trips/Trips';
+import TravelDetails from '@/pages/private/trips/TravelDetails';
 import ProductsReport from '@/pages/private/reports/ProductsReport';
 
 const Logout = lazy(() => import('@/pages/Logout.jsx'));
@@ -66,6 +67,10 @@ const routes = {
         {
           path: '/trips',
           element: <Trips />,
+        },
+        {
+          path: '/trips/:id',
+          element: <TravelDetails />,
         },
         {
           path: '/sales-orders',
@@ -184,6 +189,10 @@ export const routesSellers = {
         {
           path: '/trips',
           element: <Trips />,
+        },
+        {
+          path: '/trips/:id',
+          element: <TravelDetails />,
         },
       ],
     },

@@ -17,6 +17,9 @@ if (major < 20) {
 require('dotenv').config({ path: '.env' });
 require('dotenv').config({ path: '.env.local' });
 
+// Allow self-signed certificates in dev if explicitly enabled
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 // Connect to MongoDB
 mongoose.connect(process.env.DATABASE);
 
@@ -33,6 +36,7 @@ for (const filePath of modelsFiles) {
 
 // Initialize scheduler
 const NotificationScheduler = require('./schedulers/NotificationScheduler');
+const TravelScheduler = require('./schedulers/TravelScheduler');
 
 // Start Express
 const app = require('./app');
@@ -59,7 +63,8 @@ if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
 
 server.listen(app.get('port'), () => {
   console.log(`Express running → On PORT : ${app.get('port')}`);
-  
+
   // Iniciar el scheduler después de que el servidor esté corriendo
   NotificationScheduler.start();
+  TravelScheduler.start();
 });
