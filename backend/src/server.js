@@ -18,7 +18,9 @@ require('dotenv').config({ path: '.env' });
 require('dotenv').config({ path: '.env.local' });
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE);
+mongoose.connect(process.env.DATABASE, {
+  autoIndex: true, // Crear índices automáticamente
+});
 
 mongoose.connection.on('error', (error) => {
   console.log('1. 🔥 Check your .env file and add your MongoDB URL');

@@ -114,6 +114,19 @@ export const stockRequest = {
       return errorHandler(error);
     }
   },
+  listAllCatalog: async ({ entity }) => {
+    try {
+      const response = await axios.get(`${entity}/catalog`);
+
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
 
   post: async ({ entity, jsonData }) => {
     try {
@@ -176,7 +189,7 @@ export const stockRequest = {
     } catch (error) {
       return errorHandler(error);
     }
-  }
+  },
 };
 
 export default stockRequest;
