@@ -47,5 +47,3 @@ const travels = {
 };
 
 export default travels;
-
-

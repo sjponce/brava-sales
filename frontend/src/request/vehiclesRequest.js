@@ -5,5 +5,3 @@ const vehiclesRequest = {
 };
 
 export default vehiclesRequest;
-
-

@@ -94,5 +94,3 @@ const AddTravelModal = ({ open, handlerOpen }) => {
 };
 
 export default AddTravelModal;
-
-

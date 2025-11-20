@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -31,12 +30,13 @@ const bultosFromOrder = (order) => {
   );
 };
 
-const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos, currentBultos }) => {
+const AssignOrdersModal = ({
+  open, onClose, travelId, onAssigned, capacityBultos, currentBultos }) => {
   const dispatch = useDispatch();
   const listState = useSelector((store) => store.crud.listAll);
   const [selected, setSelected] = useState({});
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [loadingStock, setLoadingStock] = useState(false);
+  // const [loadingStock, setLoadingStock] = useState(false);
   const [stockMap, setStockMap] = useState({});
   const [expanded, setExpanded] = useState({});
 
@@ -62,7 +62,7 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
         return;
       }
       try {
-        setLoadingStock(true);
+        // setLoadingStock(true);
         // collect unique idStock
         const idSet = new Set();
         pending.forEach((o) => {
@@ -73,9 +73,11 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
         const stockDataMap = stockRes?.result || {};
 
         const hasSufficientStock = (order) => {
+          // eslint-disable-next-line no-restricted-syntax
           for (const prod of order.products || []) {
             const sizes = prod.sizes || [];
             const stockSizes = stockDataMap[prod.idStock] || [];
+            // eslint-disable-next-line no-restricted-syntax
             for (const sz of sizes) {
               const availableRow = stockSizes.find((s) => s.number === Number(sz.size));
               const availableQty = availableRow ? Number(availableRow.stock) : 0;
@@ -94,18 +96,16 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
         setFilteredOrders([]);
         setStockMap({});
       } finally {
-        setLoadingStock(false);
+        // setLoadingStock(false);
       }
     };
     computeAvailability();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders, open]);
 
   const totalSelectedBultos = useMemo(
-    () =>
-      filteredOrders
-        .filter((o) => selected[o._id])
-        .reduce((sum, o) => sum + bultosFromOrder(o), 0),
+    () => filteredOrders
+      .filter((o) => selected[o._id])
+      .reduce((sum, o) => sum + bultosFromOrder(o), 0),
     [filteredOrders, selected]
   );
 
@@ -157,12 +157,12 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
                   <TableRow key={o._id}>
                     <TableCell>
                       <FormControlLabel
-                        control={
+                        control={(
                           <Checkbox
                             checked={!!selected[o._id]}
                             onChange={() => toggle(o._id)}
-                          />
-                        }
+                        />
+                        )}
                       />
                     </TableCell>
                     <TableCell>{o.salesOrderCode}</TableCell>
@@ -231,5 +231,3 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
 };
 
 export default AssignOrdersModal;
-
-
