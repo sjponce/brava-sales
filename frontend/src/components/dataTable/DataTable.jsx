@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar, esES } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 
 const DataTable = ({
-  columns, rows, rowHeight, filter,
+  columns, rows, rowHeight, filter
 }) => (
   <Box
     className="dataTable"
@@ -27,7 +27,10 @@ const DataTable = ({
           },
         },
       }}
-      slots={{ toolbar: GridToolbar }}
+      slots={{
+        toolbar: GridToolbar,
+        noRowsOverlay: () => null,
+      }}
       slotProps={{
         toolbar: {
           showQuickFilter: true,

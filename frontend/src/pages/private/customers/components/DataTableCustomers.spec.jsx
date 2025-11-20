@@ -114,13 +114,11 @@ describe('DataTableCustomers Component', () => {
         <DataTableCustomers />
       </Provider>
     );
+
     await waitFor(() => {
-      const { crud } = mockStore.getState();
-      const { listAll } = crud;
-      return listAll.isSuccess && !listAll.isLoading;
+      expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
     });
 
-    expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
     expect(screen.getByText(/john@example.com/i)).toBeInTheDocument();
   });
 
@@ -133,7 +131,7 @@ describe('DataTableCustomers Component', () => {
           ...initialState.crud,
           listAll: {
             ...initialState.crud.listAll,
-            isLoading: false,
+            isLoading: true,
           },
         },
       },
@@ -143,13 +141,10 @@ describe('DataTableCustomers Component', () => {
         <DataTableCustomers />
       </Provider>
     );
-    await waitFor(() => {
-      const { crud } = mockStore.getState();
-      const { listAll } = crud;
-      return listAll.isLoading;
-    });
 
-    const loadingComponent = screen.getByTestId('loading-backdrop');
-    expect(loadingComponent).toBeInTheDocument();
+    await waitFor(() => {
+      const loadingComponent = screen.getByTestId('loading-backdrop');
+      expect(loadingComponent).toBeInTheDocument();
+    });
   });
 });

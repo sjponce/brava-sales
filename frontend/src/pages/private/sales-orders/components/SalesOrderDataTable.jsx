@@ -163,7 +163,7 @@ const SalesOrderDataTable = () => {
 
   return (
     <Box display="flex" height="100%">
-      <DataTable columns={columns} rows={rows} />
+      <DataTable columns={columns} rows={salesOrderState?.isLoading ? [] : rows} />
       <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
       <Loading
         isLoading={
