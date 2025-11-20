@@ -104,7 +104,7 @@ const TripsDataTable = () => {
 
   return (
     <Box display="flex" height="100%">
-      <DataTable columns={columns} rows={rows} />
+      <DataTable columns={columns} rows={tripState?.isLoading ? [] : rows} />
       <CustomDialog
         title="Eliminar viaje"
         text="Esta acción no se puede deshacer, ¿Desea continuar?"

@@ -21,6 +21,7 @@ import TwoColorCircle from '@/components/TwoColorCircle';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts } from '@/redux/cart/selectors';
 import getProductImageMap from '@/utils/getProductImageMap';
+import Loading from '@/components/Loading';
 
 const StyledCard = styled(Card)(() => ({
   height: '100%',
@@ -243,6 +244,7 @@ const ProductCatalog = () => {
           </Grid>
         ))}
       </Grid>
+      <Loading isLoading={productState?.isLoading} />
       {expandedImage && (
         <Dialog open={!!expandedImage} onClose={handleCloseImage}>
           <DialogContent>

@@ -96,16 +96,12 @@ describe('SalesOrderDataTable Component', () => {
         </Router>
       </Provider>
     );
+
     await waitFor(() => {
-      const { sales } = mockStore.getState();
-      const { listAll } = sales;
-      return listAll.isSuccess && !listAll.isLoading;
+      expect(screen.getByText(/SO001/i)).toBeInTheDocument();
     });
 
-    setTimeout(() => {
-      expect(screen.getByText(/SO001/i)).toBeInTheDocument();
-      expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
-    }, 0);
+    expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
   });
 
   test('test_loading_indicator', async () => {
@@ -129,14 +125,10 @@ describe('SalesOrderDataTable Component', () => {
         </Router>
       </Provider>
     );
+
     await waitFor(() => {
-      const { sales } = mockStore.getState();
-      const { listAll } = sales;
-      return listAll.isLoading;
-    });
-    setTimeout(() => {
-      const loadingComponent = screen.getByRole('progressbar');
+      const loadingComponent = screen.getByTestId('loading-backdrop');
       expect(loadingComponent).toBeInTheDocument();
-    }, 0);
+    });
   });
 });

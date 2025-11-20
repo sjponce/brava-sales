@@ -32,6 +32,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import stock from '@/redux/stock/actions';
 import sales from '@/redux/sales/actions';
+import Loading from '@/components/Loading';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -544,6 +545,7 @@ const ProductsReport = () => {
           )}
         </Box>
       </Paper>
+      <Loading isLoading={!products || !salesOrders} />
     </Box>
   );
 };

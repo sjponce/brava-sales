@@ -162,7 +162,7 @@ const SellersDataTable = () => {
   ];
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <DataTable columns={columns} rows={rows} />
+      <DataTable columns={columns} rows={sellerState?.isLoading ? [] : rows} />
       <CustomDialog
         title={`${selectedRow.enabled ? 'Deshabilitar' : 'Habilitar'}: ${selectedRow.name}`}
         text="Esta acción no se puede deshacer, ¿Desea continuar?"
