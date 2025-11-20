@@ -94,6 +94,20 @@ const ProductCatalog = ({ handleModal }) => {
     setSearchTerm('');
   };
 
+  // Helper para detectar si un producto es nuevo (dentro de 21 días)
+  const isProductNew = (createdAt) => {
+    if (!createdAt) return false;
+    try {
+      const productDate = new Date(createdAt);
+      const currentDate = new Date();
+      const timeDiffMs = currentDate - productDate;
+      return timeDiffMs < (21 * 24 * 60 * 60 * 1000);
+    } catch (error) {
+      console.error('Error parsing createdAt date:', error);
+      return false;
+    }
+  };
+
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Stack spacing={2}>
@@ -146,7 +160,12 @@ const ProductCatalog = ({ handleModal }) => {
           }}
         >
           {filteredProducts.map((product) => (
-            <StyledCard key={product._id}>
+            <StyledCard
+              key={product._id}
+              sx={{
+                opacity: product.enabled ? 1 : 0.6,
+              }}
+            >
               <ImageContainer>
                 <StyledCardMedia
                   image={imageProducts[product.stockId]?.imageUrl}
@@ -159,6 +178,39 @@ const ProductCatalog = ({ handleModal }) => {
                     )
                   }
                 />
+                {isProductNew(product.createdAt) && (
+                  <Chip
+                    label="Nuevo"
+                    size="small"
+                    variant="outlined"
+                    color="warning"
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                      height: 24,
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      backgroundColor: 'background.paper',
+                    }}
+                  />
+                )}
+                {!product.enabled && (
+                  <Chip
+                    label="No publicado"
+                    size="small"
+                    sx={{
+                      position: 'absolute',
+                      bottom: 8,
+                      left: 8,
+                      height: 24,
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      backgroundColor: '#9e9e9e',
+                      color: 'white',
+                    }}
+                  />
+                )}
                 <EditButton
                   className="edit-button"
                   size="small"

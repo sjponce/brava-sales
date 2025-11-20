@@ -188,5 +188,3 @@ const AddTravelForm = ({ setValue, watch }) => {
 };
 
 export default AddTravelForm;
-
-

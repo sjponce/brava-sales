@@ -12,6 +12,7 @@ import {
   Box,
   Dialog,
   DialogContent,
+  Chip,
 } from '@mui/material';
 import { AddShoppingCart, RemoveShoppingCart } from '@mui/icons-material';
 import stock from '@/redux/stock/actions';
@@ -31,7 +32,11 @@ const StyledCard = styled(Card)(() => ({
 }));
 
 const StyledCardMedia = styled(CardMedia)({
-  paddingTop: '56.25%',
+  paddingTop: '0',
+  width: '100%',
+  height: 300,
+  objectFit: 'cover',
+  objectPosition: 'center',
 });
 
 const StyledCardContent = styled(CardContent)({
@@ -54,20 +59,21 @@ const ProductCatalog = () => {
     setExpandedImage('');
   };
 
-  const productState = useSelector((store) => store.stock.listAll);
+  const productState = useSelector((store) => store.stock.listAllCatalog);
 
   const updateTable = async () => {
     if (productState?.isLoading) return;
-    dispatch(stock.listAll({ entity: 'stock' }));
+    dispatch(stock.listAllCatalog({ entity: 'stock' }));
   };
 
-  const handleImageByColor = (stockId, imageUrl, color, id) => {
+  const handleImageByColor = (stockId, imageUrl, color, id, quantity) => {
     setImageProducts((prevImages) => ({
       ...prevImages,
       [stockId]: {
         imageUrl,
         color,
         id,
+        quantity,
       },
     }));
   };
@@ -100,6 +106,20 @@ const ProductCatalog = () => {
     && cartProduct.color === imageProducts[product.stockId]?.color
   );
 
+  // Helper para detectar si un producto es nuevo (dentro de 21 días)
+  const isProductNew = (createdAt) => {
+    if (!createdAt) return false;
+    try {
+      const productDate = new Date(createdAt);
+      const currentDate = new Date();
+      const timeDiffMs = currentDate - productDate;
+      return timeDiffMs < (21 * 24 * 60 * 60 * 1000);
+    } catch (error) {
+      console.error('Error parsing createdAt date:', error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (!productState?.result) return;
     const newRows = productState.result?.items?.result;
@@ -109,6 +129,7 @@ const ProductCatalog = () => {
         imageUrl: item.variations[0]?.imageUrl,
         color: item.variations[0]?.color,
         id: item.variations[0]?.id,
+        quantity: item.variations[0]?.stock,
       };
       return acc;
     }, {});
@@ -131,36 +152,69 @@ const ProductCatalog = () => {
         {allProducts.map((product) => (
           <Grid item key={product._id} xs={12} sm={6} md={4}>
             <StyledCard>
-              <StyledCardMedia
-                image={imageProducts[product.stockId].imageUrl}
-                title={product.name}
-                onClick={() => handleImageClick(imageProducts[product.stockId].imageUrl)}
-                sx={{ cursor: 'pointer' }}
-              />
+              <Box sx={{ position: 'relative' }}>
+                <StyledCardMedia
+                  image={imageProducts[product.stockId].imageUrl}
+                  title={product.name}
+                  onClick={() => handleImageClick(imageProducts[product.stockId].imageUrl)}
+                  sx={{ cursor: 'pointer' }}
+                />
+                {isProductNew(product.createdAt) && (
+                  <Chip
+                    label="Nuevo"
+                    variant="outlined"
+                    color="warning"
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                      height: 24,
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      backgroundColor: 'background.paper',
+                    }}
+                  />
+                )}
+              </Box>
               <StyledCardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h6" color="textSecondary" component="h2" sx={{ fontWeight: 'bold' }}>
                   {product.promotionalName}
                 </Typography>
                 <Typography marginBottom={2}>{product.description}</Typography>
-                <Typography variant="h5" color="textSecondary">
-                  $ {product.price}
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 1 }}>
+                  <Typography variant="caption" color="textSecondary">Precio:</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'secondary.dark' }}>
+                    ${product.price.toLocaleString('es-AR')}
+                  </Typography>
+                </Box>
               </StyledCardContent>
               <CardContent>
-                <Box display="flex" justifyContent="space-between">
-                  <Box>
+                <Box display="flex" justifyContent="space-between" alignItems="center" gap={1}>
+                  {/* Colores disponibles */}
+                  <Box display="flex" gap={0.5} flexWrap="wrap" flex={1}>
                     {product.variations?.map((variation) => {
                       const colors = variation.color.split('/');
+                      const isSelected = imageProducts[product.stockId]?.id === variation.id;
                       return (
-                        <Tooltip title={variation.color} key={variation.id}>
+                        <Tooltip
+                          title={`${variation.color} (Stock: ${variation.stock})`}
+                          key={variation.id}>
                           <IconButton
-                            size="medium"
+                            size="small"
                             onClick={() => handleImageByColor(
                               product.stockId,
                               variation.imageUrl,
                               variation.color,
-                              variation.id
-                            )}>
+                              variation.id,
+                              variation.stock
+                            )}
+                            sx={{
+                              border: isSelected ? 2 : 1,
+                              borderColor: isSelected ? 'primary.main' : 'divider',
+                              p: 0.3,
+                              width: 32,
+                              height: 32,
+                            }}>
                             <TwoColorCircle
                               color1={getColors(colors[0])}
                               color2={getColors(colors[1])}

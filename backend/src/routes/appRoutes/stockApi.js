@@ -9,6 +9,7 @@ const setupRoutes = async () => {
 
   router.route('/stock').get(catchErrors(stockMiddleware.listAll));
   router.route('/stock/').get(catchErrors(stockMiddleware.listAll));
+  router.route('/stock/catalog').get(catchErrors(stockMiddleware.listAllCatalog));
   router.route('/stock/update/:id').put(catchErrors(stockMiddleware.update));
   router.route('/stock/remove/:id').delete(catchErrors(stockMiddleware.remove));
   router.route('/stock/:id').get(catchErrors(stockMiddleware.read));

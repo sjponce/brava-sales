@@ -91,7 +91,7 @@ const getAxiosOptions = (cookie) => {
       const https = require('https');
       options.httpsAgent = new https.Agent({ rejectUnauthorized: false });
     }
-  } catch (_) {
+  } catch {
     // no-op
   }
   return options;

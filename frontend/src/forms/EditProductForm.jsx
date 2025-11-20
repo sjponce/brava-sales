@@ -3,7 +3,9 @@ import {
   Box,
   Chip,
   Divider,
+  FormControlLabel,
   InputAdornment,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -47,12 +49,25 @@ const EditProductForm = ({ register, setValue, watch }) => {
                 width: '200px',
               }}
             />
+            <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+              <Typography variant="caption">
+                Id del producto
+              </Typography>
+              <Typography variant="h5" color="primary" sx={{ fontWeight: 'bold' }}>
+                {watch('stockId')}
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" width="100%" gap={2} justifyContent="center">
-          <Typography variant="h5">
-            {watch('promotionalName')}
-          </Typography>
+          <TextField
+            name="promotionalName"
+            required
+            label="Nombre promocional"
+            {...register('promotionalName')}
+            value={watch('promotionalName')}
+            fullWidth
+          />
           <TextField
             name="price"
             required
@@ -60,6 +75,7 @@ const EditProductForm = ({ register, setValue, watch }) => {
             InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
             }}
+            helperText={watch('price') <= 0 ? 'Indica el valor del precio' : ''}
             onChange={handlePriceChange}
             value={watch('price')}
             fullWidth
@@ -69,9 +85,25 @@ const EditProductForm = ({ register, setValue, watch }) => {
             margin="normal"
             label="Descripción"
             {...register('description')}
-            minRows={3}
+            minRows={2}
             fullWidth
             multiline
+          />
+          <FormControlLabel
+            control={(
+              <Switch
+                checked={watch('enabled') || false}
+                onChange={(e) => setValue('enabled', e.target.checked)}
+                disabled={watch('price') <= 0}
+                color="primary"
+              />
+            )}
+            label="Publicar en catálogo"
+            sx={{
+              mt: 1,
+              opacity: watch('price') <= 0 ? 0.5 : 1,
+            }}
+            title={watch('price') <= 0 ? 'Indica un precio válido para publicar' : ''}
           />
         </Box>
       </Box>

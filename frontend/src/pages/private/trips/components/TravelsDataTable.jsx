@@ -121,5 +121,3 @@ const TravelsDataTable = () => {
 };
 
 export default TravelsDataTable;
-
-
