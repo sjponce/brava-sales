@@ -75,7 +75,10 @@ const SalesOrderDataTable = () => {
 
   useEffect(() => {
     if (!salesOrderState?.result) return;
-    const newRows = salesOrderState.result?.items.result.map((item) => ({ ...item, id: item._id }));
+    const newRows = salesOrderState.result?.items.result
+      .map((item) => ({ ...item, id: item._id }))
+    // Ordenar por fecha descendente (más reciente primero)
+      .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
     setRows(newRows);
   }, [salesOrderState]);
 
@@ -100,6 +103,7 @@ const SalesOrderDataTable = () => {
       field: 'customer',
       headerName: 'Cliente',
       width: 150,
+      valueGetter: (params) => params.row.customer?.name || '',
       renderCell: (params) => `${params.row.customer?.name || ''}`,
     },
     {
