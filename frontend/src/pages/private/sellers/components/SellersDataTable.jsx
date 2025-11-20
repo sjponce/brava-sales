@@ -82,7 +82,7 @@ const SellersDataTable = () => {
       field: 'photo',
       headerName: 'Foto',
       sortable: false,
-      width: 50,
+      width: 75,
       renderCell: (params) => (
         <Box display="flex" flexDirection="column" justifyContent="center" height="100%">
           <Avatar src={params.value} sx={{ width: 30, height: 30 }} />
