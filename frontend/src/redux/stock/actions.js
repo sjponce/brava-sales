@@ -90,6 +90,33 @@ const stock = {
         });
       }
     },
+  listAllCatalog:
+    ({ entity }) => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'listAllCatalog',
+        payload: null,
+      });
+
+      const data = await stockRequest.listAllCatalog({ entity });
+
+      if (data.success === true) {
+        const result = {
+          items: data,
+        };
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: 'listAllCatalog',
+          payload: result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'listAllCatalog',
+          payload: null,
+        });
+      }
+    },
   read:
     ({ entity, id }) => async (dispatch) => {
       dispatch({

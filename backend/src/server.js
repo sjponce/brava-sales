@@ -21,7 +21,9 @@ require('dotenv').config({ path: '.env.local' });
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE);
+mongoose.connect(process.env.DATABASE, {
+  autoIndex: true, // Crear índices automáticamente
+});
 
 mongoose.connection.on('error', (error) => {
   console.log('1. 🔥 Check your .env file and add your MongoDB URL');

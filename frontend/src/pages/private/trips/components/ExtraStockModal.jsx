@@ -28,15 +28,14 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
   const [sizesQty, setSizesQty] = useState({});
   const [items, setItems] = useState([]);
   const [stockProducts, setStockProducts] = useState([]);
-  const [stockLoading, setStockLoading] = useState(false);
+  // const [stockLoading, setStockLoading] = useState(false);
   const [stockFilter, setStockFilter] = useState('');
 
   const totalQtyPlanned = useMemo(
-    () =>
-      items.reduce(
-        (sum, it) => sum + (it.sizes || []).reduce((s, sz) => s + Number(sz.quantity || 0), 0),
-        0
-      ),
+    () => items.reduce(
+      (sum, it) => sum + (it.sizes || []).reduce((s, sz) => s + Number(sz.quantity || 0), 0),
+      0
+    ),
     [items]
   );
   const willExceedCapacity = currentBultos + totalQtyPlanned > capacityBultos;
@@ -54,6 +53,7 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
     const idStock = Number(idStockInput);
     if (!idStock) return;
     const sizes = Object.entries(sizesQty)
+      // eslint-disable-next-line no-unused-vars
       .filter(([_, q]) => Number(q) > 0)
       .map(([size, quantity]) => ({ size, quantity: Number(quantity) }));
     if (sizes.length === 0) return;
@@ -94,13 +94,13 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
     const loadStock = async () => {
       if (!open) return;
       try {
-        setStockLoading(true);
+        // setStockLoading(true);
         const res = await stockRequest.listAll({ entity: '/stock' });
         setStockProducts(res?.result || []);
       } catch (_) {
         setStockProducts([]);
       } finally {
-        setStockLoading(false);
+        // setStockLoading(false);
       }
     };
     loadStock();
@@ -215,9 +215,9 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
                           size="small"
                           inputProps={{ min: 0, max: s.stock }}
                           value={sizesQty[s.number] ?? ''}
-                          onChange={(e) =>
-                            setSizesQty((prev) => ({ ...prev, [s.number]: e.target.value }))
-                          }
+                          onChange={(e) => setSizesQty(
+                            (prev) => ({ ...prev, [s.number]: e.target.value })
+                          )}
                           sx={{ width: 100 }}
                         />
                       </TableCell>
@@ -283,5 +283,3 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
 };
 
 export default ExtraStockModal;
-
-

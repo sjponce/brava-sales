@@ -51,10 +51,16 @@ const ProductDetailsForm = ({ watch }) => {
               />
             </Box>
             <Box display="flex" flexDirection="column" justifyContent="space-between" mt={2}>
-              <Typography variant="h6">
-                {watch('promotionalName')}
+              <Typography variant="h5" color="primary" sx={{ fontWeight: 'bold' }} align="center">
+                {watch('stockId')}
+              </Typography>
+              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} align="center">
                 {' '}
                 {watch('color')}
+              </Typography>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="caption">
+                {watch('promotionalName')}
               </Typography>
               <Typography variant="caption">
                 Precio: $
@@ -67,6 +73,11 @@ const ProductDetailsForm = ({ watch }) => {
               <Typography variant="caption">
                 Descripción:
                 {watch('description')}
+              </Typography>
+              <Typography variant="caption">
+                Estado:
+                {' '}
+                {watch('enabled') ? 'Publicado' : 'No Publicado'}
               </Typography>
             </Box>
           </Box>
