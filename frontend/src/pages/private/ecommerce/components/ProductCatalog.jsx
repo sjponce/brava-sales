@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Grid,
   Typography,
@@ -20,8 +20,8 @@ import getColors from '@/utils/getColors';
 import TwoColorCircle from '@/components/TwoColorCircle';
 import cart from '@/redux/cart/actions';
 import { selectCartProducts } from '@/redux/cart/selectors';
-import getProductImageMap from '@/utils/getProductImageMap';
 import Loading from '@/components/Loading';
+import { ProductsContext } from '@/context/productsContext/ProducsContext';
 
 const StyledCard = styled(Card)(() => ({
   height: '100%',
@@ -47,8 +47,9 @@ const StyledCardContent = styled(CardContent)({
 const ProductCatalog = () => {
   const dispatch = useDispatch();
   const [allProducts, setAllProducts] = useState([]);
-  const [imageProducts, setImageProducts] = useState([]);
   const cartProducts = useSelector(selectCartProducts);
+
+  const { imageProducts, handleImageByColor, isLoading } = useContext(ProductsContext);
 
   const [expandedImage, setExpandedImage] = useState('');
 
@@ -65,18 +66,7 @@ const ProductCatalog = () => {
   const updateTable = async () => {
     if (productState?.isLoading) return;
     dispatch(stock.listAllCatalog({ entity: 'stock' }));
-  };
-
-  const handleImageByColor = (stockId, imageUrl, color, id, quantity) => {
-    setImageProducts((prevImages) => ({
-      ...prevImages,
-      [stockId]: {
-        imageUrl,
-        color,
-        id,
-        quantity,
-      },
-    }));
+    console.log('ProductCatalog mounted');
   };
 
   const handleAddToCart = (product) => {
@@ -125,27 +115,11 @@ const ProductCatalog = () => {
     if (!productState?.result) return;
     const newRows = productState.result?.items?.result;
     setAllProducts(newRows);
-    const images = newRows.reduce((acc, item) => {
-      acc[item.stockId] = {
-        imageUrl: item.variations[0]?.imageUrl,
-        color: item.variations[0]?.color,
-        id: item.variations[0]?.id,
-        quantity: item.variations[0]?.stock,
-      };
-      return acc;
-    }, {});
-    setImageProducts(images);
   }, [productState]);
 
   useEffect(() => {
     updateTable();
   }, []);
-
-  useEffect(() => {
-    if (!productState?.result) return;
-    const productImgMap = getProductImageMap(productState?.result.items.result);
-    dispatch(stock.setProductImageMap(productImgMap));
-  }, [productState?.isSuccess]);
 
   return (
     <>
@@ -155,7 +129,7 @@ const ProductCatalog = () => {
             <StyledCard>
               <Box sx={{ position: 'relative' }}>
                 <StyledCardMedia
-                  image={imageProducts[product.stockId].imageUrl}
+                  image={imageProducts[product.stockId]?.imageUrl}
                   title={product.name}
                   onClick={() => handleImageClick(imageProducts[product.stockId].imageUrl)}
                   sx={{ cursor: 'pointer' }}
@@ -244,7 +218,7 @@ const ProductCatalog = () => {
           </Grid>
         ))}
       </Grid>
-      <Loading isLoading={productState?.isLoading} />
+      <Loading isLoading={productState?.isLoading || isLoading} />
       {expandedImage && (
         <Dialog open={!!expandedImage} onClose={handleCloseImage}>
           <DialogContent>

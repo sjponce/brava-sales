@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Container,
   Box,
@@ -9,46 +9,34 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCatalog from './components/ProductCatalog';
 import Cart from './components/Cart';
-import sales from '@/redux/sales/actions';
 import AddSalesOrderModal from '../sales-orders/components/AddSalesOrderModal';
-import ModalSalesOrderDetails from '../sales-orders/components/ModalSalesOrderDetails';
-import Loading from '@/components/Loading';
 import crud from '@/redux/crud/actions';
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
 import OrdersDialog from './components/OrdersDialog';
+import { ModalSalesOrderContext } from '@/context/modalSalesOrderContext/ModalSalesOrderContext';
 
 const HomeEcommerce = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-  const [openDetails, setOpenDetails] = React.useState(false);
   const [selectedRow, setSelectedRow] = React.useState({ id: '' });
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { openModal } = useContext(ModalSalesOrderContext);
+
   const readSalesOrderState = useSelector((store) => store.sales.read);
-  const updateSalesOrderState = useSelector((store) => store.sales.update);
   const currentUser = useSelector(selectCurrentAdmin);
 
   const handleDetails = async (id) => {
     setSelectedRow({ ...selectedRow, id });
-    await dispatch(sales.read({ entity: 'sales', id }));
-    setOpenDetails(true);
+    openModal(id);
   };
-
-  const updatedPayment = useSelector((state) => state.sales.createPayment);
-  const crudUpdate = useSelector((state) => state.crud.update);
 
   useEffect(() => {
     if (currentUser.customer) {
       dispatch(crud.filter({ entity: 'salesOrder', options: { filter: 'customer', equal: currentUser.customer } }));
     }
   }, [readSalesOrderState]);
-
-  useEffect(() => {
-    if (!updatedPayment.result && !crudUpdate?.result) return;
-    if (updatedPayment.isLoading && crudUpdate?.isLoading) return;
-    dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
-  }, [updatedPayment, crud, dispatch, selectedRow.id]);
 
   const location = useLocation();
 
@@ -57,6 +45,8 @@ const HomeEcommerce = () => {
     const fetchData = async () => {
       const searchParams = new URLSearchParams(location.search);
       const salesOrder = searchParams.get('salesOrder');
+      console.log('salesOrder from URL:', salesOrder);
+      if (!salesOrder || salesOrder === 'null') return;
       handleDetails(salesOrder);
     };
     fetchData();
@@ -86,8 +76,6 @@ const HomeEcommerce = () => {
         ecommerce
       />
       <OrdersDialog handleAction={handleDetails} />
-      <ModalSalesOrderDetails open={openDetails} handlerOpen={setOpenDetails} />
-      <Loading isLoading={readSalesOrderState?.isLoading || updateSalesOrderState?.isLoading} />
     </Container>
   );
 };

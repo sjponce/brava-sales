@@ -14,11 +14,9 @@ const RootApp = () => (
   <Suspense fallback={<PageLoader />}>
     <BrowserRouter>
       <Provider store={store}>
-        <Suspense fallback={<PageLoader />}>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-            <BravaSalesOs />
-          </LocalizationProvider>
-        </Suspense>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+          <BravaSalesOs />
+        </LocalizationProvider>
       </Provider>
     </BrowserRouter>
     <CssBaseline />

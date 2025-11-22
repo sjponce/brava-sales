@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
 import { request } from '@/request';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ModalSalesOrderProvider } from '@/context/modalSalesOrderContext/ModalSalesOrderContext';
 
 const mockDelete = jest.fn().mockResolvedValue({
   message: 'Se elimino el elemento',
@@ -92,7 +93,9 @@ describe('SalesOrderDataTable Component', () => {
     render(
       <Provider store={mockStore}>
         <Router>
-          <SalesOrderDataTable />
+          <ModalSalesOrderProvider>
+            <SalesOrderDataTable />
+          </ModalSalesOrderProvider>
         </Router>
       </Provider>
     );
@@ -121,7 +124,9 @@ describe('SalesOrderDataTable Component', () => {
     render(
       <Provider store={mockStore}>
         <Router>
-          <SalesOrderDataTable />
+          <ModalSalesOrderProvider>
+            <SalesOrderDataTable />
+          </ModalSalesOrderProvider>
         </Router>
       </Provider>
     );

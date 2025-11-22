@@ -95,8 +95,8 @@ class NotificationHelpers {
         title: `Pago recibido: ${salesOrder.salesOrderCode}`,
         message: `${customer.name} realizó un pago de $${payment.amount.toLocaleString()} para la cuota ${installment.installmentNumber} del pedido ${salesOrder.salesOrderCode}`,
         relatedEntity: {
-          entityType: 'Payment',
-          entityId: payment._id
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
         },
         metadata: {
           salesOrderCode: salesOrder.salesOrderCode,
@@ -221,8 +221,8 @@ class NotificationHelpers {
         title: `Stock reservado: ${salesOrder.salesOrderCode}`,
         message: `Se reservó stock para ${productCount} producto(s) del pedido ${salesOrder.salesOrderCode} de ${customer.name}`,
         relatedEntity: {
-          entityType: 'StockReservation',
-          entityId: stockReservation._id
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
         },
         metadata: {
           salesOrderCode: salesOrder.salesOrderCode,
@@ -254,8 +254,8 @@ class NotificationHelpers {
         title: `Envío realizado: ${salesOrder.salesOrderCode}`,
         message: `El pedido ${salesOrder.salesOrderCode} ha sido enviado`,
         relatedEntity: {
-          entityType: 'StockReservation',
-          entityId: stockReservation._id
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
         },
         metadata: {
           salesOrderCode: salesOrder.salesOrderCode,
