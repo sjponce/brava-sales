@@ -41,6 +41,7 @@ const Products = () => {
 
   useEffect(() => {
     dispatch(stock.listAll({ entity: 'stock' }));
+    console.log('Products mounted');
   }, [updateProductState]);
 
   return (

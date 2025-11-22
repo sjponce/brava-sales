@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Typography,
   IconButton,
@@ -15,60 +14,21 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { EditRounded } from '@mui/icons-material';
-import stock from '@/redux/stock/actions';
 import getColors from '@/utils/getColors';
 import TwoColorCircle from '@/components/TwoColorCircle';
-import getProductImageMap from '@/utils/getProductImageMap';
 import { StyledCard, ImageContainer, StyledCardMedia, EditButton } from './custom/StyledComponents';
+import { ProductsContext } from '@/context/productsContext/ProducsContext';
 
 const ProductCatalog = ({ handleModal }) => {
-  const dispatch = useDispatch();
-  const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [imageProducts, setImageProducts] = useState([]);
   const [expandedImage, setExpandedImage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const { imageProducts, handleImageByColor, allProducts } = useContext(ProductsContext);
 
   const handleCloseImage = () => {
     setExpandedImage('');
   };
-
-  const productState = useSelector((store) => store.stock.listAll);
-
-  const handleImageByColor = (stockId, imageUrl, color, id, quantity) => {
-    setImageProducts((prevImages) => ({
-      ...prevImages,
-      [stockId]: {
-        imageUrl,
-        color,
-        id,
-        quantity,
-      },
-    }));
-  };
-
-  useEffect(() => {
-    if (!productState?.result) return;
-    const newRows = productState.result?.items?.result;
-    setAllProducts(newRows);
-    setFilteredProducts(newRows);
-    const images = newRows.reduce((acc, item) => {
-      acc[item.stockId] = {
-        imageUrl: item.variations[0]?.imageUrl,
-        color: item.variations[0]?.color,
-        id: item.variations[0]?.id,
-        quantity: item.variations[0]?.stock || 0,
-      };
-      return acc;
-    }, {});
-    setImageProducts(images);
-  }, [productState]);
-
-  useEffect(() => {
-    if (!productState?.result) return;
-    const productImgMap = getProductImageMap(productState?.result.items.result);
-    dispatch(stock.setProductImageMap(productImgMap));
-  }, [productState?.isSuccess]);
 
   // Filtrar productos por stockId
   useEffect(() => {
