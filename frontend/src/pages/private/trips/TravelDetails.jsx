@@ -17,10 +17,12 @@ import {
 } from '@mui/material';
 import { PlayArrowRounded, DoneAllRounded, RocketLaunchRounded, AssignmentTurnedInRounded, Inventory2Rounded } from '@mui/icons-material';
 import travelsRequest from '@/request/travelsRequest';
+import stockRequest from '@/request/stockRequest';
 import formatDate from '@/utils/formatDate';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import AssignOrdersModal from './components/AssignOrdersModal';
 import ExtraStockModal from './components/ExtraStockModal';
+import StopDeliveriesModal from './components/StopDeliveriesModal';
 
 const sumBultos = (items = []) =>
   items.reduce(
@@ -36,9 +38,12 @@ const TravelDetails = () => {
   const [assignOpen, setAssignOpen] = useState(false);
   const [extraOpen, setExtraOpen] = useState(false);
   const [dialog, setDialog] = useState({ open: false, title: '', onAccept: null });
+  const [stockMap, setStockMap] = useState({});
+  const [deliveriesOpen, setDeliveriesOpen] = useState(false);
+  const [currentStop, setCurrentStop] = useState(null);
   const capacityUsedPct = useMemo(() => {
     if (!travel) return 0;
-    const total = sumBultos(travel.items) + sumBultos(travel.extraStockItems);
+    const total = sumBultos(travel?.items || []) + sumBultos(travel?.extraStockItems || []);
     const cap = Number(travel.capacityBultos || 0) || 0;
     return cap > 0 ? Math.min(100, Math.round((total * 100) / cap)) : 0;
   }, [travel]);
@@ -46,6 +51,23 @@ const TravelDetails = () => {
   const load = async () => {
     const { result } = await travelsRequest.getDetails(id);
     setTravel(result);
+    // fetch stock availability for all idStock involved
+    try {
+      const ids = Array.from(
+        new Set([
+          ...((result?.items || []).map((it) => it.idStock)),
+          ...((result?.extraStockItems || []).map((it) => it.idStock)),
+        ])
+      ).filter((v) => v !== undefined && v !== null);
+      if (ids.length > 0) {
+        const res = await stockRequest.getStockProducts({ entity: '/stock', ids });
+        setStockMap(res?.result || {});
+      } else {
+        setStockMap({});
+      }
+    } catch (_) {
+      setStockMap({});
+    }
   };
 
   useEffect(() => {
@@ -63,6 +85,46 @@ const TravelDetails = () => {
   const handleComplete = async () => {
     await travelsRequest.completeTravel(id);
     await load();
+  };
+
+  // Group items by sales order for display and unassign selection
+  const groupedByOrder = useMemo(() => {
+    const map = {};
+    (travel?.items || []).forEach((it) => {
+      const key = String(it.salesOrder?._id || it.salesOrder);
+      if (!key) return;
+      if (!map[key]) {
+        map[key] = { order: it.salesOrder, code: it.salesOrder?.salesOrderCode, items: [] };
+      }
+      map[key]?.items?.push(it);
+    });
+    return map;
+  }, [travel]);
+
+  const [selectedOrders, setSelectedOrders] = useState({});
+  const [selectedExtraIdStocks, setSelectedExtraIdStocks] = useState({});
+
+  const toggleOrderSelect = (orderId) =>
+    setSelectedOrders((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
+  const toggleExtraSelect = (idStock) =>
+    setSelectedExtraIdStocks((prev) => ({ ...prev, [idStock]: !prev[idStock] }));
+
+  const removeSelectedOrders = async () => {
+    const orderIds = Object.keys(selectedOrders).filter((k) => selectedOrders[k]);
+    if (orderIds.length === 0) return;
+    await travelsRequest.unassignOrders(id, orderIds);
+    await load();
+    setSelectedOrders({});
+  };
+
+  const removeSelectedExtra = async () => {
+    const idStocks = Object.keys(selectedExtraIdStocks)
+      .filter((k) => selectedExtraIdStocks[k])
+      .map((k) => Number(k));
+    if (idStocks.length === 0) return;
+    await travelsRequest.removeExtraStock(id, idStocks);
+    await load();
+    setSelectedExtraIdStocks({});
   };
 
   if (!travel) return null;
@@ -84,7 +146,7 @@ const TravelDetails = () => {
       </Paper>
 
       <Box display="flex" gap={2} flexWrap="wrap">
-        {travel.status === 'PLANNED' && (
+        {travel.status === 'PLANNED' || travel.status === 'RESERVED' && (
           <Button
             variant="outlined"
             startIcon={<AssignmentTurnedInRounded />}
@@ -156,6 +218,18 @@ const TravelDetails = () => {
                       <RocketLaunchRounded />
                     </IconButton>
                   )}
+                  {travel.status === 'IN_TRANSIT' && (
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => {
+                        setCurrentStop(stop);
+                        setDeliveriesOpen(true);
+                      }}
+                    >
+                      Entregar
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -172,10 +246,12 @@ const TravelDetails = () => {
               <TableCell>Producto</TableCell>
               <TableCell>Color</TableCell>
               <TableCell>Talles</TableCell>
+              <TableCell>Stock disp.</TableCell>
+              {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && <TableCell align="right">Seleccionar</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
-            {(travel.items || []).map((it) => (
+            {(travel?.items || []).map((it) => (
               <TableRow key={it._id}>
                 <TableCell>{it.salesOrder?.salesOrderCode}</TableCell>
                 <TableCell>{it.product?.name || it.idStock}</TableCell>
@@ -185,11 +261,89 @@ const TravelDetails = () => {
                     .map((s) => `${s.size}(${s.quantity}) D:${s.delivered || 0} F:${s.failed || 0}`)
                     .join(', ')}
                 </TableCell>
+                <TableCell>
+                  {(it.sizes || [])
+                    .map((s) => {
+                      const row = (stockMap?.[it.idStock] || []).find((ss) => ss.number === Number(s.size));
+                      const available = row ? Number(row.stock) : 0;
+                      return `${s.size}(${available})`;
+                    })
+                    .join(', ')}
+                </TableCell>
+                {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
+                  <TableCell align="right">
+                    <input
+                      type="checkbox"
+                      checked={!!selectedOrders[String(it.salesOrder?._id || it.salesOrder)]}
+                      onChange={() => toggleOrderSelect(String(it.salesOrder?._id || it.salesOrder))}
+                    />
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
+        <Box display="flex" justifyContent="flex-end">
+          <Button variant="outlined" color="error" onClick={removeSelectedOrders} disabled={Object.values(selectedOrders).every((v) => !v)}>
+            Quitar pedidos seleccionados
+          </Button>
+        </Box>
+      )}
+
+      <Typography variant="h6">Stock adicional cargado</Typography>
+      <TableContainer component={Paper} variant="outlined">
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Producto</TableCell>
+              <TableCell>ID Stock</TableCell>
+              <TableCell>Color</TableCell>
+              <TableCell>Talles</TableCell>
+              <TableCell>Stock disp.</TableCell>
+              {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && <TableCell align="right">Seleccionar</TableCell>}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(travel.extraStockItems || []).map((it, idx) => (
+              <TableRow key={`${it.idStock}-${idx}`}>
+                <TableCell>{it.product?.name || '-'}</TableCell>
+                <TableCell>{it.idStock}</TableCell>
+                <TableCell>{it.color}</TableCell>
+                <TableCell>
+                  {(it.sizes || []).map((s) => `${s.size}(${s.quantity})`).join(', ')}
+                </TableCell>
+                <TableCell>
+                  {(it.sizes || [])
+                    .map((s) => {
+                      const row = (stockMap?.[it.idStock] || []).find((ss) => ss.number === Number(s.size));
+                      const available = row ? Number(row.stock) : 0;
+                      return `${s.size}(${available})`;
+                    })
+                    .join(', ')}
+                </TableCell>
+                {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
+                  <TableCell align="right">
+                    <input
+                      type="checkbox"
+                      checked={!!selectedExtraIdStocks[String(it.idStock)]}
+                      onChange={() => toggleExtraSelect(String(it.idStock))}
+                    />
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
+        <Box display="flex" justifyContent="flex-end">
+          <Button variant="outlined" color="error" onClick={removeSelectedExtra} disabled={Object.values(selectedExtraIdStocks).every((v) => !v)}>
+            Quitar stock adicional seleccionado
+          </Button>
+        </Box>
+      )}
 
       <CustomDialog
         title={dialog.title}
@@ -222,7 +376,20 @@ const TravelDetails = () => {
         }}
         capacityBultos={Number(travel.capacityBultos || 0)}
         currentBultos={sumBultos(travel.items) + sumBultos(travel.extraStockItems)}
+        extraItems={travel.extraStockItems || []}
       />
+      {deliveriesOpen && currentStop && (
+        <StopDeliveriesModal
+          open={deliveriesOpen}
+          onClose={() => setDeliveriesOpen(false)}
+          travel={travel}
+          stop={currentStop}
+          onDelivered={async () => {
+            await load();
+            setDeliveriesOpen(false);
+          }}
+        />
+      )}
     </Box>
   );
 };

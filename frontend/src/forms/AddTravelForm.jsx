@@ -20,18 +20,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DatePicker } from '@mui/x-date-pickers';
 import { vehiclesActions } from '@/redux/vehicles';
 import { selectVehiclesList } from '@/redux/vehicles/selectors';
+import crud from '@/redux/crud/actions';
 
 const AddTravelForm = ({ setValue, watch }) => {
   const dispatch = useDispatch();
   const [stops, setStops] = useState([]);
   const vehicles = useSelector(selectVehiclesList);
-  const customers = useSelector((store) => store.crud?.search?.result?.items?.result);
+  const customers = useSelector((store) => store.crud?.listAll?.result?.items?.result);
 
   const selectedVehicle = watch('vehicle') || null;
   const driverName = watch('driverName') || '';
-  const startDate = watch('startDate') || null;
-  const endDate = watch('endDate') || null;
-  const useExtraStock = watch('useExtraStock') || false;
 
   const addStop = () => {
     setStops((prev) => [
@@ -55,8 +53,8 @@ const AddTravelForm = ({ setValue, watch }) => {
 
   useEffect(() => {
     dispatch(vehiclesActions.listAll());
-    // customers still via generic crud for now
-    // dispatch(crud.listAll({ entity: 'customer' }));
+    // customers via generic crud
+    dispatch(crud.listAll({ entity: 'customer' }));
     setStops([]);
   }, []);
 
@@ -68,6 +66,8 @@ const AddTravelForm = ({ setValue, watch }) => {
         name: s.name,
         address: s.address,
         customer: s.customer?._id || null,
+        plannedStart: s.plannedStart || null,
+        plannedEnd: s.plannedEnd || null,
       }))
     );
   }, [stops]);
@@ -77,7 +77,7 @@ const AddTravelForm = ({ setValue, watch }) => {
     <Box component="form" id="travel-step-1">
       <Box display="flex" gap={2} mb={3}>
         <Autocomplete
-          fullWidth
+          style={{ width: '350px' }}
           value={selectedVehicle}
           onChange={(event, value) => setValue('vehicle', value)}
           options={vehicles || []}
@@ -87,34 +87,11 @@ const AddTravelForm = ({ setValue, watch }) => {
           )}
         />
         <TextField
-          fullWidth
+          style={{ width: '400px' }}
           label="Conductor"
           value={driverName}
           onChange={(e) => setValue('driverName', e.target.value)}
-          margin="normal"
         />
-        <DatePicker
-          label="Fecha inicio"
-          value={startDate}
-          onChange={(date) => setValue('startDate', date)}
-          minDate={today}
-          renderInput={(params) => <TextField {...params} required margin="normal" />}
-        />
-        <DatePicker
-          label="Fecha fin"
-          value={endDate}
-          onChange={(date) => setValue('endDate', date)}
-          minDate={startDate || today}
-          renderInput={(params) => <TextField {...params} required margin="normal" />}
-        />
-      </Box>
-
-      <Box display="flex" alignItems="center" gap={1} mb={2}>
-        <Checkbox
-          checked={!!useExtraStock}
-          onChange={(e) => setValue('useExtraStock', e.target.checked)}
-        />
-        <Typography variant="body2">Lleva stock adicional</Typography>
       </Box>
 
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={1.5}>
@@ -136,6 +113,12 @@ const AddTravelForm = ({ setValue, watch }) => {
               </TableCell>
               <TableCell>
                 <Typography variant="overline">Cliente</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="overline">Inicio</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="overline">Fin</Typography>
               </TableCell>
               <TableCell align="center">
                 <Typography variant="overline">Acciones</Typography>
@@ -168,6 +151,25 @@ const AddTravelForm = ({ setValue, watch }) => {
                     onChange={(event, value) => updateStop(stop.id, 'customer', value)}
                     options={customers || []}
                     getOptionLabel={(option) => option?.name || ''}
+                    renderInput={(params) => (
+                      <TextField {...params} size="small" variant="outlined" />
+                    )}
+                  />
+                </TableCell>
+                <TableCell>
+                  <DatePicker
+                    value={stop.plannedStart || null}
+                    onChange={(date) => updateStop(stop.id, 'plannedStart', date)}
+                    renderInput={(params) => (
+                      <TextField {...params} size="small" variant="outlined" />
+                    )}
+                  />
+                </TableCell>
+                <TableCell>
+                  <DatePicker
+                    value={stop.plannedEnd || null}
+                    onChange={(date) => updateStop(stop.id, 'plannedEnd', date)}
+                    minDate={stop.plannedStart || null}
                     renderInput={(params) => (
                       <TextField {...params} size="small" variant="outlined" />
                     )}

@@ -21,8 +21,8 @@ const computeBultosFromTravel = (travel) => {
 
 const create = async (req, res) => {
   const {
-    startDate,
-    endDate,
+    startDate, // opcional: si no viene, calculamos desde paradas
+    endDate,   // opcional: si no viene, calculamos desde paradas
     vehicleId,
     driverName,
     stops = [],
@@ -30,21 +30,41 @@ const create = async (req, res) => {
     extraStockItems = [],
   } = req.body;
 
-  if (!startDate || !endDate || !vehicleId) {
+  if (!vehicleId) {
     return res.status(400).json({
       success: false,
       result: null,
-      message: 'startDate, endDate y vehicleId son requeridos',
+      message: 'vehicleId es requerido',
     });
   }
 
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) {
+  // Calcular fechas desde paradas si están definidas
+  let computedStart = null;
+  let computedEnd = null;
+  try {
+    const startCandidates = (stops || [])
+      .map((s) => (s?.plannedStart ? new Date(s.plannedStart) : null))
+      .filter((d) => d && !isNaN(d.getTime()));
+    const endCandidates = (stops || [])
+      .map((s) => (s?.plannedEnd ? new Date(s.plannedEnd) : null))
+      .filter((d) => d && !isNaN(d.getTime()));
+
+    if (startCandidates.length > 0) {
+      computedStart = new Date(Math.min(...startCandidates.map((d) => d.getTime())));
+    }
+    if (endCandidates.length > 0) {
+      computedEnd = new Date(Math.max(...endCandidates.map((d) => d.getTime())));
+    }
+  } catch (_) { /* no-op */ }
+
+  const start = computedStart || (startDate ? new Date(startDate) : null);
+  const end = computedEnd || (endDate ? new Date(endDate) : null);
+
+  if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) {
     return res.status(400).json({
       success: false,
       result: null,
-      message: 'Las fechas no son válidas (startDate <= endDate)',
+      message: 'Las fechas del viaje no son válidas. Configure plannedStart/plannedEnd en las paradas o envíe startDate/endDate válidos',
     });
   }
 
@@ -70,6 +90,8 @@ const create = async (req, res) => {
       name: s.name,
       address: s.address,
       customer: s.customer,
+      plannedStart: s.plannedStart ? new Date(s.plannedStart) : undefined,
+      plannedEnd: s.plannedEnd ? new Date(s.plannedEnd) : undefined,
     })),
     status: 'PLANNED',
   });
@@ -310,6 +332,38 @@ const start = async (req, res) => {
       message: 'El viaje debe estar en estado RESERVED',
     });
   }
+
+  // Extra validation: ensure orders are fully reserved and extra stock (if enabled) is present
+  try {
+    // Validate that there are assigned items to transport
+    if ((travel.items || []).length === 0 && (travel.extraStockItems || []).length === 0) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'No se puede iniciar: no hay carga asignada al viaje',
+      });
+    }
+
+    // Validate extra stock if enabled
+    if (travel.useExtraStock) {
+      const extra = travel.extraStockItems || [];
+      const hasAnyQty = extra.some((it) => Array.isArray(it.sizes) && it.sizes.some((s) => Number(s.quantity) > 0));
+      if (extra.length === 0 || !hasAnyQty) {
+        return res.status(400).json({
+          success: false,
+          result: null,
+          message: 'No se puede iniciar: falta stock adicional configurado',
+        });
+      }
+    }
+  } catch (e) {
+    return res.status(500).json({
+      success: false,
+      result: null,
+      message: 'Error validando stock antes de iniciar el viaje',
+    });
+  }
+
   travel.status = 'IN_TRANSIT';
   travel.startedAt = new Date();
   await travel.save();
@@ -688,6 +742,166 @@ module.exports = {
   recordFailedDeliveries,
   complete,
   addExtraStock,
+  unassignOrders: async (req, res) => {
+    const { id } = req.params;
+    const { orderIds = [] } = req.body;
+    const cookie = `token=${req.cookies.token}`;
+
+    if (!Array.isArray(orderIds) || orderIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'orderIds es requerido y debe ser un arreglo',
+      });
+    }
+
+    const travel = await Travel.findById(id).exec();
+    if (!travel) {
+      return res.status(404).json({ success: false, result: null, message: 'Viaje no encontrado' });
+    }
+    if (!['PLANNED', 'RESERVED'].includes(travel.status)) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'Solo se puede modificar pedidos mientras el viaje no esté en tránsito',
+      });
+    }
+
+    // Build movement to return stock for items of the selected orders
+    const movementDetails = [];
+    const keepItems = [];
+    const idSet = new Set(orderIds.map((x) => String(x)));
+    
+    for (const it of travel.items || []) {
+      const soId = String(it?.salesOrder?._id || it?.salesOrder);
+      if (idSet.has(soId)) {
+        for (const sz of it.sizes || []) {
+          movementDetails.push({
+            productId: it.idStock,
+            number: Number(sz.size),
+            quantity: Number(sz.quantity) || 0,
+          });
+        }
+        // skip adding to keepItems (we are removing items of selected orders)
+      } else {
+        keepItems.push(it);
+      }
+    }
+
+    if (movementDetails.length > 0) {
+      const responseMovement = await axios.post(
+        `${process.env.BASE_API}/stock/movement`,
+        { type: 'input', details: movementDetails },
+        getAxiosOptions(cookie)
+      );
+      if (responseMovement.status !== 200) {
+        return res.status(500).json({
+          success: false,
+          result: null,
+          message: 'Error al devolver stock de pedidos',
+        });
+      }
+    }
+
+    travel.items = keepItems;
+    travel.markModified('items');
+
+    const nextAssigned = (travel.assignedOrders || []).filter((oid) => {
+      const key = String(oid?._id || oid);
+      return !idSet.has(key);
+    });
+    travel.assignedOrders = nextAssigned;
+    travel.markModified('assignedOrders');
+
+    // If nothing remains reserved, revert to PLANNED
+    const hasAnyLoad = (travel.items || []).length > 0 || (travel.extraStockItems || []).length > 0;
+    if (!hasAnyLoad) {
+      travel.status = 'PLANNED';
+      travel.reservedAt = undefined;
+      travel.ttlReleaseAt = undefined;
+    }
+
+    await travel.save();
+
+    return res.status(200).json({
+      success: true,
+      result: await Travel.findById(travel._id).exec(),
+      message: 'Pedidos desasignados',
+    });
+  },
+  removeExtraStock: async (req, res) => {
+    const { id } = req.params;
+    const { idStocks = [] } = req.body; // remove complete extra items by idStock
+    const cookie = `token=${req.cookies.token}`;
+
+    if (!Array.isArray(idStocks) || idStocks.length === 0) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'idStocks es requerido y debe ser un arreglo',
+      });
+    }
+
+    const travel = await Travel.findById(id).exec();
+    if (!travel) {
+      return res.status(404).json({ success: false, result: null, message: 'Viaje no encontrado' });
+    }
+    if (!['PLANNED', 'RESERVED'].includes(travel.status)) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'Solo se puede modificar stock adicional mientras el viaje no esté en tránsito',
+      });
+    }
+
+    const movementDetails = [];
+    const keepExtra = [];
+    for (const it of travel.extraStockItems || []) {
+      if (idStocks.includes(it.idStock)) {
+        for (const sz of it.sizes || []) {
+          movementDetails.push({
+            productId: it.idStock,
+            number: Number(sz.size),
+            quantity: Number(sz.quantity) || 0,
+          });
+        }
+      } else {
+        keepExtra.push(it);
+      }
+    }
+
+    if (movementDetails.length > 0) {
+      const responseMovement = await axios.post(
+        `${process.env.BASE_API}/stock/movement`,
+        { type: 'input', details: movementDetails },
+        getAxiosOptions(cookie)
+      );
+      if (responseMovement.status !== 200) {
+        return res.status(500).json({
+          success: false,
+          result: null,
+          message: 'Error al devolver stock adicional',
+        });
+      }
+    }
+
+    travel.extraStockItems = keepExtra;
+
+    const hasAnyLoad = (travel.items || []).length > 0 || (travel.extraStockItems || []).length > 0;
+    if (!hasAnyLoad) {
+      travel.status = 'PLANNED';
+      travel.reservedAt = undefined;
+      travel.ttlReleaseAt = undefined;
+    }
+
+    await travel.save();
+
+    return res.status(200).json({
+      success: true,
+      result: await Travel.findById(travel._id).exec(),
+      message: 'Stock adicional removido',
+    });
+  },
   // minimal CRUD used by generic /api/travel routes
   listAll,
   delete: remove,

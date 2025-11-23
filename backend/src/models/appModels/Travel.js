@@ -21,6 +21,12 @@ const TravelStopSchema = new Schema(
       ref: 'Customer',
       autopopulate: true,
     },
+    plannedStart: {
+      type: Date,
+    },
+    plannedEnd: {
+      type: Date,
+    },
     arrivedAt: {
       type: Date,
     },

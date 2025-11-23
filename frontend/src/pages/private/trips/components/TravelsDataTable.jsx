@@ -19,7 +19,9 @@ const TravelsDataTable = () => {
   const rows = useSelector(selectTravelsList).map((item) => ({ ...item, id: item._id }));
   const isLoading = useSelector(selectTravelsLoading);
   const userState = useSelector((store) => store.auth.current);
-
+  const createTravelState = useSelector((store) => store.travels.create);
+  const deleteTravelState = useSelector((store) => store.travels.delete);
+  const updateTravelState = useSelector((store) => store.travels.update);
   const handleDelete = (id, description) => {
     setSelectedRow({ ...selectedRow, id, description });
     setDialogOpen(true);
@@ -41,7 +43,7 @@ const TravelsDataTable = () => {
 
   useEffect(() => {
     updateTable();
-  }, []);
+  }, [createTravelState?.result, deleteTravelState?.result, updateTravelState?.result]);
 
   const columns = [
     {

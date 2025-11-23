@@ -30,14 +30,14 @@ const AddTripModal = ({ open, handlerOpen }) => {
   const createTrip = async (data) => {
     try {
       dispatch(
-        crud.create({
-          entity: 'trip',
-          jsonData: {
-            ...data,
-            seller: data.seller?._id,
-            startDate: new Date(data.startDate),
-            endDate: new Date(data.endDate),
-          },
+        travelsActions.create({
+          startDate: new Date(data.startDate),
+          endDate: new Date(data.endDate),
+          vehicleId: data.vehicle?._id,
+          driverName: data.driverName || data.vehicle?.driver?.name,
+          stops: data.stops || [],
+          useExtraStock: true,
+          extraStockItems: data.extraStockItems || [],
         })
       );
     } catch (error) {

@@ -39,6 +39,7 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
   const [loadingStock, setLoadingStock] = useState(false);
   const [stockMap, setStockMap] = useState({});
   const [expanded, setExpanded] = useState({});
+  const [reservedOrderIds, setReservedOrderIds] = useState(new Set());
 
   useEffect(() => {
     if (open) {
@@ -63,6 +64,23 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
       }
       try {
         setLoadingStock(true);
+        // fetch travels in RESERVED/IN_TRANSIT to exclude already assigned orders
+        try {
+          const travelsResp = await travelsRequest.listTravels();
+          const travelList = travelsResp?.result || [];
+          const reservedIds = new Set();
+          (travelList || [])
+            .filter((t) => t.status === 'RESERVED' || t.status === 'IN_TRANSIT')
+            .forEach((t) => {
+              (t.assignedOrders || []).forEach((oid) => {
+                const idStr = String(oid?._id || oid);
+                if (idStr) reservedIds.add(idStr);
+              });
+            });
+          setReservedOrderIds(reservedIds);
+        } catch (e) {
+          setReservedOrderIds(new Set());
+        }
         // collect unique idStock
         const idSet = new Set();
         pending.forEach((o) => {
@@ -87,7 +105,11 @@ const AssignOrdersModal = ({ open, onClose, travelId, onAssigned, capacityBultos
           return true;
         };
 
-        setFilteredOrders(pending.filter(hasSufficientStock));
+        // filter out orders already assigned to a RESERVED / IN_TRANSIT travel
+        const next = pending
+          .filter((o) => !reservedOrderIds.has(String(o._id)))
+          .filter(hasSufficientStock);
+        setFilteredOrders(next);
         setStockMap(stockDataMap);
       } catch (_) {
         // fallback: if stock fails, show none to avoid overpromising
