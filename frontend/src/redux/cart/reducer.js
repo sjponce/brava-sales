@@ -12,6 +12,11 @@ const INITIAL_CART_STATE = {
   open: false,
 };
 
+const INITIAL_FILTERS_STATE = {
+  open: false,
+  selectedTags: {}, // { category: [tagIds] }
+};
+
 const INITIAL_STATE = {
   current: {
     result: null,
@@ -21,9 +26,7 @@ const INITIAL_STATE = {
   orderDialog: {
     open: false,
   },
-  filters: {
-    open: false,
-  },
+  filters: { ...INITIAL_FILTERS_STATE },
 };
 
 // eslint-disable-next-line default-param-last
@@ -141,7 +144,52 @@ const cartReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         filters: {
+          ...state.filters,
           open: !state.filters.open,
+        },
+      };
+    case actionTypes.SELECT_TAG_FILTER:
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          selectedTags: {
+            ...state.filters.selectedTags,
+            [payload.category]: [
+              ...(state.filters.selectedTags[payload.category] || []),
+              payload.tagId,
+            ],
+          },
+        },
+      };
+    case actionTypes.DESELECT_TAG_FILTER: {
+      const updatedTagsForCategory = (
+        state.filters.selectedTags[payload.category] || []
+      ).filter((id) => id !== payload.tagId);
+
+      const newSelectedTags = { ...state.filters.selectedTags };
+
+      // Si la categoría queda vacía, eliminarla
+      if (updatedTagsForCategory.length === 0) {
+        delete newSelectedTags[payload.category];
+      } else {
+        newSelectedTags[payload.category] = updatedTagsForCategory;
+      }
+
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          selectedTags: newSelectedTags,
+        },
+      };
+    }
+    case actionTypes.RESET_TAG_FILTERS:
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          selectedTags: {},
         },
       };
     case actionTypes.OPEN_ORDER_DIALOG:
