@@ -19,7 +19,7 @@ import stock from '@/redux/stock/actions';
 import getColors from '@/utils/getColors';
 import TwoColorCircle from '@/components/TwoColorCircle';
 import cart from '@/redux/cart/actions';
-import { selectCartProducts } from '@/redux/cart/selectors';
+import { selectCartProducts, selectSelectedTags } from '@/redux/cart/selectors';
 import Loading from '@/components/Loading';
 import { ProductsContext } from '@/context/productsContext/ProducsContext';
 
@@ -47,7 +47,9 @@ const StyledCardContent = styled(CardContent)({
 const ProductCatalog = () => {
   const dispatch = useDispatch();
   const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const cartProducts = useSelector(selectCartProducts);
+  const selectedTags = useSelector(selectSelectedTags);
 
   const { imageProducts, handleImageByColor, isLoading } = useContext(ProductsContext);
 
@@ -117,13 +119,27 @@ const ProductCatalog = () => {
   }, [productState]);
 
   useEffect(() => {
+    const selectedCategories = Object.keys(selectedTags);
+
+    if (selectedCategories.length === 0) {
+      setFilteredProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter((product) => selectedCategories.every((category) => {
+        const tagsInCategory = selectedTags[category];
+        return tagsInCategory.some((tagId) => product.tags?.includes(tagId));
+      }));
+      setFilteredProducts(filtered);
+    }
+  }, [allProducts, selectedTags]);
+
+  useEffect(() => {
     updateTable();
   }, []);
 
   return (
     <>
       <Grid container spacing={4}>
-        {allProducts.map((product) => (
+        {filteredProducts.map((product) => (
           <Grid item key={product._id} xs={12} sm={6} md={4}>
             <StyledCard>
               <Box sx={{ position: 'relative' }}>
