@@ -95,7 +95,7 @@ describe('listAll', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'Ocurrio un error buscando las ordenedes de venta',
+      message: 'Ocurrio un error buscando las ordenes de venta',
       error: errorMessage,
     });
   });

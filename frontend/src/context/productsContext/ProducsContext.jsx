@@ -49,7 +49,6 @@ export const ProductsProvider = ({ children }) => {
   useEffect(() => {
     if (productState?.isLoading) return;
     dispatch(stock.listAll({ entity: 'stock' }));
-    console.log('Products mounted of context');
   }, []);
 
   // Actualizar product image map en Redux

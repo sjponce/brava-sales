@@ -45,26 +45,12 @@ const SalesOrderDataTable = () => {
 
   const location = useLocation();
 
-  // const createdPayment = useSelector((state) => state.sales.createPayment);
-  // const updatedPayment = useSelector((state) => state.sales.updatePayment);
-
-  // const crudUpdate = useSelector((state) => state.crud.update);
-
-  // useEffect(() => {
-  //   if (!createdPayment?.result && !crudUpdate?.result && !updatedPayment?.result) return;
-  //   if (createdPayment?.isLoading && crudUpdate?.isLoading && updatedPayment?.isLoading) return;
-  //   dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
-  // }, [updatedPayment, crudUpdate, createdPayment]);
-
   const salesOrderState = useSelector((store) => store.sales.listAll);
-  // const readSalesOrderState = useSelector((store) => store.sales.read);
   const createSalesOrderState = useSelector((store) => store.sales.create);
   const updateSalesOrderState = useSelector((store) => store.sales.update);
   const deleteSalesOrderState = useSelector((store) => store.sales.delete);
   const reserveStockState = useSelector((store) => store.sales.reserveStock);
-  // const stockProductsState = useSelector((store) => store.stock.getStockProducts);
   const products = useSelector((store) => store.stock.listAll)?.result?.items?.result;
-  // const filterState = useSelector((store) => store.crud.filter);
 
   useEffect(() => {
     if (!reserveStockState?.isSuccess || selectedRow.id === '') return;

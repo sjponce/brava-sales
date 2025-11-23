@@ -66,7 +66,6 @@ const ProductCatalog = () => {
   const updateTable = async () => {
     if (productState?.isLoading) return;
     dispatch(stock.listAllCatalog({ entity: 'stock' }));
-    console.log('ProductCatalog mounted');
   };
 
   const handleAddToCart = (product) => {
