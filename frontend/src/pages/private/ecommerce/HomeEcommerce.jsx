@@ -45,7 +45,6 @@ const HomeEcommerce = () => {
     const fetchData = async () => {
       const searchParams = new URLSearchParams(location.search);
       const salesOrder = searchParams.get('salesOrder');
-      console.log('salesOrder from URL:', salesOrder);
       if (!salesOrder || salesOrder === 'null') return;
       handleDetails(salesOrder);
     };

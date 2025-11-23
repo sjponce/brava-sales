@@ -23,6 +23,7 @@ const ModalSalesOrderDetailsGlobal = () => {
   useEffect(() => {
     if (!createdPayment?.result && !crudUpdate?.result && !updatedPayment?.result) return;
     if (createdPayment?.isLoading && crudUpdate?.isLoading && updatedPayment?.isLoading) return;
+    if (!selectedSalesOrderId) return;
     dispatch(sales.read({ entity: 'sales', id: selectedSalesOrderId }));
   }, [updatedPayment, crudUpdate, createdPayment]);
 
