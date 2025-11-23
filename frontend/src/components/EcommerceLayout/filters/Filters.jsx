@@ -22,7 +22,7 @@ const drawerWidth = 300;
 const Filters = ({ open, toggleDrawer }) => {
   const [tags, setTags] = useState([]);
   const dispatch = useDispatch();
-  const tagsState = useSelector((store) => store.crud.list);
+  const tagsState = useSelector((store) => store.crud.list_tag);
   const selectedTags = useSelector(selectSelectedTags);
   const [openCategories, setOpenCategories] = useState({});
 
