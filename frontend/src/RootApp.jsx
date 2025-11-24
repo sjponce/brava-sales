@@ -3,7 +3,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { Suspense, lazy } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { CssBaseline } from '@mui/material';
 import store from '@/redux/store';
 import PageLoader from '@/components/PageLoader';
 import 'dayjs/locale/en-gb';
@@ -19,7 +18,6 @@ const RootApp = () => (
         </LocalizationProvider>
       </Provider>
     </BrowserRouter>
-    <CssBaseline />
   </Suspense>
 );
 export default RootApp;
