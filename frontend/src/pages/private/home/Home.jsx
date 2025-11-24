@@ -101,6 +101,9 @@ export const Home = () => {
   const salesOrders = useSelector((state) => state.sales.listAll?.result?.items?.result || []);
   const customers = useSelector((state) => state.crud.listAll?.result?.items?.result || []);
   const products = useSelector((state) => state.stock.listAll?.result?.items?.result || []);
+  const pendingBalance = useSelector(
+    (state) => state.sales.calculatePendingBalance?.result || 0
+  );
   const isLoadingSales = useSelector((state) => state.sales.listAll?.isLoading);
   const isLoadingCustomers = useSelector((state) => state.crud.listAll?.isLoading);
   const isLoadingProducts = useSelector((state) => state.stock.listAll?.isLoading);
@@ -170,10 +173,8 @@ export const Home = () => {
         return total + discountAmount;
       }, 0);
 
-    // Pagos pendientes - suma de órdenes no pagadas completamente (FALTA CONTEMPLAR CUOTAS)
-    const pendingPayments = salesOrders
-      .filter((order) => order.paymentStatus !== 'Paid')
-      .reduce((total, order) => total + (order.finalAmount || order.totalAmount || 0), 0);
+    // Pagos pendientes - obtenido del Redux
+    const pendingPayments = pendingBalance;
 
     // Procesar productos con la estructura real del backend
     const allVariations = [];
@@ -244,12 +245,13 @@ export const Home = () => {
     dispatch(sales.listAll({ entity: 'sales' }));
     dispatch(crud.listAll({ entity: 'customer' }));
     dispatch(stock.listAll({ entity: 'stock' }));
+    dispatch(sales.calculatePendingBalance());
   }, [dispatch]);
 
   // Calcular métricas cuando cambien los datos
   useEffect(() => {
     calculateMetrics();
-  }, [salesOrders, customers, products]);
+  }, [salesOrders, customers, products, pendingBalance]);
   const formatCurrency = (amount) => new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
