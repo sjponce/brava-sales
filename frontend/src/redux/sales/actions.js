@@ -412,6 +412,52 @@ const sales = {
         });
       }
     },
+  calculatePendingBalance:
+    () => async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+        keyState: 'calculatePendingBalance',
+        payload: null,
+      });
+
+      try {
+        const data = await salesRequest.filter({
+          entity: 'installment',
+          options: { filter: 'enabled', equal: true },
+        });
+
+        if (data.success === true) {
+          // Filtrar solo las cuotas no pagadas
+          const pendingInstallments = data.result.filter(
+            (installment) => installment.status !== 'Paid'
+          );
+
+          // Calcular el total
+          const totalBalance = pendingInstallments.reduce(
+            (sum, installment) => sum + (installment.amount || 0),
+            0
+          );
+
+          dispatch({
+            type: actionTypes.REQUEST_SUCCESS,
+            keyState: 'calculatePendingBalance',
+            payload: totalBalance,
+          });
+        } else {
+          dispatch({
+            type: actionTypes.REQUEST_FAILED,
+            keyState: 'calculatePendingBalance',
+            payload: null,
+          });
+        }
+      } catch (error) {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: 'calculatePendingBalance',
+          payload: null,
+        });
+      }
+    },
 };
 
 export default sales;
