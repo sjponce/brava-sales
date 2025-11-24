@@ -3,6 +3,7 @@ const axios = require('axios');
 const Travel = mongoose.model('Travel');
 const Vehicle = mongoose.model('Vehicle');
 const SalesOrder = mongoose.model('SalesOrder');
+const StockReservation = mongoose.model('StockReservation');
 
 const computeBultosFromItems = (items) => {
   if (!Array.isArray(items)) return 0;
@@ -25,6 +26,8 @@ const create = async (req, res) => {
     endDate,   // opcional: si no viene, calculamos desde paradas
     vehicleId,
     driverName,
+    seller, // puede venir como id o documento
+    sellerId,
     stops = [],
     useExtraStock = false,
     extraStockItems = [],
@@ -55,7 +58,7 @@ const create = async (req, res) => {
     if (endCandidates.length > 0) {
       computedEnd = new Date(Math.max(...endCandidates.map((d) => d.getTime())));
     }
-  } catch (_) { /* no-op */ }
+  } catch (err) { /* no-op */ void err; }
 
   const start = computedStart || (startDate ? new Date(startDate) : null);
   const end = computedEnd || (endDate ? new Date(endDate) : null);
@@ -82,6 +85,7 @@ const create = async (req, res) => {
     endDate: end,
     vehicle: vehicle._id,
     driverName: driverName || vehicle?.driver?.name,
+    seller: sellerId || (seller && seller._id ? seller._id : seller) || undefined,
     capacityBultos: vehicle.capacityBultos,
     useExtraStock: !!useExtraStock,
     extraStockItems: Array.isArray(extraStockItems) ? extraStockItems : [],
@@ -113,7 +117,8 @@ const getAxiosOptions = (cookie) => {
       const https = require('https');
       options.httpsAgent = new https.Agent({ rejectUnauthorized: false });
     }
-  } catch (_) {
+  } catch (err) {
+    void err;
     // no-op
   }
   return options;
@@ -356,7 +361,8 @@ const start = async (req, res) => {
         });
       }
     }
-  } catch (e) {
+  } catch (err) {
+    void err;
     return res.status(500).json({
       success: false,
       result: null,
@@ -901,6 +907,146 @@ module.exports = {
       result: await Travel.findById(travel._id).exec(),
       message: 'Stock adicional removido',
     });
+  },
+  addTravelSale: async (req, res) => {
+    const { id } = req.params; // travel id
+    const { salesOrderId } = req.body;
+    if (!salesOrderId) {
+      return res.status(400).json({ success: false, result: null, message: 'salesOrderId es requerido' });
+    }
+    const travel = await Travel.findById(id).exec();
+    if (!travel) {
+      return res.status(404).json({ success: false, result: null, message: 'Viaje no encontrado' });
+    }
+
+    const exists = (travel.travelSalesOrders || []).some((so) => String(so?._id || so) === String(salesOrderId));
+    if (!exists) {
+      travel.travelSalesOrders = [...(travel.travelSalesOrders || []), salesOrderId];
+      travel.markModified('travelSalesOrders');
+      await travel.save();
+    }
+
+    // Ensure a StockReservation exists for this sales order so it shows up in shipping list
+    let existingReservation = await StockReservation.findOne({ salesOrder: salesOrderId }).exec();
+    if (!existingReservation) {
+      const so = await SalesOrder.findById(salesOrderId).populate('products.product').exec();
+      if (so) {
+        const reservationProducts = (so.products || []).map((p) => ({
+          productId: p.product?._id || p.product,
+          idStock: p.idStock,
+          stockId: p.product?.stockId || '',
+          color: p.color,
+          sizes: (p.sizes || []).map((s) => ({
+            size: s.size,
+            quantity: Number(s.quantity) || 0,
+            pending: 0,
+          })),
+        }));
+        existingReservation = await new StockReservation({
+          products: reservationProducts,
+          salesOrder: so._id,
+          status: 'Delivered',
+          shippingMethod: 'tripDelivery',
+          departureDate: so.orderDate,
+          arrivalDate: new Date(),
+        }).save();
+      }
+    }
+
+    const result = await Travel.findById(travel._id).populate('travelSalesOrders.order').exec();
+    return res.status(200).json({ success: true, result, message: 'Venta asociada al viaje' });
+  },
+  consumeExtraStock: async (req, res) => {
+    const { id } = req.params;
+    const { consumptions = [] } = req.body;
+
+    if (!Array.isArray(consumptions) || consumptions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        result: null,
+        message: 'consumptions es requerido y debe ser un arreglo',
+      });
+    }
+
+    const travel = await Travel.findById(id).exec();
+    if (!travel) {
+      return res.status(404).json({ success: false, result: null, message: 'Viaje no encontrado' });
+    }
+    // Normalmente la venta en viaje ocurre en tránsito
+    if (travel.status !== 'IN_TRANSIT') {
+      return res.status(400).json({ success: false, result: null, message: 'Solo se puede consumir stock adicional cuando el viaje está en tránsito' });
+    }
+
+    // Construir mapa de consumo por idStock/size
+    const consumeMap = new Map();
+    for (const c of consumptions) {
+      if (!c || typeof c.idStock !== 'number') continue;
+      const key = String(c.idStock);
+      const sizes = Array.isArray(c.sizes) ? c.sizes : [];
+      if (!consumeMap.has(key)) consumeMap.set(key, new Map());
+      const sizeMap = consumeMap.get(key);
+      for (const s of sizes) {
+        const sizeKey = String(s.size);
+        const qty = Number(s.quantity) || 0;
+        if (qty <= 0) continue;
+        sizeMap.set(sizeKey, (sizeMap.get(sizeKey) || 0) + qty);
+      }
+    }
+
+    // Validar disponibilidad
+    const missing = [];
+    for (const [idStockKey, sizeMap] of consumeMap.entries()) {
+      const item = (travel.extraStockItems || []).find((it) => String(it.idStock) === idStockKey);
+      for (const [sizeKey, qty] of sizeMap.entries()) {
+        const row = (item?.sizes || []).find((s) => String(s.size) === sizeKey);
+        const available = Number(row?.quantity || 0);
+        if (available < qty) {
+          missing.push({ idStock: Number(idStockKey), size: sizeKey, requested: qty, available });
+        }
+      }
+    }
+    if (missing.length > 0) {
+      return res.status(400).json({ success: false, result: { missing }, message: 'Faltante de stock adicional para consumir' });
+    }
+
+    // Descontar
+    const keepItems = [];
+    for (const item of travel.extraStockItems || []) {
+      const sizeMap = consumeMap.get(String(item.idStock));
+      if (!sizeMap) {
+        keepItems.push(item);
+        continue;
+      }
+      const nextSizes = [];
+      for (const s of item.sizes || []) {
+        const toConsume = Number(sizeMap.get(String(s.size)) || 0);
+        const remaining = Number(s.quantity || 0) - toConsume;
+        if (remaining > 0) {
+          nextSizes.push({ ...s.toObject?.() || s, quantity: remaining });
+        }
+      }
+      if (nextSizes.length > 0) {
+        const kept = { ...item.toObject?.() || item, sizes: nextSizes };
+        keepItems.push(kept);
+      }
+    }
+
+    travel.extraStockItems = keepItems;
+    travel.markModified('extraStockItems');
+    await travel.save();
+
+    const result = await Travel.findById(travel._id).exec();
+    return res.status(200).json({ success: true, result, message: 'Stock adicional consumido' });
+  },
+  markSaleDelivered: async (req, res) => {
+    const { salesOrderId } = req.params;
+    const salesOrder = await SalesOrder.findById(salesOrderId).exec();
+    if (!salesOrder) {
+      return res.status(404).json({ success: false, result: null, message: 'Orden de venta no encontrada' });
+    }
+    salesOrder.status = 'Delivered';
+    await salesOrder.save();
+    return res.status(200).json({ success: true, result: salesOrder, message: 'Orden marcada como entregada' });
   },
   // minimal CRUD used by generic /api/travel routes
   listAll,
