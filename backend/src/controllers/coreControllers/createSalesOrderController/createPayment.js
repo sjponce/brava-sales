@@ -1,13 +1,18 @@
 const { getPreference } = require('@/config/mercadoPagoConfig');
 const Payment = require('@/models/appModels/Payment');
+const NotificationHelpers = require('@/helpers/NotificationHelpers');
 const mongoose = require('mongoose');
 const Installment = mongoose.model('Installment');
 
 const createPayment = async (req, res) => {
   try {
     const { installmentId, paymentData, mercadoPagoData } = req.body;
+    const userId = req.user?._id || req.user?.id;
 
-    const installment = await Installment.findById(installmentId).populate('payments').exec();
+    const installment = await Installment.findById(installmentId)
+      .populate('payments')
+      .populate({ path: 'salesOrder', populate: 'customer responsible' })
+      .exec();
 
     if (!installment) {
       return res.status(404).json({
@@ -16,6 +21,8 @@ const createPayment = async (req, res) => {
         message: 'No se encontro la cuota',
       });
     }
+
+    const salesOrder = installment.salesOrder;
 
     let mercadoPagoPaymentData;
 
@@ -109,7 +116,12 @@ const createPayment = async (req, res) => {
       paymentMethod: paymentData.paymentMethod,
       mercadoPagoData,
       status,
-      photo: paymentData.photo,    }).save();
+      photo: paymentData.photo,
+    }).save();
+    
+    // Notificar cuando se crea un nuevo pago
+    await NotificationHelpers.onPaymentCreated(newPayment, installment, salesOrder, userId);
+    
     installment.payments.push(newPayment);
     
     const totalPayment = installment.payments.reduce((totalAmount, currentPayment) => {
@@ -132,6 +144,16 @@ const createPayment = async (req, res) => {
     const result = await installment.save();
 
     if (result) {
+      // Notificar cuando se aprueba un pago
+      if (status === 'Approved') {
+        await NotificationHelpers.onPaymentReceived(newPayment, installment, salesOrder, userId);
+      }
+      
+      // Notificar cuando una cuota se paga completamente
+      if (isTotallyPaid) {
+        await NotificationHelpers.onInstallmentFullyPaid(installment, salesOrder, userId);
+      }
+
       return res.status(200).json({
         success: true,
         installment,

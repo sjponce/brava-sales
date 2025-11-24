@@ -9,9 +9,11 @@ const NotificationSchema = new Schema(
       enum: [
         'ORDER_CREATED',
         'ORDER_STATUS_CHANGED', 
+        'PAYMENT_CREATED',
         'PAYMENT_RECEIVED',
         'PAYMENT_OVERDUE',
         'INSTALLMENT_DUE',
+        'INSTALLMENT_FULLY_PAID',
         'STOCK_RESERVED',
         'STOCK_SHIPPED',
         'CUSTOMER_REGISTERED',
@@ -47,10 +49,21 @@ const NotificationSchema = new Schema(
     metadata: {
       salesOrderCode: String,
       customerName: String,
+      customerId: mongoose.Schema.Types.ObjectId,
       amount: Number,
       dueDate: Date,
       previousStatus: String,
       newStatus: String,
+      // Campos específicos para notificaciones de pagos
+      paymentMethod: String,
+      installmentNumber: Number,
+      requiresApproval: Boolean,
+      paymentStatus: String,
+      installmentAmount: Number,
+      sellerId: mongoose.Schema.Types.ObjectId,
+      overdueInstallmentIds: [mongoose.Schema.Types.ObjectId],
+      overdueInstallmentsCount: Number,
+      daysPastDue: Number,
     },
 
     // Estado de la notificación

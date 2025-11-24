@@ -117,6 +117,7 @@ class NotificationService {
         }
 
         case 'PAYMENT_RECEIVED':
+        case 'PAYMENT_CREATED':
         case 'PAYMENT_OVERDUE':
         case 'INSTALLMENT_DUE': {
           // Admins y vendedor responsable
@@ -127,13 +128,31 @@ class NotificationService {
             recipients.add(metadata.sellerId.toString());
           }
 
-          // Para pagos vencidos, también notificar al cliente
-          if (type === 'PAYMENT_OVERDUE' || type === 'INSTALLMENT_DUE') {
+          // Para PAYMENT_CREATED, PAYMENT_OVERDUE e INSTALLMENT_DUE, también notificar al cliente
+          if (type === 'PAYMENT_CREATED' || type === 'PAYMENT_OVERDUE' || type === 'INSTALLMENT_DUE') {
             if (metadata.customerId) {
               const customer = await mongoose.model('Customer').findById(metadata.customerId).populate('user');
               if (customer?.user) {
                 recipients.add(customer.user._id.toString());
               }
+            }
+          }
+          break;
+        }
+
+        case 'INSTALLMENT_FULLY_PAID': {
+          // Admins, vendedor y cliente
+          const installmentAdmins = await User.find({ role: 'admin', enabled: true });
+          installmentAdmins.forEach(admin => recipients.add(admin._id.toString()));
+          
+          if (metadata.sellerId) {
+            recipients.add(metadata.sellerId.toString());
+          }
+          
+          if (metadata.customerId) {
+            const customer = await mongoose.model('Customer').findById(metadata.customerId).populate('user');
+            if (customer?.user) {
+              recipients.add(customer.user._id.toString());
             }
           }
           break;
@@ -193,6 +212,7 @@ class NotificationService {
    */
   static requiresAction(type) {
     const actionRequiredTypes = [
+      'PAYMENT_CREATED',
       'PAYMENT_OVERDUE',
       'INSTALLMENT_DUE',
       'ORDER_CREATED' // Podría requerir procesamiento
