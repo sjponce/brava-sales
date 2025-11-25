@@ -9,6 +9,7 @@ import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { travelsActions } from '@/redux/travels';
 import { selectTravelsList, selectTravelsLoading } from '@/redux/travels/selectors';
 import formatDate from '@/utils/formatDate';
+import translateStatus from '@/utils/translateSalesStatus';
 
 const TravelsDataTable = () => {
   const dispatch = useDispatch();
@@ -72,7 +73,7 @@ const TravelsDataTable = () => {
       field: 'status',
       headerName: 'Estado',
       width: 150,
-      renderCell: (params) => params.row.status,
+      renderCell: (params) => translateStatus(params.row.status),
     },
     {
       field: 'stops',
@@ -123,5 +124,3 @@ const TravelsDataTable = () => {
 };
 
 export default TravelsDataTable;
-
-

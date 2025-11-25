@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   Box,
   Button,
@@ -15,16 +15,15 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import travelsRequest from '@/request/travelsRequest';
 import stock from '@/redux/stock/actions';
 import ModifiableProductTableTrips from '../../sales-orders/components/ModifiableProductTableTrips';
 
-const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, currentBultos, extraItems = [] }) => {
+const ExtraStockModal = ({ open, onClose, travelId, onAdded, extraItems = [] }) => {
   const dispatch = useDispatch();
   const { control, setValue, watch, reset } = useForm();
-  const productsState = useSelector((store) => store.stock.listAll);
 
   const totalQtyPlanned = useMemo(() => {
     const products = watch('products') || [];
@@ -33,11 +32,10 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
       0
     );
   }, [watch('products')]);
-  const willExceedCapacity = currentBultos + totalQtyPlanned > capacityBultos;
 
   const confirm = async () => {
     const products = watch('products') || [];
-    if (products?.length === 0 || willExceedCapacity) return;
+    if (products?.length === 0) return;
     // map products -> items for extra stock
     const items = products.map((p) => ({
       product: p.product,
@@ -47,8 +45,8 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
     }));
     const res = await travelsRequest.addExtraStock(travelId, items);
     if (res?.success) {
-      reset({ products: [] });
       onAdded?.();
+      reset({ products: [] });
     }
   };
 
@@ -68,16 +66,11 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
         </Box>
         <Box display="flex" gap={2} mt={2} alignItems="center">
           <Typography variant="body2">Total bultos a cargar: {totalQtyPlanned}</Typography>
-          {willExceedCapacity && (
-            <Typography variant="body2" color="error">
-              Excede capacidad ({currentBultos + totalQtyPlanned}/{capacityBultos})
-            </Typography>
-          )}
         </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
-        <Button variant="contained" onClick={confirm} disabled={(watch('products') || []).length === 0 || willExceedCapacity}>
+        <Button variant="contained" onClick={confirm} disabled={(watch('products') || []).length === 0}>
           Confirmar
         </Button>
       </DialogActions>
@@ -115,5 +108,3 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, capacityBultos, cur
 };
 
 export default ExtraStockModal;
-
-

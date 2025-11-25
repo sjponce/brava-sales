@@ -73,11 +73,22 @@ const SalesOrderDataTable = () => {
 
   const [rows, setRows] = useState([]);
 
+  const [filterOrderId, setFilterOrderId] = useState(null);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const orderId = searchParams?.get('orderId');
+    setFilterOrderId(orderId || null);
+  }, [location.search]);
+
   useEffect(() => {
     if (!salesOrderState?.result) return;
-    const newRows = salesOrderState.result?.items.result.map((item) => ({ ...item, id: item._id }));
+    let newRows = salesOrderState.result?.items.result.map((item) => ({ ...item, id: item._id }));
+    if (filterOrderId) {
+      newRows = newRows.filter((r) => String(r._id || r.id) === String(filterOrderId));
+    }
     setRows(newRows);
-  }, [salesOrderState]);
+  }, [salesOrderState, filterOrderId]);
 
   const updateTable = () => {
     if (salesOrderState?.isLoading) return;

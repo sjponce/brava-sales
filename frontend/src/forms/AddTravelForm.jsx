@@ -1,7 +1,6 @@
 import {
   Autocomplete,
   Box,
-  Checkbox,
   IconButton,
   Paper,
   Table,
@@ -15,30 +14,31 @@ import {
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 import { vehiclesActions } from '@/redux/vehicles';
 import { selectVehiclesList } from '@/redux/vehicles/selectors';
 import crud from '@/redux/crud/actions';
+
+const CITIES = [
+  { id: 1, name: 'Córdoba' },
+  { id: 2, name: 'Alta Gracia' },
+  { id: 3, name: 'Carlos Paz' },
+];
 
 const AddTravelForm = ({ setValue, watch }) => {
   const dispatch = useDispatch();
   const [stops, setStops] = useState([]);
   const vehicles = useSelector(selectVehiclesList);
-  const customers = useSelector((store) => store.crud?.listAll?.result?.items?.result);
 
   const selectedVehicle = watch('vehicle') || null;
-  const driverName = watch('driverName') || '';
 
   const addStop = () => {
     setStops((prev) => [
       ...prev,
       {
         id: Date.now(),
-        name: '',
-        address: '',
-        customer: null,
       },
     ]);
   };
@@ -53,8 +53,7 @@ const AddTravelForm = ({ setValue, watch }) => {
 
   useEffect(() => {
     dispatch(vehiclesActions.listAll());
-    // customers via generic crud
-    dispatch(crud.listAll({ entity: 'customer' }));
+    dispatch(crud.listAll({ entity: 'seller' }));
     setStops([]);
   }, []);
 
@@ -72,7 +71,6 @@ const AddTravelForm = ({ setValue, watch }) => {
     );
   }, [stops]);
 
-  const today = dayjs();
   return (
     <Box component="form" id="travel-step-1">
       <Box display="flex" gap={2} mb={3}>
@@ -86,11 +84,23 @@ const AddTravelForm = ({ setValue, watch }) => {
             <TextField {...params} sx={{ m: 0 }} required label="Vehículo" margin="normal" />
           )}
         />
-        <TextField
+        <Autocomplete
           style={{ width: '400px' }}
-          label="Conductor"
-          value={driverName}
-          onChange={(e) => setValue('driverName', e.target.value)}
+          value={watch('seller') || null}
+          onChange={(event, value) => {
+            setValue('seller', value);
+            const fullName = value ? [value.name, value.surname].filter(Boolean).join(' ') : '';
+            setValue('driverName', fullName);
+          }}
+          options={useSelector((store) => store.crud?.listAll?.result?.items?.result) || []}
+          getOptionLabel={(option) => {
+            if (!option) return '';
+            const fullName = [option.name, option.surname].filter(Boolean).join(' ');
+            return fullName || option?.user?.email || '';
+          }}
+          renderInput={(params) => (
+            <TextField {...params} sx={{ m: 0 }} label="Vendedor" margin="normal" />
+          )}
         />
       </Box>
 
@@ -106,13 +116,7 @@ const AddTravelForm = ({ setValue, watch }) => {
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="overline">Nombre</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="overline">Dirección</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="overline">Cliente</Typography>
+                <Typography variant="overline">Localidad</Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="overline">Inicio</Typography>
@@ -126,62 +130,58 @@ const AddTravelForm = ({ setValue, watch }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stops.map((stop) => (
-              <TableRow key={`stop-${stop.id}`}>
-                <TableCell>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={stop.name}
-                    onChange={(e) => updateStop(stop.id, 'name', e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    value={stop.address}
-                    onChange={(e) => updateStop(stop.id, 'address', e.target.value)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Autocomplete
-                    fullWidth
-                    value={stop.customer}
-                    onChange={(event, value) => updateStop(stop.id, 'customer', value)}
-                    options={customers || []}
-                    getOptionLabel={(option) => option?.name || ''}
-                    renderInput={(params) => (
-                      <TextField {...params} size="small" variant="outlined" />
-                    )}
-                  />
-                </TableCell>
-                <TableCell>
-                  <DatePicker
-                    value={stop.plannedStart || null}
-                    onChange={(date) => updateStop(stop.id, 'plannedStart', date)}
-                    renderInput={(params) => (
-                      <TextField {...params} size="small" variant="outlined" />
-                    )}
-                  />
-                </TableCell>
-                <TableCell>
-                  <DatePicker
-                    value={stop.plannedEnd || null}
-                    onChange={(date) => updateStop(stop.id, 'plannedEnd', date)}
-                    minDate={stop.plannedStart || null}
-                    renderInput={(params) => (
-                      <TextField {...params} size="small" variant="outlined" />
-                    )}
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  <IconButton onClick={() => removeStop(stop.id)} color="error" size="small">
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {stops.map((stop, index) => {
+              const today = dayjs().startOf('day');
+              const prevEnd = (index > 0 && stops[index - 1]?.plannedEnd)
+                ? dayjs(stops[index - 1].plannedEnd)
+                : null;
+              const minStart = (prevEnd && prevEnd.isValid()) ? prevEnd : today;
+              const startValue = stop.plannedStart ? dayjs(stop.plannedStart) : null;
+              const minEnd = (startValue && startValue.isValid()) ? startValue : today;
+              return (
+                <TableRow key={`stop-${stop.id}`}>
+                  <TableCell sx={{ width: 200 }}>
+                    <Autocomplete
+                      fullWidth
+                      value={stop.name}
+                      onChange={(event, value) => updateStop(stop.id, 'name', value?.name)}
+                      options={CITIES}
+                      getOptionLabel={(option) => option?.name || ''}
+                      renderInput={(params) => (
+                        <TextField {...params} size="small" variant="outlined" />
+                      )}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <DatePicker
+                      slotProps={{ textField: { sx: { width: '100%', margin: 0 } } }}
+                      value={startValue}
+                      minDate={minStart}
+                      onChange={(date) => updateStop(stop.id, 'plannedStart', date)}
+                      renderInput={(params) => (
+                        <TextField {...params} size="small" variant="outlined" />
+                      )}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <DatePicker
+                      slotProps={{ textField: { sx: { width: '100%', margin: 0 } } }}
+                      value={stop.plannedEnd ? dayjs(stop.plannedEnd) : null}
+                      onChange={(date) => updateStop(stop.id, 'plannedEnd', date)}
+                      minDate={minEnd}
+                      renderInput={(params) => (
+                        <TextField {...params} size="small" variant="outlined" />
+                      )}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton onClick={() => removeStop(stop.id)} color="error" size="small">
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -190,5 +190,3 @@ const AddTravelForm = ({ setValue, watch }) => {
 };
 
 export default AddTravelForm;
-
-

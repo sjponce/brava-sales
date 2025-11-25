@@ -31,7 +31,7 @@ const AddTravelModal = ({ open, handlerOpen }) => {
     try {
       const payload = {
         vehicleId: data.vehicle?._id,
-        driverName: data.driverName || data.vehicle?.driver?.name,
+        sellerId: data.seller?._id || undefined,
         stops: data.stops || [],
         useExtraStock: true,
         extraStockItems: data.extraStockItems || [],
@@ -95,5 +95,3 @@ const AddTravelModal = ({ open, handlerOpen }) => {
 };
 
 export default AddTravelModal;
-
-

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Box,
@@ -15,22 +15,19 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { PlayArrowRounded, DoneAllRounded, RocketLaunchRounded, AssignmentTurnedInRounded, Inventory2Rounded } from '@mui/icons-material';
+import { PlayArrowRounded, DoneAllRounded, RocketLaunchRounded, Inventory2Rounded } from '@mui/icons-material';
 import travelsRequest from '@/request/travelsRequest';
 import stockRequest from '@/request/stockRequest';
 import formatDate from '@/utils/formatDate';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import AssignOrdersModal from './components/AssignOrdersModal';
 import ExtraStockModal from './components/ExtraStockModal';
-import StopDeliveriesModal from './components/StopDeliveriesModal';
+// import StopDeliveriesModal from './components/StopDeliveriesModal';
+import CreateTravelSaleModal from './components/CreateTravelSaleModal';
+import translateStatus from '@/utils/translateSalesStatus';
 
-const sumBultos = (items = []) =>
-  items.reduce(
-    (acc, it) =>
-      acc +
-      (it.sizes || []).reduce((s, sz) => s + Number(sz.quantity || 0), 0),
-    0
-  );
+const sumBultos = (items = []) => items.reduce((acc, it) => acc
+  + (it.sizes || []).reduce((s, sz) => s + Number(sz.quantity || 0), 0), 0);
 
 const TravelDetails = () => {
   const { id } = useParams();
@@ -38,14 +35,13 @@ const TravelDetails = () => {
   const [assignOpen, setAssignOpen] = useState(false);
   const [extraOpen, setExtraOpen] = useState(false);
   const [dialog, setDialog] = useState({ open: false, title: '', onAccept: null });
-  const [stockMap, setStockMap] = useState({});
-  const [deliveriesOpen, setDeliveriesOpen] = useState(false);
+  // const [deliveriesOpen, setDeliveriesOpen] = useState(false);
   const [currentStop, setCurrentStop] = useState(null);
-  const capacityUsedPct = useMemo(() => {
-    if (!travel) return 0;
-    const total = sumBultos(travel?.items || []) + sumBultos(travel?.extraStockItems || []);
-    const cap = Number(travel.capacityBultos || 0) || 0;
-    return cap > 0 ? Math.min(100, Math.round((total * 100) / cap)) : 0;
+  const [saleOpen, setSaleOpen] = useState(false);
+  const currentStopIndex = useMemo(() => {
+    if (!travel || !Array.isArray(travel.stops)) return -1;
+    const nextIdx = travel.stops.findIndex((s) => !s?.arrivedAt);
+    return nextIdx === -1 ? travel.stops.length - 1 : nextIdx - 1;
   }, [travel]);
 
   const load = async () => {
@@ -61,18 +57,16 @@ const TravelDetails = () => {
       ).filter((v) => v !== undefined && v !== null);
       if (ids.length > 0) {
         const res = await stockRequest.getStockProducts({ entity: '/stock', ids });
-        setStockMap(res?.result || {});
-      } else {
-        setStockMap({});
+        return res?.result || {};
       }
+      return {};
     } catch (_) {
-      setStockMap({});
+      return {};
     }
   };
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const confirm = (title, onAccept) => setDialog({ open: true, title, onAccept });
@@ -87,35 +81,12 @@ const TravelDetails = () => {
     await load();
   };
 
-  // Group items by sales order for display and unassign selection
-  const groupedByOrder = useMemo(() => {
-    const map = {};
-    (travel?.items || []).forEach((it) => {
-      const key = String(it.salesOrder?._id || it.salesOrder);
-      if (!key) return;
-      if (!map[key]) {
-        map[key] = { order: it.salesOrder, code: it.salesOrder?.salesOrderCode, items: [] };
-      }
-      map[key]?.items?.push(it);
-    });
-    return map;
-  }, [travel]);
-
-  const [selectedOrders, setSelectedOrders] = useState({});
   const [selectedExtraIdStocks, setSelectedExtraIdStocks] = useState({});
 
-  const toggleOrderSelect = (orderId) =>
-    setSelectedOrders((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
-  const toggleExtraSelect = (idStock) =>
-    setSelectedExtraIdStocks((prev) => ({ ...prev, [idStock]: !prev[idStock] }));
-
-  const removeSelectedOrders = async () => {
-    const orderIds = Object.keys(selectedOrders).filter((k) => selectedOrders[k]);
-    if (orderIds.length === 0) return;
-    await travelsRequest.unassignOrders(id, orderIds);
-    await load();
-    setSelectedOrders({});
-  };
+  const toggleExtraSelect = (idStock) => setSelectedExtraIdStocks((prev) => ({
+    ...prev,
+    [idStock]: !prev[idStock],
+  }));
 
   const removeSelectedExtra = async () => {
     const idStocks = Object.keys(selectedExtraIdStocks)
@@ -135,26 +106,15 @@ const TravelDetails = () => {
 
       <Paper variant="outlined">
         <Box display="flex" gap={3} p={2} flexWrap="wrap">
-          <Chip label={`Estado: ${travel.status}`} color="primary" />
+          <Chip label={`Estado: ${translateStatus(travel.status) || ''}`} color="primary" />
           <Chip label={`Inicio: ${formatDate(travel.startDate)}`} />
           <Chip label={`Fin: ${formatDate(travel.endDate)}`} />
           <Chip label={`Vehículo: ${travel.vehicle?.plate || ''}`} />
           <Chip label={`Conductor: ${travel.driverName || ''}`} />
-          <Chip label={`Capacidad: ${travel.capacityBultos || 0} bultos`} />
-          <Chip label={`Uso de capacidad: ${capacityUsedPct}%`} />
         </Box>
       </Paper>
 
       <Box display="flex" gap={2} flexWrap="wrap">
-        {travel.status === 'PLANNED' || travel.status === 'RESERVED' && (
-          <Button
-            variant="outlined"
-            startIcon={<AssignmentTurnedInRounded />}
-            onClick={() => setAssignOpen(true)}
-          >
-            Asignar pedidos
-          </Button>
-        )}
         {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
           <Button
             variant="outlined"
@@ -194,7 +154,7 @@ const TravelDetails = () => {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Nombre</TableCell>
-              <TableCell>Cliente</TableCell>
+              <TableCell>Llegada planeada</TableCell>
               <TableCell>Llegada</TableCell>
               <TableCell align="right">Acciones</TableCell>
             </TableRow>
@@ -204,7 +164,7 @@ const TravelDetails = () => {
               <TableRow key={stop._id}>
                 <TableCell>{idx + 1}</TableCell>
                 <TableCell>{stop.name}</TableCell>
-                <TableCell>{stop.customer?.name || '-'}</TableCell>
+                <TableCell>{stop.plannedStart ? formatDate(stop.plannedStart) : '-'}</TableCell>
                 <TableCell>{stop.arrivedAt ? formatDate(stop.arrivedAt) : '-'}</TableCell>
                 <TableCell align="right">
                   {travel.status === 'IN_TRANSIT' && !stop.arrivedAt && (
@@ -218,16 +178,16 @@ const TravelDetails = () => {
                       <RocketLaunchRounded />
                     </IconButton>
                   )}
-                  {travel.status === 'IN_TRANSIT' && (
+                  {travel.status === 'IN_TRANSIT' && idx === currentStopIndex && (
                     <Button
                       variant="outlined"
                       size="small"
                       onClick={() => {
                         setCurrentStop(stop);
-                        setDeliveriesOpen(true);
+                        setSaleOpen(true);
                       }}
                     >
-                      Entregar
+                      Crear venta
                     </Button>
                   )}
                 </TableCell>
@@ -237,62 +197,42 @@ const TravelDetails = () => {
         </Table>
       </TableContainer>
 
-      <Typography variant="h6">Items</Typography>
+      <Typography variant="h6">Ventas realizadas en viaje</Typography>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Pedido</TableCell>
-              <TableCell>Producto</TableCell>
-              <TableCell>Color</TableCell>
-              <TableCell>Talles</TableCell>
-              <TableCell>Stock disp.</TableCell>
-              {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && <TableCell align="right">Seleccionar</TableCell>}
+              <TableCell>OV</TableCell>
+              <TableCell>Cliente</TableCell>
+              <TableCell align="right">Total</TableCell>
+              <TableCell>Estado</TableCell>
+              <TableCell align="right">Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(travel?.items || []).map((it) => (
-              <TableRow key={it._id}>
-                <TableCell>{it.salesOrder?.salesOrderCode}</TableCell>
-                <TableCell>{it.product?.name || it.idStock}</TableCell>
-                <TableCell>{it.color}</TableCell>
-                <TableCell>
-                  {(it.sizes || [])
-                    .map((s) => `${s.size}(${s.quantity}) D:${s.delivered || 0} F:${s.failed || 0}`)
-                    .join(', ')}
+            {(travel.travelSalesOrders || []).map((so) => (
+              <TableRow key={so._id || String(so)}>
+                <TableCell>{so.salesOrderCode || '-'}</TableCell>
+                <TableCell>{so.customer?.name || so.customer?.businessName || '-'}</TableCell>
+                <TableCell align="right">${Number(so.finalAmount || 0).toFixed(2)}</TableCell>
+                <TableCell>{so.status || '-'}</TableCell>
+                <TableCell align="right">
+                  <Button size="small" onClick={() => window.location.assign(`/sales-orders?orderId=${so._id || so}`)}>
+                    Ver pedidos
+                  </Button>
                 </TableCell>
-                <TableCell>
-                  {(it.sizes || [])
-                    .map((s) => {
-                      const row = (stockMap?.[it.idStock] || []).find((ss) => ss.number === Number(s.size));
-                      const available = row ? Number(row.stock) : 0;
-                      return `${s.size}(${available})`;
-                    })
-                    .join(', ')}
-                </TableCell>
-                {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
-                  <TableCell align="right">
-                    <input
-                      type="checkbox"
-                      checked={!!selectedOrders[String(it.salesOrder?._id || it.salesOrder)]}
-                      onChange={() => toggleOrderSelect(String(it.salesOrder?._id || it.salesOrder))}
-                    />
-                  </TableCell>
-                )}
               </TableRow>
             ))}
+            {(!travel.travelSalesOrders || travel.travelSalesOrders.length === 0) && (
+              <TableRow>
+                <TableCell colSpan={5} align="center">Sin ventas registradas en este viaje.</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-      {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
-        <Box display="flex" justifyContent="flex-end">
-          <Button variant="outlined" color="error" onClick={removeSelectedOrders} disabled={Object.values(selectedOrders).every((v) => !v)}>
-            Quitar pedidos seleccionados
-          </Button>
-        </Box>
-      )}
 
-      <Typography variant="h6">Stock adicional cargado</Typography>
+      <Typography variant="h6">Stock cargado</Typography>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <TableHead>
@@ -301,7 +241,6 @@ const TravelDetails = () => {
               <TableCell>ID Stock</TableCell>
               <TableCell>Color</TableCell>
               <TableCell>Talles</TableCell>
-              <TableCell>Stock disp.</TableCell>
               {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && <TableCell align="right">Seleccionar</TableCell>}
             </TableRow>
           </TableHead>
@@ -313,15 +252,6 @@ const TravelDetails = () => {
                 <TableCell>{it.color}</TableCell>
                 <TableCell>
                   {(it.sizes || []).map((s) => `${s.size}(${s.quantity})`).join(', ')}
-                </TableCell>
-                <TableCell>
-                  {(it.sizes || [])
-                    .map((s) => {
-                      const row = (stockMap?.[it.idStock] || []).find((ss) => ss.number === Number(s.size));
-                      const available = row ? Number(row.stock) : 0;
-                      return `${s.size}(${available})`;
-                    })
-                    .join(', ')}
                 </TableCell>
                 {(travel.status === 'PLANNED' || travel.status === 'RESERVED') && (
                   <TableCell align="right">
@@ -378,15 +308,15 @@ const TravelDetails = () => {
         currentBultos={sumBultos(travel.items) + sumBultos(travel.extraStockItems)}
         extraItems={travel.extraStockItems || []}
       />
-      {deliveriesOpen && currentStop && (
-        <StopDeliveriesModal
-          open={deliveriesOpen}
-          onClose={() => setDeliveriesOpen(false)}
+      {saleOpen && currentStop && (
+        <CreateTravelSaleModal
+          open={saleOpen}
+          onClose={() => setSaleOpen(false)}
           travel={travel}
           stop={currentStop}
-          onDelivered={async () => {
+          onCreated={async () => {
             await load();
-            setDeliveriesOpen(false);
+            setSaleOpen(false);
           }}
         />
       )}
@@ -395,5 +325,3 @@ const TravelDetails = () => {
 };
 
 export default TravelDetails;
-
-
