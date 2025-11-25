@@ -6,12 +6,26 @@ const NotificationService = require('../services/NotificationService');
 class NotificationHelpers {
 
   /**
+   * Extrae el ID del vendedor responsable
+   * Maneja tanto objetos User como IDs de ObjectId
+   */
+  static extractSellerId(responsible) {
+    if (!responsible) return null;
+    
+    // Si es un ObjectId o string, retornar directamente
+    if (typeof responsible === 'string') return responsible;
+    if (responsible._id) return responsible._id;
+    
+    return responsible;
+  }
+
+  /**
    * Notificación cuando se crea una nueva orden de venta
    */
   static async onOrderCreated(salesOrder, createdBy = null) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
 
       await NotificationService.createNotification({
         type: 'ORDER_CREATED',
@@ -53,7 +67,7 @@ class NotificationHelpers {
       };
 
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
 
       await NotificationService.createNotification({
         type: 'ORDER_STATUS_CHANGED',
@@ -88,7 +102,7 @@ class NotificationHelpers {
   static async onPaymentReceived(payment, installment, salesOrder, receivedBy = null) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
 
       await NotificationService.createNotification({
         type: 'PAYMENT_RECEIVED',
@@ -122,7 +136,7 @@ class NotificationHelpers {
    */
   static async onPaymentOverdue({ salesOrder, overdueInstallments, customer }) {
     try {
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
       
       // Calcular información agregada
       const totalOverdueAmount = overdueInstallments.reduce((sum, inst) => sum + inst.amount, 0);
@@ -177,7 +191,7 @@ class NotificationHelpers {
   static async onInstallmentDueSoon(installment, salesOrder, daysUntilDue = 3) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
 
       await NotificationService.createNotification({
         type: 'INSTALLMENT_DUE',
@@ -213,7 +227,7 @@ class NotificationHelpers {
   static async onStockReserved(stockReservation, salesOrder, reservedBy = null) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
       const productCount = stockReservation.products.length;
 
       await NotificationService.createNotification({
@@ -247,7 +261,7 @@ class NotificationHelpers {
   static async onStockShipped(stockReservation, salesOrder, shippedBy = null) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
 
       await NotificationService.createNotification({
         type: 'STOCK_SHIPPED',
@@ -335,7 +349,7 @@ class NotificationHelpers {
   static async onPaymentCreated(payment, installment, salesOrder, createdBy = null) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
       const requiresApproval = payment.paymentMethod !== 'MercadoPago' || payment.status === 'Pending';
 
       await NotificationService.createNotification({
@@ -375,7 +389,7 @@ class NotificationHelpers {
   static async onInstallmentFullyPaid(installment, salesOrder, paidBy = null) {
     try {
       const customer = salesOrder.customer;
-      const sellerId = salesOrder.responsible;
+      const sellerId = this.extractSellerId(salesOrder.responsible);
 
       await NotificationService.createNotification({
         type: 'INSTALLMENT_FULLY_PAID',

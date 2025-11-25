@@ -125,7 +125,13 @@ class NotificationService {
           paymentAdmins.forEach(admin => recipients.add(admin._id.toString()));
           
           if (metadata.sellerId) {
-            recipients.add(metadata.sellerId.toString());
+            // Convertir a string de forma segura
+            const sellerIdString = metadata.sellerId.toString?.() || metadata.sellerId;
+            
+            // Validar que sea un ObjectId válido
+            if (typeof sellerIdString === 'string' && sellerIdString.match(/^[0-9a-f]{24}$/i)) {
+              recipients.add(sellerIdString);
+            }
           }
 
           // Para PAYMENT_CREATED, PAYMENT_OVERDUE e INSTALLMENT_DUE, también notificar al cliente

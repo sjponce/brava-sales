@@ -31,7 +31,6 @@ const EditShippingForm = ({ control, register, watch, setValue, shippingMethodOp
 
         <DatePicker
           label="Fecha de Salida"
-          defaultValue={today}
           value={watch('departureDate')}
           onChange={(newValue) => setValue('departureDate', newValue)}
           slotProps={{

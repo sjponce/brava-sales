@@ -149,14 +149,14 @@ export const menuMaterialSellers = [
     listItems: [
       {
         id: 1,
-        title: 'Informes',
-        url: 'reports',
-        icon: <FeedOutlined color="primary" />,
+        title: 'Productos',
+        url: 'productsReport',
+        icon: <InsertChartOutlined color="primary" />,
       },
       {
         id: 2,
-        title: 'Estadísticas',
-        url: 'stats',
+        title: 'Clientes',
+        url: 'clientsReport',
         icon: <InsertChartOutlined color="primary" />,
       },
 

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { lazy } from 'react';
 import { selectAuth, selectCurrentAdmin } from '@/redux/auth/selectors';
 import { AppContextProvider } from '@/context/appContext';
@@ -27,17 +27,13 @@ const DefaultApp = () => (
 const BravaSalesOs = () => {
   const { isLoggedIn } = useSelector(selectAuth);
   const { forcePasswordReset } = useSelector(selectCurrentAdmin);
-  const theme = useSelector((state) => state.theme);
+  const themeMode = useSelector((state) => state.theme);
 
-  const getTheme = () => {
-    if (theme) {
-      return theme === 'light' ? lightTheme : darkTheme;
-    }
-    return lightTheme;
-  };
+  const currentTheme = themeMode === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <ThemeProvider theme={getTheme()}>
+    <ThemeProvider theme={currentTheme}>
+      <CssBaseline />
       {!isLoggedIn || forcePasswordReset ? <AuthRouter /> : <DefaultApp />}
     </ThemeProvider>
   );

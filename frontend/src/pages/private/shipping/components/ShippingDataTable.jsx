@@ -252,12 +252,16 @@ const ShippingDataTable = () => {
             )}
             {status === 'Shipped' && (
               <>
-                <IconButton onClick={() => handleApprove(params.row)} size="small">
-                  <Check />
-                </IconButton>
-                <IconButton onClick={() => handleCancel(params.row)} size="small">
-                  <Cancel />
-                </IconButton>
+                <Tooltip title="Aprobar envío">
+                  <IconButton onClick={() => handleApprove(params.row)} size="small">
+                    <Check />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Cancelar envío">
+                  <IconButton onClick={() => handleCancel(params.row)} size="small">
+                    <Cancel />
+                  </IconButton>
+                </Tooltip>
               </>
             )}
           </div>
