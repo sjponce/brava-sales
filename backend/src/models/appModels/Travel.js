@@ -149,7 +149,7 @@ const TravelSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'SalesOrder',
-        autopopulate: true,
+        autopopulate: true
       },
     ],
     items: [TravelItemSchema],

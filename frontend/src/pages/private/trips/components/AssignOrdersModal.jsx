@@ -136,7 +136,6 @@ const AssignOrdersModal = ({
       <DialogContent>
         <Box display="flex" gap={2} mb={2} flexWrap="wrap">
           <Typography variant="body2">Capacidad vehículo: {capacityBultos}</Typography>
-          <Typography variant="body2">Bultos actuales: {currentBultos}</Typography>
           <Typography variant="body2">Seleccionados: {totalSelectedBultos}</Typography>
           {overCapacity && (
             <Typography variant="body2" color="error">

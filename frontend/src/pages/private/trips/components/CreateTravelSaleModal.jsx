@@ -330,9 +330,6 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Box display="flex" gap={2} mt={2}>
-              <Typography variant="body2">Bultos a vender: {totalBultos}</Typography>
-            </Box>
           </Box>
         )}
 

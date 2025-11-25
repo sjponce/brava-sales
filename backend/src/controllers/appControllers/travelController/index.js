@@ -304,7 +304,18 @@ const assignOrders = async (req, res) => {
 
 const getDetails = async (req, res) => {
   const { id } = req.params;
-  const travel = await Travel.findById(id).exec();
+  const travel = await Travel.findById(id)
+    .populate('vehicle')
+    .populate('assignedOrders')
+    .populate('items.salesOrder')
+    .populate('items.product')
+    .populate('extraStockItems.product')
+    .populate({
+      path: 'travelSalesOrders',
+      model: 'SalesOrder',
+      populate: { path: 'customer', model: 'Customer' },
+    })
+    .exec();
   if (!travel) {
     return res.status(404).json({
       success: false,
@@ -760,7 +771,7 @@ module.exports = {
       });
     }
 
-    const travel = await Travel.findById(id).exec();
+    const travel = await Travel.findById(id).populate().exec();
     if (!travel) {
       return res.status(404).json({ success: false, result: null, message: 'Viaje no encontrado' });
     }

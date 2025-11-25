@@ -64,9 +64,6 @@ const ExtraStockModal = ({ open, onClose, travelId, onAdded, extraItems = [] }) 
         <Box mt={1}>
           <ModifiableProductTableTrips setValue={setValue} watch={watch} control={control} />
         </Box>
-        <Box display="flex" gap={2} mt={2} alignItems="center">
-          <Typography variant="body2">Total bultos a cargar: {totalQtyPlanned}</Typography>
-        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>

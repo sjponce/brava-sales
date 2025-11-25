@@ -45,7 +45,6 @@ const TravelsDataTable = () => {
   useEffect(() => {
     updateTable();
   }, [createTravelState?.result, deleteTravelState?.result, updateTravelState?.result]);
-
   const columns = [
     {
       field: 'startDate',
@@ -55,7 +54,7 @@ const TravelsDataTable = () => {
     {
       field: 'endDate',
       headerName: 'Fin',
-      renderCell: (params) => formatDate(params.row.endDate),
+      renderCell: (params) => formatDate(params.row.completedAt || '-'),
     },
     {
       field: 'vehicle',

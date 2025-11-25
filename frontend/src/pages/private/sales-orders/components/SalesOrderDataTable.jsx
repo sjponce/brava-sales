@@ -85,7 +85,7 @@ const SalesOrderDataTable = () => {
   useEffect(() => {
     updateTable();
   }, [createSalesOrderState, updateSalesOrderState, deleteSalesOrderState, reserveStockState]);
-
+  console.log(rows);
   const columns = [
     {
       field: 'salesOrderCode',
@@ -111,7 +111,12 @@ const SalesOrderDataTable = () => {
       field: 'status',
       headerName: 'Estado',
       width: 200,
-      renderCell: (params) => `${translateStatus(params.row.status) || ''}`,
+      renderCell: (params) => {
+        if (params.row.shippingMethod === 'tripDelivery' && params.row.status === 'Delivered') {
+          return 'Completado';
+        }
+        return translateStatus(params.row.status) || '';
+      }
     },
     {
       field: 'actions',

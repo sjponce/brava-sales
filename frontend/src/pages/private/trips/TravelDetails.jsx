@@ -99,7 +99,7 @@ const TravelDetails = () => {
   };
 
   if (!travel) return null;
-
+  console.log(travel);
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Typography variant="h5">Viaje</Typography>
@@ -203,7 +203,6 @@ const TravelDetails = () => {
           <TableHead>
             <TableRow>
               <TableCell>OV</TableCell>
-              <TableCell>Cliente</TableCell>
               <TableCell align="right">Total</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell align="right">Acciones</TableCell>
@@ -213,9 +212,8 @@ const TravelDetails = () => {
             {(travel.travelSalesOrders || []).map((so) => (
               <TableRow key={so._id || String(so)}>
                 <TableCell>{so.salesOrderCode || '-'}</TableCell>
-                <TableCell>{so.customer?.name || so.customer?.businessName || '-'}</TableCell>
                 <TableCell align="right">${Number(so.finalAmount || 0).toFixed(2)}</TableCell>
-                <TableCell>{so.status || '-'}</TableCell>
+                <TableCell>{translateStatus(so.status) || '-'}</TableCell>
                 <TableCell align="right">
                   <Button size="small" onClick={() => window.location.assign(`/sales-orders?orderId=${so._id || so}`)}>
                     Ver pedidos
@@ -247,7 +245,7 @@ const TravelDetails = () => {
           <TableBody>
             {(travel.extraStockItems || []).map((it, idx) => (
               <TableRow key={`${it.idStock}-${idx}`}>
-                <TableCell>{it.product?.name || '-'}</TableCell>
+                <TableCell>{it.product?.stockId || '-'}</TableCell>
                 <TableCell>{it.idStock}</TableCell>
                 <TableCell>{it.color}</TableCell>
                 <TableCell>
