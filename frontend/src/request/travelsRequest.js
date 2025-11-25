@@ -106,6 +106,51 @@ const travelsRequest = {
       return errorHandler(error);
     }
   },
+  unassignOrders: async (travelId, orderIds) => {
+    try {
+      const response = await axios.post(`/travels/${travelId}/unassign-orders`, { orderIds });
+      successHandler(response, { notifyOnSuccess: true, notifyOnFailed: true });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  removeExtraStock: async (travelId, idStocks) => {
+    try {
+      const response = await axios.post(`/travels/${travelId}/extra-stock/remove`, { idStocks });
+      successHandler(response, { notifyOnSuccess: true, notifyOnFailed: true });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  attachTravelSale: async (travelId, salesOrderId) => {
+    try {
+      const response = await axios.post(`/travels/${travelId}/sales`, { salesOrderId });
+      successHandler(response, { notifyOnSuccess: false, notifyOnFailed: true });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  markSaleDelivered: async (travelId, salesOrderId) => {
+    try {
+      const response = await axios.post(`/travels/${travelId}/sales/${salesOrderId}/delivered`);
+      successHandler(response, { notifyOnSuccess: false, notifyOnFailed: true });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  consumeExtraStock: async (travelId, consumptions) => {
+    try {
+      const response = await axios.post(`/travels/${travelId}/extra-stock/consume`, { consumptions });
+      successHandler(response, { notifyOnSuccess: false, notifyOnFailed: true });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
 };
 
 export default travelsRequest;

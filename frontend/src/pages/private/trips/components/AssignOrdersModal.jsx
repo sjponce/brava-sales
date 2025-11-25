@@ -39,6 +39,7 @@ const AssignOrdersModal = ({
   // const [loadingStock, setLoadingStock] = useState(false);
   const [stockMap, setStockMap] = useState({});
   const [expanded, setExpanded] = useState({});
+  const [reservedOrderIds, setReservedOrderIds] = useState(new Set());
 
   useEffect(() => {
     if (open) {
@@ -89,7 +90,11 @@ const AssignOrdersModal = ({
           return true;
         };
 
-        setFilteredOrders(pending.filter(hasSufficientStock));
+        // filter out orders already assigned to a RESERVED / IN_TRANSIT travel
+        const next = pending
+          .filter((o) => !reservedOrderIds.has(String(o._id)))
+          .filter(hasSufficientStock);
+        setFilteredOrders(next);
         setStockMap(stockDataMap);
       } catch (_) {
         // fallback: if stock fails, show none to avoid overpromising

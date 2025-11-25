@@ -1,10 +1,11 @@
 import { Box, Button, IconButton, Modal, Tooltip, Typography, styled } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import AddTravelForm from '@/forms/AddTravelForm';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
-import travelsRequest from '@/request/travelsRequest';
+import { travelsActions } from '@/redux/travels';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -14,6 +15,7 @@ const StyledModal = styled(Modal)({
 
 const AddTravelModal = ({ open, handlerOpen }) => {
   const { setValue, watch, reset, handleSubmit } = useForm();
+  const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const preSubmit = (e) => {
@@ -27,15 +29,14 @@ const AddTravelModal = ({ open, handlerOpen }) => {
 
   const onSubmit = async (data) => {
     try {
-      await travelsRequest.createTravel({
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
+      const payload = {
         vehicleId: data.vehicle?._id,
-        driverName: data.driverName || data.vehicle?.driver?.name,
+        sellerId: data.seller?._id || undefined,
         stops: data.stops || [],
-        useExtraStock: !!data.useExtraStock,
+        useExtraStock: true,
         extraStockItems: data.extraStockItems || [],
-      });
+      };
+      dispatch(travelsActions.create(payload));
     } catch (error) {
       // handled globally
     } finally {

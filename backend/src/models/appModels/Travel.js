@@ -10,16 +10,12 @@ const TravelStopSchema = new Schema(
     },
     name: {
       type: String,
-      required: true,
-      trim: true,
     },
-    address: {
-      type: String,
+    plannedStart: {
+      type: Date,
     },
-    customer: {
-      type: Schema.Types.ObjectId,
-      ref: 'Customer',
-      autopopulate: true,
+    plannedEnd: {
+      type: Date,
     },
     arrivedAt: {
       type: Date,
@@ -125,6 +121,11 @@ const TravelSchema = new Schema(
       autopopulate: true,
       required: true,
     },
+    seller: {
+      type: Schema.Types.ObjectId,
+      ref: 'Seller',
+      autopopulate: true,
+    },
     driverName: {
       type: String,
     },
@@ -164,6 +165,13 @@ const TravelSchema = new Schema(
     ttlReleaseAt: {
       type: Date,
     },
+    travelSalesOrders: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'SalesOrder',
+        autopopulate: true,
+      },
+    ],
   },
   { timestamps: true }
 );

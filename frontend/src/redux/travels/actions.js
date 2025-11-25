@@ -5,6 +5,15 @@ const travels = {
   resetState: () => async (dispatch) => {
     dispatch({ type: actionTypes.RESET_STATE });
   },
+  create: (payload) => async (dispatch) => {
+    dispatch({ type: actionTypes.REQUEST_LOADING, keyState: 'create' });
+    const data = await travelsRequest.createTravel(payload);
+    if (data.success === true) {
+      dispatch({ type: actionTypes.REQUEST_SUCCESS, keyState: 'create', payload: data.result });
+    } else {
+      dispatch({ type: actionTypes.REQUEST_FAILED, keyState: 'create' });
+    }
+  },
   listAll: () => async (dispatch) => {
     dispatch({ type: actionTypes.REQUEST_LOADING, keyState: 'listAll' });
     const data = await travelsRequest.listTravels();

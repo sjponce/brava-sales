@@ -13,7 +13,11 @@ const translateStatus = (status) => {
     'Partially reserved': 'Parcialmente reservado',
     'Partially Shipped': 'Parcialmente entregado',
     Completed: 'Completado',
-
+    PLANNED: 'Planificado',
+    RESERVED: 'Reservado',
+    IN_TRANSIT: 'En transito',
+    COMPLETED: 'Completado',
+    CANCELLED: 'Cancelado',
   };
   return translations[status] || status;
 };

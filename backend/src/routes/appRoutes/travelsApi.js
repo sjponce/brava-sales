@@ -16,6 +16,11 @@ const setupRoutes = async () => {
   router.route('/travels/:id/deliveries/failed').post(catchErrors(controller.recordFailedDeliveries));
   router.route('/travels/:id/complete').post(catchErrors(controller.complete));
   router.route('/travels/:id/extra-stock').post(catchErrors(controller.addExtraStock));
+  router.route('/travels/:id/unassign-orders').post(catchErrors(controller.unassignOrders));
+  router.route('/travels/:id/extra-stock/remove').post(catchErrors(controller.removeExtraStock));
+  router.route('/travels/:id/sales').post(catchErrors(controller.addTravelSale));
+  router.route('/travels/:id/sales/:salesOrderId/delivered').post(catchErrors(controller.markSaleDelivered));
+  router.route('/travels/:id/extra-stock/consume').post(catchErrors(controller.consumeExtraStock));
 };
 
 setupRoutes();

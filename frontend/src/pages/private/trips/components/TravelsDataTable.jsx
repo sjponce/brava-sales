@@ -9,6 +9,7 @@ import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import { travelsActions } from '@/redux/travels';
 import { selectTravelsList, selectTravelsLoading } from '@/redux/travels/selectors';
 import formatDate from '@/utils/formatDate';
+import translateStatus from '@/utils/translateSalesStatus';
 
 const TravelsDataTable = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,9 @@ const TravelsDataTable = () => {
   const rows = useSelector(selectTravelsList).map((item) => ({ ...item, id: item._id }));
   const isLoading = useSelector(selectTravelsLoading);
   const userState = useSelector((store) => store.auth.current);
-
+  const createTravelState = useSelector((store) => store.travels.create);
+  const deleteTravelState = useSelector((store) => store.travels.delete);
+  const updateTravelState = useSelector((store) => store.travels.update);
   const handleDelete = (id, description) => {
     setSelectedRow({ ...selectedRow, id, description });
     setDialogOpen(true);
@@ -41,7 +44,7 @@ const TravelsDataTable = () => {
 
   useEffect(() => {
     updateTable();
-  }, []);
+  }, [createTravelState?.result, deleteTravelState?.result, updateTravelState?.result]);
 
   const columns = [
     {
@@ -70,7 +73,7 @@ const TravelsDataTable = () => {
       field: 'status',
       headerName: 'Estado',
       width: 150,
-      renderCell: (params) => params.row.status,
+      renderCell: (params) => translateStatus(params.row.status),
     },
     {
       field: 'stops',
