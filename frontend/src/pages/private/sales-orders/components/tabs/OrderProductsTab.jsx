@@ -32,7 +32,7 @@ const OrderProductsTab = ({ saleData }) => {
     const stockMap = {};
     Object.keys(stockData).forEach((idStock) => {
       stockMap[idStock] = {};
-      stockData[idStock].forEach((size) => {
+      stockData[idStock]?.forEach((size) => {
         stockMap[idStock][size.number] = size.stock;
       });
     });

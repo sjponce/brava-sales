@@ -112,7 +112,8 @@ const ProductsReport = () => {
 
     const filteredSalesOrders = salesOrders.filter((order) => {
       const orderDate = new Date(order.orderDate);
-      return (!startDate || orderDate >= startDate) && (!endDate || orderDate <= endDate);
+      const endOfDay = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!startDate || orderDate >= startDate) && (!endOfDay || orderDate <= endOfDay);
     });
 
     let totalRevenue = 0;
@@ -167,7 +168,8 @@ const ProductsReport = () => {
     if (salesOrders && products) {
       const filteredSalesOrders = salesOrders.filter((order) => {
         const orderDate = new Date(order.orderDate);
-        return (!startDate || orderDate >= startDate) && (!endDate || orderDate <= endDate);
+        const endOfDay = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+        return (!startDate || orderDate >= startDate) && (!endOfDay || orderDate <= endOfDay);
       });
 
       const productTotals = {};

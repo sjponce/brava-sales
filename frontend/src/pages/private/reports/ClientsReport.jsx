@@ -113,7 +113,8 @@ const ClientsReport = () => {
 
     const filteredSalesOrders = salesOrders.filter((order) => {
       const orderDate = new Date(order.orderDate);
-      return (!startDate || orderDate >= startDate) && (!endDate || orderDate <= endDate);
+      const endOfDay = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!startDate || orderDate >= startDate) && (!endOfDay || orderDate <= endOfDay);
     });
 
     let totalRevenue = 0;
@@ -169,7 +170,8 @@ const ClientsReport = () => {
     if (salesOrders && customers) {
       const filteredSalesOrders = salesOrders.filter((order) => {
         const orderDate = new Date(order.orderDate);
-        return (!startDate || orderDate >= startDate) && (!endDate || orderDate <= endDate);
+        const endOfDay = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+        return (!startDate || orderDate >= startDate) && (!endOfDay || orderDate <= endOfDay);
       });
 
       const clientTotals = {};

@@ -194,6 +194,14 @@ export const routesSellers = {
           path: '/trips/:id',
           element: <TravelDetails />,
         },
+        {
+          path: '/productsReport',
+          element: <ProductsReport />,
+        },
+        {
+          path: '/clientsReport',
+          element: <Reports />,
+        }
       ],
     },
   ],

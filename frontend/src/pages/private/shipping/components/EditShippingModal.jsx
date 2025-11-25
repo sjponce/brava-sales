@@ -36,12 +36,18 @@ const EditShippingModal = ({ shipping, open, handlerOpen }) => {
 
   useEffect(() => {
     setValue('shippingMethod', shipping?.shippingMethod);
-    setValue('arrivalDate', shipping?.arrivalDate ? dayjs(shipping.arrivalDate) : null);
-    setValue('departureDate', shipping?.departureDate ? dayjs(shipping.departureDate) : null);
+    setValue(
+      'arrivalDate',
+      shipping?.arrivalDate
+        ? dayjs(shipping.arrivalDate)
+        : dayjs().add(15, 'day')
+    );
+    setValue('departureDate', shipping?.departureDate ? dayjs(shipping.departureDate) : dayjs());
     setValue('shippingCode', shipping?.shippingCode);
   }, [shipping]);
 
   const updateShipping = async (data) => {
+    console.log('Updating shipping with data:', data);
     try {
       await dispatch(crud.update({ entity: 'stockReservation', id: shipping.id, jsonData: data }));
     } catch (error) {
