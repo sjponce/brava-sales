@@ -45,7 +45,7 @@ const EditShippingModal = ({ shipping, open, handlerOpen }) => {
     try {
       await dispatch(crud.update({ entity: 'stockReservation', id: shipping.id, jsonData: data }));
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

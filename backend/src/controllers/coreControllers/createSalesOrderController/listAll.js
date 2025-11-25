@@ -39,7 +39,7 @@ const listAll = async (req, res) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Ocurrio un error buscando las ordenedes de venta',
+      message: 'Ocurrio un error buscando las ordenes de venta',
       error: error.message,
     });
   }

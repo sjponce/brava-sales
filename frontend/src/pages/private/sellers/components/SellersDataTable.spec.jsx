@@ -96,17 +96,10 @@ describe('SellersDataTable Component', () => {
         <SellersDataTable />
       </Provider>
     );
-    await waitFor(() => {
-      const { crud } = mockStore.getState();
-      const { listAll } = crud;
-      return listAll.isSuccess && !listAll.isLoading;
-    });
 
-    // Hack to push the expect to the end of Event loop
-    setTimeout(() => {
+    await waitFor(() => {
       expect(screen.getByText(/John/i)).toBeInTheDocument();
-      expect(screen.getByText(/Doe/i)).toBeInTheDocument();
-    }, 0);
+    });
   });
 
   test('test_loading_indicator', async () => {
@@ -128,14 +121,10 @@ describe('SellersDataTable Component', () => {
         <SellersDataTable />
       </Provider>
     );
+
     await waitFor(() => {
-      const { crud } = mockStore.getState();
-      const { listAll } = crud;
-      return listAll.isLoading;
-    });
-    setTimeout(() => {
-      const loadingComponent = screen.getByRole('progressbar');
+      const loadingComponent = screen.getByTestId('loading-backdrop');
       expect(loadingComponent).toBeInTheDocument();
-    }, 0);
+    });
   });
 });

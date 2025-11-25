@@ -40,7 +40,9 @@ const ModalProductDetails = ({
 
   const updateProduct = async (data) => {
     const dataProduct = {
+      promotionalName: data.promotionalName,
       description: data.description,
+      enabled: data.enabled,
       tags: data.tags,
       price: parseFloat(data.price),
     };
@@ -68,6 +70,8 @@ const ModalProductDetails = ({
       };
 
       setValue('promotionalName', product?.promotionalName);
+      setValue('enabled', product?.enabled);
+      setValue('stockId', product?.stockId);
       setValue('color', product?.stockInfo?.color);
       setValue('description', product?.description);
       setValue('price', product?.price);

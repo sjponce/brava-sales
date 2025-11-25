@@ -31,6 +31,7 @@ const EditShippingForm = ({ control, register, watch, setValue, shippingMethodOp
 
         <DatePicker
           label="Fecha de Salida"
+          defaultValue={today}
           value={watch('departureDate')}
           onChange={(newValue) => setValue('departureDate', newValue)}
           slotProps={{
@@ -41,17 +42,21 @@ const EditShippingForm = ({ control, register, watch, setValue, shippingMethodOp
           minDate={today}
         />
 
-        <DatePicker
-          label="Fecha de Llegada"
-          value={watch('arrivalDate')}
-          onChange={(newValue) => setValue('arrivalDate', newValue)}
-          slotProps={{
-            textField: {
-              readOnly: true,
-            }
-          }}
-          minDate={watch('departureDate') || today}
-        />
+        {
+          watch('shippingMethod') === 'tripDelivery' && (
+            <DatePicker
+              label="Fecha de Llegada"
+              value={watch('arrivalDate')}
+              onChange={(newValue) => setValue('arrivalDate', newValue)}
+              slotProps={{
+                textField: {
+                  readOnly: true,
+                }
+              }}
+              minDate={watch('departureDate') || today}
+            />
+          )
+        }
 
         <TextField
           label="Código de envío"

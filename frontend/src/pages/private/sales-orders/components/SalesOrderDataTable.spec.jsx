@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '@/redux/rootReducer';
 import { request } from '@/request';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ModalSalesOrderProvider } from '@/context/modalSalesOrderContext/ModalSalesOrderContext';
 
 const mockDelete = jest.fn().mockResolvedValue({
   message: 'Se elimino el elemento',
@@ -92,20 +93,18 @@ describe('SalesOrderDataTable Component', () => {
     render(
       <Provider store={mockStore}>
         <Router>
-          <SalesOrderDataTable />
+          <ModalSalesOrderProvider>
+            <SalesOrderDataTable />
+          </ModalSalesOrderProvider>
         </Router>
       </Provider>
     );
+
     await waitFor(() => {
-      const { sales } = mockStore.getState();
-      const { listAll } = sales;
-      return listAll.isSuccess && !listAll.isLoading;
+      expect(screen.getByText(/SO001/i)).toBeInTheDocument();
     });
 
-    setTimeout(() => {
-      expect(screen.getByText(/SO001/i)).toBeInTheDocument();
-      expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
-    }, 0);
+    expect(screen.getByText(/John Doe/i)).toBeInTheDocument();
   });
 
   test('test_loading_indicator', async () => {
@@ -125,18 +124,16 @@ describe('SalesOrderDataTable Component', () => {
     render(
       <Provider store={mockStore}>
         <Router>
-          <SalesOrderDataTable />
+          <ModalSalesOrderProvider>
+            <SalesOrderDataTable />
+          </ModalSalesOrderProvider>
         </Router>
       </Provider>
     );
+
     await waitFor(() => {
-      const { sales } = mockStore.getState();
-      const { listAll } = sales;
-      return listAll.isLoading;
-    });
-    setTimeout(() => {
-      const loadingComponent = screen.getByRole('progressbar');
+      const loadingComponent = screen.getByTestId('loading-backdrop');
       expect(loadingComponent).toBeInTheDocument();
-    }, 0);
+    });
   });
 });

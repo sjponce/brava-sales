@@ -8,7 +8,7 @@ const translateStatus = (status) => {
     Paid: 'Pagado',
     Approved: 'Aprobado',
     Rejected: 'Rechazado',
-    OverDue: 'Vencido',
+    Overdue: 'Vencido',
     Reserved: 'Reservado',
     'Partially reserved': 'Parcialmente reservado',
     'Partially Shipped': 'Parcialmente entregado',

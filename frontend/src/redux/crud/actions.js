@@ -33,9 +33,10 @@ const crud = {
     },
   list:
     ({ entity, options = { page: 1, items: 10 } }) => async (dispatch) => {
+      const keyState = `list_${entity}`;
       dispatch({
         type: actionTypes.REQUEST_LOADING,
-        keyState: 'list',
+        keyState,
         payload: null,
       });
 
@@ -52,13 +53,13 @@ const crud = {
         };
         dispatch({
           type: actionTypes.REQUEST_SUCCESS,
-          keyState: 'list',
+          keyState,
           payload: result,
         });
       } else {
         dispatch({
           type: actionTypes.REQUEST_FAILED,
-          keyState: 'list',
+          keyState,
           payload: null,
         });
       }
@@ -233,10 +234,10 @@ const crud = {
     }
   },
   filter:
-    ({ entity, options = {} }) => async (dispatch) => {
+    ({ entity, options = {}, accessKey = 'filter' }) => async (dispatch) => {
       dispatch({
         type: actionTypes.REQUEST_LOADING,
-        keyState: 'filter',
+        keyState: accessKey,
         payload: null,
       });
 
@@ -245,20 +246,22 @@ const crud = {
 
         dispatch({
           type: actionTypes.REQUEST_SUCCESS,
-          keyState: 'filter',
+          keyState: accessKey,
           payload: data,
         });
 
-        dispatch({
-          type: actionTypes.CURRENT_ITEM,
-          payload: data,
-        });
+        if (accessKey === 'filter') {
+          dispatch({
+            type: actionTypes.CURRENT_ITEM,
+            payload: data,
+          });
+        }
 
         return data;
       } catch (error) {
         dispatch({
           type: actionTypes.REQUEST_FAILED,
-          keyState: 'filter',
+          keyState: accessKey,
           payload: null,
         });
 

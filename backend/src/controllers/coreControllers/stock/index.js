@@ -1,4 +1,5 @@
 const listAll = require('./listAll');
+const listAllCatalog = require('./listAllCatalog');
 const { callWithAuth } = require('./callWithAuth');
 const update  = require('./update');
 const remove = require('./remove');
@@ -10,6 +11,9 @@ const createStockMiddleware = () => {
   const stockMethods = {
     listAll: async (req, res, ...args) => {
       await callWithAuth(req, res, listAll, ...args);
+    },
+    listAllCatalog: async (req, res, ...args) => {
+      await callWithAuth(req, res, listAllCatalog, ...args);
     },
     update: async (req, res, ...args) => {
       await callWithAuth(req, res, update, ...args);

@@ -40,7 +40,9 @@ const update = async (req, res) => {
 
     // Actualizar solo los campos permitidos
     const updateFields = {
+      promotionalName: jsonData.promotionalName,
       description: jsonData.description,
+      enabled: jsonData.enabled,
       tags: jsonData.tags,
     };
 

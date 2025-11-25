@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Typography,
   IconButton,
@@ -15,60 +14,21 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { EditRounded } from '@mui/icons-material';
-import stock from '@/redux/stock/actions';
 import getColors from '@/utils/getColors';
 import TwoColorCircle from '@/components/TwoColorCircle';
-import getProductImageMap from '@/utils/getProductImageMap';
 import { StyledCard, ImageContainer, StyledCardMedia, EditButton } from './custom/StyledComponents';
+import { ProductsContext } from '@/context/productsContext/ProducsContext';
 
 const ProductCatalog = ({ handleModal }) => {
-  const dispatch = useDispatch();
-  const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [imageProducts, setImageProducts] = useState([]);
   const [expandedImage, setExpandedImage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const { imageProducts, handleImageByColor, allProducts } = useContext(ProductsContext);
 
   const handleCloseImage = () => {
     setExpandedImage('');
   };
-
-  const productState = useSelector((store) => store.stock.listAll);
-
-  const handleImageByColor = (stockId, imageUrl, color, id, quantity) => {
-    setImageProducts((prevImages) => ({
-      ...prevImages,
-      [stockId]: {
-        imageUrl,
-        color,
-        id,
-        quantity,
-      },
-    }));
-  };
-
-  useEffect(() => {
-    if (!productState?.result) return;
-    const newRows = productState.result?.items?.result;
-    setAllProducts(newRows);
-    setFilteredProducts(newRows);
-    const images = newRows.reduce((acc, item) => {
-      acc[item.stockId] = {
-        imageUrl: item.variations[0]?.imageUrl,
-        color: item.variations[0]?.color,
-        id: item.variations[0]?.id,
-        quantity: item.variations[0]?.stock || 0,
-      };
-      return acc;
-    }, {});
-    setImageProducts(images);
-  }, [productState]);
-
-  useEffect(() => {
-    if (!productState?.result) return;
-    const productImgMap = getProductImageMap(productState?.result.items.result);
-    dispatch(stock.setProductImageMap(productImgMap));
-  }, [productState?.isSuccess]);
 
   // Filtrar productos por stockId
   useEffect(() => {
@@ -92,6 +52,20 @@ const ProductCatalog = ({ handleModal }) => {
 
   const handleClearSearch = () => {
     setSearchTerm('');
+  };
+
+  // Helper para detectar si un producto es nuevo (dentro de 21 días)
+  const isProductNew = (createdAt) => {
+    if (!createdAt) return false;
+    try {
+      const productDate = new Date(createdAt);
+      const currentDate = new Date();
+      const timeDiffMs = currentDate - productDate;
+      return timeDiffMs < (21 * 24 * 60 * 60 * 1000);
+    } catch (error) {
+      console.error('Error parsing createdAt date:', error);
+      return false;
+    }
   };
 
   return (
@@ -146,7 +120,12 @@ const ProductCatalog = ({ handleModal }) => {
           }}
         >
           {filteredProducts.map((product) => (
-            <StyledCard key={product._id}>
+            <StyledCard
+              key={product._id}
+              sx={{
+                opacity: product.enabled ? 1 : 0.6,
+              }}
+            >
               <ImageContainer>
                 <StyledCardMedia
                   image={imageProducts[product.stockId]?.imageUrl}
@@ -159,6 +138,39 @@ const ProductCatalog = ({ handleModal }) => {
                     )
                   }
                 />
+                {isProductNew(product.createdAt) && (
+                  <Chip
+                    label="Nuevo"
+                    size="small"
+                    variant="outlined"
+                    color="warning"
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                      height: 24,
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      backgroundColor: 'background.paper',
+                    }}
+                  />
+                )}
+                {!product.enabled && (
+                  <Chip
+                    label="No publicado"
+                    size="small"
+                    sx={{
+                      position: 'absolute',
+                      bottom: 8,
+                      left: 8,
+                      height: 24,
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      backgroundColor: '#9e9e9e',
+                      color: 'white',
+                    }}
+                  />
+                )}
                 <EditButton
                   className="edit-button"
                   size="small"

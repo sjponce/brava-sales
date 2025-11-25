@@ -32,4 +32,7 @@ const PriceHistorySchema = new Schema(
   { timestamps: true }
 );
 
+// Índice para optimizar búsquedas de precio más reciente por producto
+PriceHistorySchema.index({ product: 1, effectiveDate: -1 });
+
 module.exports = mongoose.model('PriceHistory', PriceHistorySchema);

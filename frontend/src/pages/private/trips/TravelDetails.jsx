@@ -26,9 +26,6 @@ import ExtraStockModal from './components/ExtraStockModal';
 import CreateTravelSaleModal from './components/CreateTravelSaleModal';
 import translateStatus from '@/utils/translateSalesStatus';
 
-const sumBultos = (items = []) => items.reduce((acc, it) => acc
-  + (it.sizes || []).reduce((s, sz) => s + Number(sz.quantity || 0), 0), 0);
-
 const TravelDetails = () => {
   const { id } = useParams();
   const [travel, setTravel] = useState(null);

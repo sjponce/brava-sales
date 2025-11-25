@@ -1,21 +1,26 @@
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { selectAuth, selectCurrentAdmin } from '@/redux/auth/selectors';
 import { AppContextProvider } from '@/context/appContext';
 import { lightTheme, darkTheme } from '../theme/theme';
-import PageLoader from '@/components/PageLoader';
 import AuthRouter from '@/router/AuthRouter';
 import GlobalDownloadManager from '../utils/GlobalDownloadManager';
+import ModalSalesOrderDetailsGlobal from '@/pages/private/sales-orders/components/ModalSalesOrderDetailsGlobal';
+import { ModalSalesOrderProvider } from '@/context/modalSalesOrderContext/ModalSalesOrderContext';
+import { ProductsProvider } from '@/context/productsContext/ProducsContext';
 
 const ErpApp = lazy(() => import('./ErpApp'));
 
 const DefaultApp = () => (
   <AppContextProvider>
-    <Suspense fallback={<PageLoader />}>
-      <ErpApp />
-    </Suspense>
-    <GlobalDownloadManager />
+    <ProductsProvider>
+      <ModalSalesOrderProvider>
+        <ErpApp />
+        <GlobalDownloadManager />
+        <ModalSalesOrderDetailsGlobal />
+      </ModalSalesOrderProvider>
+    </ProductsProvider>
   </AppContextProvider>
 );
 

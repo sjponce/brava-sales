@@ -95,8 +95,8 @@ class NotificationHelpers {
         title: `Pago recibido: ${salesOrder.salesOrderCode}`,
         message: `${customer.name} realizó un pago de $${payment.amount.toLocaleString()} para la cuota ${installment.installmentNumber} del pedido ${salesOrder.salesOrderCode}`,
         relatedEntity: {
-          entityType: 'Payment',
-          entityId: payment._id
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
         },
         metadata: {
           salesOrderCode: salesOrder.salesOrderCode,
@@ -221,8 +221,8 @@ class NotificationHelpers {
         title: `Stock reservado: ${salesOrder.salesOrderCode}`,
         message: `Se reservó stock para ${productCount} producto(s) del pedido ${salesOrder.salesOrderCode} de ${customer.name}`,
         relatedEntity: {
-          entityType: 'StockReservation',
-          entityId: stockReservation._id
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
         },
         metadata: {
           salesOrderCode: salesOrder.salesOrderCode,
@@ -254,8 +254,8 @@ class NotificationHelpers {
         title: `Envío realizado: ${salesOrder.salesOrderCode}`,
         message: `El pedido ${salesOrder.salesOrderCode} ha sido enviado`,
         relatedEntity: {
-          entityType: 'StockReservation',
-          entityId: stockReservation._id
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
         },
         metadata: {
           salesOrderCode: salesOrder.salesOrderCode,
@@ -326,6 +326,81 @@ class NotificationHelpers {
       console.log(`Notification sent for seller assigned: ${seller.name} ${seller.surname}`);
     } catch (error) {
       console.error('Error sending seller assigned notification:', error);
+    }
+  }
+
+  /**
+   * Notificación cuando se crea un nuevo pago (pendiente de aprobación)
+   */
+  static async onPaymentCreated(payment, installment, salesOrder, createdBy = null) {
+    try {
+      const customer = salesOrder.customer;
+      const sellerId = salesOrder.responsible;
+      const requiresApproval = payment.paymentMethod !== 'MercadoPago' || payment.status === 'Pending';
+
+      await NotificationService.createNotification({
+        type: 'PAYMENT_CREATED',
+        title: `Nuevo pago: ${salesOrder.salesOrderCode}`,
+        message: `Se registró un nuevo pago de $${payment.amount.toLocaleString()} para la cuota ${installment.installmentNumber} del pedido ${salesOrder.salesOrderCode} via ${payment.paymentMethod}${requiresApproval ? ' (Pendiente de aprobación)' : ''}`,
+        relatedEntity: {
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
+        },
+        metadata: {
+          salesOrderCode: salesOrder.salesOrderCode,
+          customerName: customer.name,
+          customerId: customer._id,
+          sellerId: sellerId,
+          amount: payment.amount,
+          installmentNumber: installment.installmentNumber,
+          installmentAmount: installment.amount,
+          paymentMethod: payment.paymentMethod,
+          paymentStatus: payment.status,
+          requiresApproval,
+          dueDate: installment.dueDate
+        },
+        priority: requiresApproval ? 'high' : 'medium',
+        createdBy
+      });
+
+      console.log(`Notification sent for payment created: ${salesOrder.salesOrderCode} - Installment ${installment.installmentNumber}`);
+    } catch (error) {
+      console.error('Error sending payment created notification:', error);
+    }
+  }
+
+  /**
+   * Notificación cuando una cuota se paga completamente
+   */
+  static async onInstallmentFullyPaid(installment, salesOrder, paidBy = null) {
+    try {
+      const customer = salesOrder.customer;
+      const sellerId = salesOrder.responsible;
+
+      await NotificationService.createNotification({
+        type: 'INSTALLMENT_FULLY_PAID',
+        title: `Cuota pagada: ${salesOrder.salesOrderCode}`,
+        message: `La cuota ${installment.installmentNumber} de $${installment.amount.toLocaleString()} del pedido ${salesOrder.salesOrderCode} ha sido completamente pagada`,
+        relatedEntity: {
+          entityType: 'SalesOrder',
+          entityId: salesOrder._id
+        },
+        metadata: {
+          salesOrderCode: salesOrder.salesOrderCode,
+          customerName: customer.name,
+          customerId: customer._id,
+          sellerId: sellerId,
+          amount: installment.amount,
+          installmentNumber: installment.installmentNumber,
+          paidDate: installment.totalPaymentDate
+        },
+        priority: 'low',
+        createdBy: paidBy
+      });
+
+      console.log(`Notification sent for installment fully paid: ${salesOrder.salesOrderCode} - Installment ${installment.installmentNumber}`);
+    } catch (error) {
+      console.error('Error sending installment fully paid notification:', error);
     }
   }
 }

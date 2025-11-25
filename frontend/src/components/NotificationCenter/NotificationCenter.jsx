@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -27,8 +27,10 @@ import {
   Refresh,
 } from '@mui/icons-material';
 import useNotifications from '@/hooks/useNotifications';
+import { ModalSalesOrderContext } from '@/context/modalSalesOrderContext/ModalSalesOrderContext';
 
 const NotificationCenter = ({ open, onClose }) => {
+  const { openModal } = useContext(ModalSalesOrderContext);
   const {
     notifications,
     unreadCount,
@@ -58,7 +60,7 @@ const NotificationCenter = ({ open, onClose }) => {
       case 'STOCK_LOW':
       case 'STOCK_RESERVED':
       case 'STOCK_SHIPPED':
-        return <ErrorIcon color="info" />;
+        return <ErrorIcon color="action" />;
       case 'CUSTOMER_REGISTERED':
       case 'SELLER_ASSIGNED':
         return <Info color="primary" />;
@@ -223,6 +225,19 @@ const NotificationCenter = ({ open, onClose }) => {
             {notifications.map((notification, index) => (
               <React.Fragment key={notification._id || notification.id}>
                 <ListItem
+                  onClick={(e) => {
+                    // Evitar que el click en los iconos de acción abra el modal
+                    if (
+                      e.target.closest('.notification-action-btn')
+                    ) {
+                      return;
+                    }
+                    const { relatedEntity } = notification;
+                    if (relatedEntity?.entityType === 'SalesOrder') {
+                      openModal(relatedEntity.entityId);
+                      onClose();
+                    }
+                  }}
                   sx={{
                     py: 2,
                     px: 2,
@@ -236,6 +251,10 @@ const NotificationCenter = ({ open, onClose }) => {
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 2,
+                    '&:hover': {
+                      backgroundColor: 'action.selected',
+                      cursor: 'pointer',
+                    },
                   }}
                 >
                   <Box sx={{ mt: 0.5 }}>
@@ -295,19 +314,27 @@ const NotificationCenter = ({ open, onClose }) => {
                     {!notification.isRead && (
                       <IconButton
                         size="small"
-                        onClick={() => handleMarkAsRead(notification._id || notification.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMarkAsRead(notification._id || notification.id);
+                        }}
                         title="Marcar como leída"
                         sx={{ p: 0.5 }}
+                        className="notification-action-btn"
                       >
                         <MarkEmailRead fontSize="small" />
                       </IconButton>
                     )}
                     <IconButton
                       size="small"
-                      onClick={() => handleDelete(notification._id || notification.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(notification._id || notification.id);
+                      }}
                       color="error"
                       title="Eliminar"
                       sx={{ p: 0.5 }}
+                      className="notification-action-btn"
                     >
                       <Delete fontSize="small" />
                     </IconButton>
