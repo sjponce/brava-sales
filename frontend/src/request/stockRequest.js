@@ -20,9 +20,9 @@ export const stockRequest = {
       return errorHandler(error);
     }
   },
-  update: async ({ entity, id, jsonData }) => {
+  update: async ({ id, jsonData }) => {
     try {
-      const response = await axios.put(`${entity}/update/${id}`, jsonData);
+      const response = await axios.put(`stock/update/${id}`, jsonData);
       successHandler(response, {
         notifyOnSuccess: true,
         notifyOnFailed: true,
@@ -114,6 +114,19 @@ export const stockRequest = {
       return errorHandler(error);
     }
   },
+  listAllCatalog: async ({ entity }) => {
+    try {
+      const response = await axios.get(`${entity}/catalog`);
+
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: false,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
 
   post: async ({ entity, jsonData }) => {
     try {
@@ -176,7 +189,7 @@ export const stockRequest = {
     } catch (error) {
       return errorHandler(error);
     }
-  }
+  },
 };
 
 export default stockRequest;

@@ -133,17 +133,24 @@ const ShippingDataTable = () => {
                 horizontal: 'left',
               }}>
               <Box p={2}>
-                {currentProducts.map((product) => (
-                  <Box key={product.idStock} mb={1}>
-                    <Typography variant="subtitle2">
-                      {product.stockId} - {product.color}
-                    </Typography>
-                    <Typography variant="body2">
-                      Talles:{' '}
-                      {product.sizes.map((size) => `${size.size} (${size.quantity})`).join(', ')}
-                    </Typography>
-                  </Box>
-                ))}
+                {currentProducts
+                  .filter((product) => product.sizes
+                    && product.sizes.length > 0
+                    && product.sizes.some((size) => size.quantity > 0))
+                  .map((product) => (
+                    <Box key={product.idStock} mb={1}>
+                      <Typography variant="subtitle2">
+                        {product.stockId} - {product.color}
+                      </Typography>
+                      <Typography variant="body2">
+                        Talles:{' '}
+                        {product.sizes
+                          .filter((size) => size.quantity > 0)
+                          .map((size) => `${size.size} (${size.quantity})`)
+                          .join(', ')}
+                      </Typography>
+                    </Box>
+                  ))}
               </Box>
             </Popover>
           </Box>
@@ -155,11 +162,10 @@ const ShippingDataTable = () => {
       headerName: 'Cant. total',
       sortable: true,
       width: 100,
-      valueGetter: (params) =>
-        params.row.products.reduce(
-          (total, product) => total + product.sizes.reduce((sum, size) => sum + size.quantity, 0),
-          0
-        ),
+      valueGetter: (params) => params.row.products.reduce(
+        (total, product) => total + product.sizes.reduce((sum, size) => sum + size.quantity, 0),
+        0
+      ),
     },
     {
       field: 'clientName',
@@ -246,12 +252,16 @@ const ShippingDataTable = () => {
             )}
             {status === 'Shipped' && (
               <>
-                <IconButton onClick={() => handleApprove(params.row)} size="small">
-                  <Check />
-                </IconButton>
-                <IconButton onClick={() => handleCancel(params.row)} size="small">
-                  <Cancel />
-                </IconButton>
+                <Tooltip title="Aprobar envío">
+                  <IconButton onClick={() => handleApprove(params.row)} size="small">
+                    <Check />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Cancelar envío">
+                  <IconButton onClick={() => handleCancel(params.row)} size="small">
+                    <Cancel />
+                  </IconButton>
+                </Tooltip>
               </>
             )}
           </div>
@@ -262,7 +272,7 @@ const ShippingDataTable = () => {
 
   return (
     <Box display="flex" height="100%">
-      <DataTable columns={columns} rows={rows} data-test-id="shipping-data-table" />
+      <DataTable columns={columns} rows={shippingState?.isLoading ? [] : rows} data-test-id="shipping-data-table" />
       <Loading isLoading={shippingState?.isLoading} />
       <EditShippingModal shipping={selectedRow} open={open} handlerOpen={setOpen} />
       <CustomDialog

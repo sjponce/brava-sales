@@ -27,7 +27,6 @@ const createMPLink = async (req, res) => {
       failure: `${process.env.MP_REDIRECT_URL}/failure?salesOrder=${installment.salesOrder}&installment=${installmentId}&amount=${paymentData.amount}`,
       pending: `${process.env.MP_REDIRECT_URL}/pending?salesOrder=${installment.salesOrder}&installment=${installmentId}&amount=${paymentData.amount}`,
     },
-    auto_return: 'approved',
   };
   try {
     const preference = await createPreference(body);

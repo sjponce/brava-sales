@@ -3,12 +3,16 @@ import { DataGrid, GridToolbar, esES } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 
 const DataTable = ({
-  columns, rows, rowHeight, filter,
+  columns, rows, rowHeight, filter
 }) => (
   <Box
     className="dataTable"
     sx={{
-      display: 'flex', tableLayout: 'fixed', width: '100%', overflowY: 'auto', height: '70vh',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      height: '100%',
+      minHeight: '70vh',
     }}
   >
     <DataGrid
@@ -19,11 +23,14 @@ const DataTable = ({
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 5,
+            pageSize: 7,
           },
         },
       }}
-      slots={{ toolbar: GridToolbar }}
+      slots={{
+        toolbar: GridToolbar,
+        noRowsOverlay: () => null,
+      }}
       slotProps={{
         toolbar: {
           showQuickFilter: true,
@@ -37,11 +44,17 @@ const DataTable = ({
       disableColumnFilter={!filter}
       disableColumnSelector
       disableColumnMenu
+      disableDensitySelector
       sx={{
-        minHeight: 450,
-        backgroundColor: 'info.main',
-        border: 'none',
+        height: '100%',
+        backgroundColor: 'background.default',
+        borderEndEndRadius: 0,
+        borderEndStartRadius: 0,
         '@media print': { color: 'black' },
+        '& .MuiDataGrid-columnHeaderTitle': {
+          fontWeight: 'bold',
+          color: 'text.secondary',
+        },
       }}
       {...(rowHeight && { rowHeight })}
     />

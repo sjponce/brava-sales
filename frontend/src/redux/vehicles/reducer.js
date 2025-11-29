@@ -1,0 +1,50 @@
+import * as actionTypes from './types';
+
+const INITIAL_KEY_STATE = {
+  result: null,
+  isLoading: false,
+  isSuccess: false,
+};
+
+const INITIAL_STATE = {
+  listAll: INITIAL_KEY_STATE,
+};
+
+// eslint-disable-next-line default-param-last
+const vehiclesReducer = (state = INITIAL_STATE, action) => {
+  const { payload, keyState } = action;
+  switch (action.type) {
+    case actionTypes.RESET_STATE:
+      return INITIAL_STATE;
+    case actionTypes.REQUEST_LOADING:
+      return {
+        ...state,
+        [keyState]: {
+          ...state[keyState],
+          isLoading: true,
+        },
+      };
+    case actionTypes.REQUEST_FAILED:
+      return {
+        ...state,
+        [keyState]: {
+          ...state[keyState],
+          isLoading: false,
+          isSuccess: false,
+        },
+      };
+    case actionTypes.REQUEST_SUCCESS:
+      return {
+        ...state,
+        [keyState]: {
+          result: payload,
+          isLoading: false,
+          isSuccess: true,
+        },
+      };
+    default:
+      return state;
+  }
+};
+
+export default vehiclesReducer;

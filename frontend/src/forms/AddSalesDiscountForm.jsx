@@ -14,7 +14,7 @@ import sales from '@/redux/sales/actions';
 
 const AddSalesDiscountForm = ({ control, watch, setValue }) => {
   const dispatch = useDispatch();
-  const promotions = useSelector((store) => store.crud.list);
+  const promotions = useSelector((store) => store.crud.list_promotion);
   const currentOptions = useSelector(getPaymentOptions);
 
   const handlerUpdateOptions = (event, dataOptions) => {

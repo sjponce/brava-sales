@@ -1,11 +1,11 @@
 import { Box, Button, IconButton, Modal, Tooltip, Typography, styled } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import AddTripForm from '@/forms/AddTripForm';
-import crud from '@/redux/crud/actions';
+import AddTravelForm from '@/forms/AddTravelForm';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import { travelsActions } from '@/redux/travels';
 
 const StyledModal = styled(Modal)({
   display: 'flex',
@@ -13,9 +13,9 @@ const StyledModal = styled(Modal)({
   justifyContent: 'center',
 });
 
-const AddTripModal = ({ open, handlerOpen }) => {
+const AddTravelModal = ({ open, handlerOpen }) => {
+  const { setValue, watch, reset, handleSubmit } = useForm();
   const dispatch = useDispatch();
-  const { register, setValue, watch, reset, handleSubmit } = useForm();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const preSubmit = (e) => {
@@ -27,29 +27,23 @@ const AddTripModal = ({ open, handlerOpen }) => {
     setDialogOpen(false);
   };
 
-  const createTrip = async (data) => {
-    try {
-      dispatch(
-        crud.create({
-          entity: 'trip',
-          jsonData: {
-            ...data,
-            seller: data.seller?._id,
-            startDate: new Date(data.startDate),
-            endDate: new Date(data.endDate),
-          },
-        })
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const onSubmit = async (data) => {
-    createTrip(data);
-    reset();
-    setDialogOpen(false);
-    handlerOpen(false);
+    try {
+      const payload = {
+        vehicleId: data.vehicle?._id,
+        sellerId: data.seller?._id || undefined,
+        stops: data.stops || [],
+        useExtraStock: true,
+        extraStockItems: data.extraStockItems || [],
+      };
+      dispatch(travelsActions.create(payload));
+    } catch (error) {
+      // handled globally
+    } finally {
+      reset();
+      setDialogOpen(false);
+      handlerOpen(false);
+    }
   };
 
   const handleClose = () => {
@@ -76,8 +70,8 @@ const AddTripModal = ({ open, handlerOpen }) => {
             </IconButton>
           </Tooltip>
         </Box>
-        <Box component="form" name="add_trip" onSubmit={preSubmit}>
-          <AddTripForm register={register} setValue={setValue} watch={watch} />
+        <Box component="form" name="add_travel" onSubmit={preSubmit}>
+          <AddTravelForm setValue={setValue} watch={watch} />
           <Box mt={3} display="flex" justifyContent="flex-end">
             <Button
               type="submit"
@@ -100,4 +94,4 @@ const AddTripModal = ({ open, handlerOpen }) => {
   );
 };
 
-export default AddTripModal;
+export default AddTravelModal;

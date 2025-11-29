@@ -1,4 +1,4 @@
-import { DarkModeOutlined, LightModeOutlined, Storefront } from '@mui/icons-material';
+import { DarkModeOutlined, LightModeOutlined, Storefront, Notifications } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -11,12 +11,15 @@ import {
   Tooltip,
   Typography,
   styled,
+  Badge,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toggleTheme } from '@/redux/themeReducer';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
+import NotificationCenter from '@/components/NotificationCenter/NotificationCenter';
+import useNotifications from '@/hooks/useNotifications';
 
 const StyledToolbar = styled(Toolbar)({
   paddingRight: '20px',
@@ -43,9 +46,11 @@ const NavbarMaterial = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const user = useSelector((state) => state.auth.current);
   const theme = useSelector((state) => state.theme);
+  const { unreadCount } = useNotifications();
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
@@ -60,10 +65,18 @@ const NavbarMaterial = () => {
     setAnchorEl(null);
   };
 
+  const handleNotificationClick = () => {
+    setNotificationOpen(true);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationOpen(false);
+  };
+
   return (
     <Stack position="sticky">
       <StyledToolbar
-        sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, margin: 1.5 }}
+        sx={{ backgroundColor: 'background.paper', borderRadius: 2.5, marginX: { xs: 'none', sm: 1.5 }, marginY: 1.5 }}
         disableGutters
       >
         <Logo>
@@ -78,6 +91,13 @@ const NavbarMaterial = () => {
           <Tooltip title="Ecommerce" arrow>
             <IconButton onClick={() => navigate('/ecommerce')}>
               <Storefront color="secondary" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Notificaciones" arrow>
+            <IconButton onClick={handleNotificationClick} color="primary">
+              <Badge badgeContent={unreadCount} color="error" invisible={unreadCount === 0}>
+                <Notifications color="warning" />
+              </Badge>
             </IconButton>
           </Tooltip>
           <IconButton onClick={handleToggleTheme}>
@@ -105,6 +125,10 @@ const NavbarMaterial = () => {
         isOpen={dialogOpen}
         onCancel={() => setDialogOpen(false)}
         onAccept={() => navigate('/logout')}
+      />
+      <NotificationCenter
+        open={notificationOpen}
+        onClose={handleNotificationClose}
       />
     </Stack>
   );

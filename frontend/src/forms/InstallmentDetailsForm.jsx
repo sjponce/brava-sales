@@ -54,7 +54,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const handleDialogCancel = () => {
-    setDialogOpen(false);
+    setStatusDialogOpen(false);
   };
   const handleClose = () => {
     handlerOpen(false);
@@ -75,8 +75,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
     (i) => i._id === installmentId
   );
   const payedAmount = installment?.payments?.reduce(
-    (sum, currentPayment) =>
-      currentPayment.status === 'Approved' ? sum + currentPayment.amount : sum,
+    (sum, currentPayment) => (currentPayment.status === 'Approved' ? sum + currentPayment.amount : sum),
     0
   );
   const paymentDifference = (installment?.amount ?? 0) - payedAmount;
@@ -181,10 +180,10 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
                 color="primary"
                 fullWidth
                 disabled={
-                  isLoading ||
-                  !isValid ||
-                  (watch('paymentMethod') !== 'MercadoPago' && !watch('photo')) ||
-                  !watch('paymentMethod')
+                  isLoading
+                  || !isValid
+                  || (watch('paymentMethod') !== 'MercadoPago' && !watch('photo'))
+                  || !watch('paymentMethod')
                 }
                 size="medium">
                 <Typography variant="button">Añadir pago</Typography>
@@ -199,7 +198,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
             onCancel={handleDialogCancel}
           />
           <CustomDialog
-            title={`${selectedRow.status === 'Rejected' ? 'Aprobar' : 'Rechazar'} Pago`}
+            title={`${selectedRow.status === 'Rejected' ? 'Rechazar' : 'Aprobar'} Pago`}
             text="Esta acción no se puede deshacer, ¿Desea continuar?"
             isOpen={statusDialogOpen}
             onAccept={handleDialogAccept}

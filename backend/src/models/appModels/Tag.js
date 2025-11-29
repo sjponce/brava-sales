@@ -6,6 +6,10 @@ const TagSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     removed: {
       type: Boolean,
       default: false,

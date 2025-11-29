@@ -15,21 +15,20 @@ jest.mock('./components/AddSalesOrderModal', () => ({ open, handlerOpen }) => (
 describe('SalesOrders', () => {
   test('renders SalesOrders component', () => {
     render(<SalesOrders />);
-    expect(screen.getByText('Ordenes de venta')).toBeInTheDocument();
-    expect(screen.getByText('Nueva Orden de Venta')).toBeInTheDocument();
+    expect(screen.getByTestId("AddButton")).toBeInTheDocument();
     expect(screen.getByTestId('sales-order-data-table')).toBeInTheDocument();
   });
 
   test('opens AddSalesOrderModal when "Nueva Orden de Venta" button is clicked', () => {
     render(<SalesOrders />);
-    const addButton = screen.getByText('Nueva Orden de Venta');
+    const addButton = screen.getByTestId("AddButton");
     fireEvent.click(addButton);
     expect(screen.getByText('Modal Open')).toBeInTheDocument();
   });
 
   test('closes AddSalesOrderModal when close button is clicked', () => {
     render(<SalesOrders />);
-    const addButton = screen.getByText('Nueva Orden de Venta');
+    const addButton = screen.getByTestId("AddButton");
     fireEvent.click(addButton);
     const closeButton = screen.getByText('Close Modal');
     fireEvent.click(closeButton);

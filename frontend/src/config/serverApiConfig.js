@@ -1,6 +1,5 @@
-export const API_BASE_URL = `${process.env.VITE_BACKEND_SERVER}api/` ?? 'http://localhost:8089/api/';
-export const BASE_URL = `${process.env.VITE_BACKEND_SERVER}` ?? 'http://localhost:8070';
+export const API_BASE_URL = `${process.env.VITE_BACKEND_SERVER}api/` ?? 'https://localhost:443/api/';
+export const BASE_URL = `${process.env.VITE_BACKEND_SERVER}` ?? 'https://localhost:443:8070';
 
-export const WEBSITE_URL = 'http://localhost:3000/';
-export const DOWNLOAD_BASE_URL = 'http://localhost:8080/download/';
+export const DOWNLOAD_BASE_URL = 'https://localhost:443/download/';
 export const ACCESS_TOKEN_NAME = 'x-auth-token';

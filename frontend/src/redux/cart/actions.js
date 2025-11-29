@@ -64,6 +64,17 @@ const cart = {
   openFilters: () => ({
     type: actionTypes.OPEN_FILTERS,
   }),
+  selectTagFilter: (tag) => ({
+    type: actionTypes.SELECT_TAG_FILTER,
+    payload: tag, // { tagId, category }
+  }),
+  deselectTagFilter: (tag) => ({
+    type: actionTypes.DESELECT_TAG_FILTER,
+    payload: tag, // { tagId, category }
+  }),
+  resetTagFilters: () => ({
+    type: actionTypes.RESET_TAG_FILTERS,
+  }),
   openOrderDialog: () => ({
     type: actionTypes.OPEN_ORDER_DIALOG,
   }),

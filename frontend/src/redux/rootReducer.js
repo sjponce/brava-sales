@@ -6,6 +6,8 @@ import stockReducer from './stock';
 import salesReducer from './sales';
 import docsReducer from './docs';
 import cartReducer from './cart';
+import travelsReducer from './travels';
+import vehiclesReducer from './vehicles';
 
 // Combine all reducers.
 
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
   sales: salesReducer,
   docs: docsReducer,
   cart: cartReducer,
+  travels: travelsReducer,
+  vehicles: vehiclesReducer,
 });
 
 export default rootReducer;

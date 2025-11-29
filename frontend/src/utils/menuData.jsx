@@ -7,11 +7,11 @@ import {
 export const menuMaterial = [
   {
     id: 1,
-    title: 'Dashboard',
+    title: 'Home',
     listItems: [
       {
         id: 1,
-        title: 'Home',
+        title: 'Dashboard',
         url: '/',
         icon: <HomeOutlined color="primary" />,
       },
@@ -72,13 +72,13 @@ export const menuMaterial = [
     listItems: [
       {
         id: 1,
-        title: 'productos',
+        title: 'Productos',
         url: 'productsReport',
         icon: <InsertChartOutlined color="primary" />,
       },
       {
         id: 2,
-        title: 'clientes',
+        title: 'Clientes',
         url: 'clientsReport',
         icon: <InsertChartOutlined color="primary" />,
       },
@@ -90,11 +90,11 @@ export const menuMaterial = [
 export const menuMaterialSellers = [
   {
     id: 1,
-    title: 'Dashboard',
+    title: 'Home',
     listItems: [
       {
         id: 1,
-        title: 'Home',
+        title: 'Dashboard',
         url: '/',
         icon: <HomeOutlined color="primary" />,
       },
@@ -149,14 +149,14 @@ export const menuMaterialSellers = [
     listItems: [
       {
         id: 1,
-        title: 'Informes',
-        url: 'reports',
-        icon: <FeedOutlined color="primary" />,
+        title: 'Productos',
+        url: 'productsReport',
+        icon: <InsertChartOutlined color="primary" />,
       },
       {
         id: 2,
-        title: 'Estadísticas',
-        url: 'stats',
+        title: 'Clientes',
+        url: 'clientsReport',
         icon: <InsertChartOutlined color="primary" />,
       },
 

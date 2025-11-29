@@ -15,9 +15,13 @@ const stockApiRouter = require('./routes/appRoutes/stockApi');
 
 const docsApiRouter = require('./routes/appRoutes/docsApi');
 
+const notificationApiRouter = require('./routes/appRoutes/notificationRoutes');
+
 const salesApiRouter = require('./routes/appRoutes/salesApi');
 
 const appApiRouter = require('./routes/appRoutes/appApi');
+
+const travelsApiRouter = require('./routes/appRoutes/travelsApi');
 
 const errorHandlers = require('./handlers/errorHandlers');
 
@@ -25,6 +29,9 @@ const userAuth = require('./controllers/coreControllers/userAuth');
 
 // create our Express app
 const app = express();
+
+// When running behind a proxy/ingress, this ensures req.secure reflects HTTPS
+app.set('trust proxy', 1);
 
 app.use(
   cors({
@@ -46,8 +53,14 @@ app.use('/api', userAuth.isValidAuthToken, coreApiRouter);
 app.use('/api', userAuth.isValidAuthToken, appApiRouter);
 app.use('/api', userAuth.isValidAuthToken, stockApiRouter);
 app.use('/api', userAuth.isValidAuthToken, salesApiRouter);
+app.use('/api', userAuth.isValidAuthToken, travelsApiRouter);
 app.use('/api', userAuth.isValidAuthToken, erpApiRouter);
 app.use('/api', userAuth.isValidAuthToken, docsApiRouter);
+app.use('/api/notifications', userAuth.isValidAuthToken, notificationApiRouter);
+
+// SOLO PARA TESTING - REMOVER EN PRODUCCIÓN
+const testNotificationApiRouter = require('./routes/appRoutes/testNotificationRoutes');
+app.use('/api/test-notifications', userAuth.isValidAuthToken, testNotificationApiRouter);
 
 app.get('/', (req, res) => {
   res.send('Brava sales!!');

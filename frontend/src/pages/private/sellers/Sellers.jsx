@@ -19,27 +19,33 @@ const Sellers = () => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        borderRadius={2}
-        marginBottom="20px">
-        <Typography variant="h4" color="primary">Vendedores</Typography>
-        <Button
-          onClick={handleClickOpen}
-          disabled={userState.role !== 'admin'}
-          variant="text"
-          size="large"
-          color="primary"
-          startIcon={<AddCircle />}>
-          <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            Nuevo vendedor
-          </Typography>
-        </Button>
-      </Box>
+      <Typography variant="overline" color="primary" align="center">
+        Vendedores
+      </Typography>
       <AddSellerModal open={open} handlerOpen={handleClose} idSeller="" />
       <SellersDataTable />
+      <Button
+        variant="outlined"
+        color="success"
+        data-test-id="add-seller-button"
+        fullWidth
+        onClick={handleClickOpen}
+        disabled={userState.role !== 'admin'}
+        sx={{
+          bottom: 1,
+          borderRadius: 3,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          boxShadow: 'none',
+          border: 1,
+          bgcolor: 'background.default',
+          ':hover': {
+            bgcolor: 'background.alternative',
+          },
+          alignSelf: 'center',
+        }}>
+        <AddCircle sx={{ fontSize: 32 }} color="success" />
+      </Button>
     </Box>
   );
 };

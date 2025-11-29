@@ -2,10 +2,12 @@ const listAll = require('./listAll');
 const axios = require('axios');
 const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 const getSalesProducts = require('./getSalesProducts');
-const getLatestPrice = require('./getLatestPrice');
+const getLatestPrices = require('./getLatestPrices');
+const syncProductsSync = require('./syncProductsSync');
 jest.mock('axios');
 jest.mock('./getSalesProducts');
-jest.mock('./getLatestPrice');
+jest.mock('./getLatestPrices');
+jest.mock('./syncProductsSync');
 describe('listAll', () => {
   let req, res, axiosInstance;
 
@@ -41,6 +43,7 @@ describe('listAll', () => {
   test('test_listAll_sales_not_found', async () => {
     axiosInstance.get.mockResolvedValue({ data: { products: [] } });
     getSalesProducts.mockResolvedValue([]);
+    syncProductsSync.mockResolvedValue({ created: [], reactivated: [], deactivated: [] });
 
     await listAll(req, res, axiosInstance);
 

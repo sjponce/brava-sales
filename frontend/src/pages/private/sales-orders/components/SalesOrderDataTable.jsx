@@ -1,7 +1,7 @@
 import { Download, Visibility } from '@mui/icons-material';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import DataTable from '@/components/dataTable/DataTable';
 import sales from '@/redux/sales/actions';
@@ -9,26 +9,27 @@ import docs from '@/redux/docs/actions';
 import Loading from '@/components/Loading';
 import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
-import ModalSalesOrderDetails from './ModalSalesOrderDetails';
+// import ModalSalesOrderDetails from './ModalSalesOrderDetails';
 import stock from '@/redux/stock/actions';
 import { selectCurrentItem } from '@/redux/sales/selectors';
 import getProductImageMap from '@/utils/getProductImageMap';
 import crud from '@/redux/crud/actions';
+import { ModalSalesOrderContext } from '@/context/modalSalesOrderContext/ModalSalesOrderContext';
 
 const SalesOrderDataTable = () => {
   const dispatch = useDispatch();
-  const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  // const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState({
     id: '',
   });
+
+  const { openModal } = useContext(ModalSalesOrderContext);
 
   const saleData = useSelector(selectCurrentItem)?.result;
 
   const handleDetails = async (id) => {
     setSelectedRow({ ...selectedRow, id });
-    await dispatch(sales.read({ entity: 'sales', id }));
-    await dispatch(crud.filter({ entity: 'stockReservation', options: { filter: 'salesOrder', equal: id } }));
-    setOpenDetailsModal(true);
+    openModal(id);
   };
 
   useEffect(() => {
@@ -44,26 +45,12 @@ const SalesOrderDataTable = () => {
 
   const location = useLocation();
 
-  const createdPayment = useSelector((state) => state.sales.createPayment);
-  const updatedPayment = useSelector((state) => state.sales.updatePayment);
-
-  const crudUpdate = useSelector((state) => state.crud.update);
-
-  useEffect(() => {
-    if (!createdPayment?.result && !crudUpdate?.result && !updatedPayment?.result) return;
-    if (createdPayment?.isLoading && crudUpdate?.isLoading && updatedPayment?.isLoading) return;
-    dispatch(sales.read({ entity: 'sales', id: selectedRow.id }));
-  }, [updatedPayment, crudUpdate, createdPayment]);
-
   const salesOrderState = useSelector((store) => store.sales.listAll);
-  const readSalesOrderState = useSelector((store) => store.sales.read);
   const createSalesOrderState = useSelector((store) => store.sales.create);
   const updateSalesOrderState = useSelector((store) => store.sales.update);
   const deleteSalesOrderState = useSelector((store) => store.sales.delete);
   const reserveStockState = useSelector((store) => store.sales.reserveStock);
-  const stockProductsState = useSelector((store) => store.stock.getStockProducts);
   const products = useSelector((store) => store.stock.listAll)?.result?.items?.result;
-  const filterState = useSelector((store) => store.crud.filter);
 
   useEffect(() => {
     if (!reserveStockState?.isSuccess || selectedRow.id === '') return;
@@ -73,11 +60,22 @@ const SalesOrderDataTable = () => {
 
   const [rows, setRows] = useState([]);
 
+  const [filterOrderId, setFilterOrderId] = useState(null);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const orderId = searchParams?.get('orderId');
+    setFilterOrderId(orderId || null);
+  }, [location.search]);
+
   useEffect(() => {
     if (!salesOrderState?.result) return;
-    const newRows = salesOrderState.result?.items.result.map((item) => ({ ...item, id: item._id }));
+    let newRows = salesOrderState.result?.items.result.map((item) => ({ ...item, id: item._id }));
+    if (filterOrderId) {
+      newRows = newRows.filter((r) => String(r._id || r.id) === String(filterOrderId));
+    }
     setRows(newRows);
-  }, [salesOrderState]);
+  }, [salesOrderState, filterOrderId]);
 
   const updateTable = () => {
     if (salesOrderState?.isLoading) return;
@@ -87,7 +85,7 @@ const SalesOrderDataTable = () => {
   useEffect(() => {
     updateTable();
   }, [createSalesOrderState, updateSalesOrderState, deleteSalesOrderState, reserveStockState]);
-
+  console.log(rows);
   const columns = [
     {
       field: 'salesOrderCode',
@@ -100,6 +98,7 @@ const SalesOrderDataTable = () => {
       field: 'customer',
       headerName: 'Cliente',
       width: 150,
+      valueGetter: (params) => params.row.customer?.name || '',
       renderCell: (params) => `${params.row.customer?.name || ''}`,
     },
     {
@@ -112,7 +111,12 @@ const SalesOrderDataTable = () => {
       field: 'status',
       headerName: 'Estado',
       width: 200,
-      renderCell: (params) => `${translateStatus(params.row.status) || ''}`,
+      renderCell: (params) => {
+        if (params.row.shippingMethod === 'tripDelivery' && params.row.status === 'Delivered') {
+          return 'Completado';
+        }
+        return translateStatus(params.row.status) || '';
+      }
     },
     {
       field: 'actions',
@@ -148,7 +152,7 @@ const SalesOrderDataTable = () => {
       if (installment && salesOrder) {
         setSelectedRow({ id: salesOrder });
         await dispatch(sales.read({ entity: 'sales', id: salesOrder }));
-        setOpenDetailsModal(true);
+        // setOpenDetailsModal(true);
       }
     };
 
@@ -163,13 +167,10 @@ const SalesOrderDataTable = () => {
 
   return (
     <Box display="flex" height="100%">
-      <DataTable columns={columns} rows={rows} />
-      <ModalSalesOrderDetails handlerOpen={setOpenDetailsModal} open={openDetailsModal} />
+      <DataTable columns={columns} rows={salesOrderState?.isLoading ? [] : rows} />
       <Loading
         isLoading={
-          salesOrderState?.isLoading || readSalesOrderState?.isLoading || updatedPayment?.isLoading
-          || reserveStockState?.isLoading || stockProductsState?.isLoading
-          || filterState?.isLoading || false
+          salesOrderState?.isLoading
         }
       />
     </Box>

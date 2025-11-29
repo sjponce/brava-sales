@@ -1,5 +1,5 @@
 import { DeleteRounded, EditRounded, LockOpenRounded } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
@@ -90,42 +90,71 @@ const DataTableCustomers = () => {
   const columns = [
     {
       field: 'name',
-      headerName: 'Nombre/Razón Social',
-      width: 200,
+      headerName: 'Nombre/Razón',
+      width: 150,
       renderCell: (params) => `${params.row.name || ''}`,
     },
     {
       field: 'email',
-      headerName: 'Correo electrónico',
+      headerName: 'Email',
       width: 200,
     },
     {
       field: 'number',
-      headerName: 'Número de teléfono',
+      headerName: 'Teléfono',
       width: 150,
     },
     {
       field: 'documentType',
-      headerName: 'Tipo de documento',
-      width: 150,
+      headerName: 'Tipo D.',
+      width: 65,
     },
     {
       field: 'documentNumber',
-      headerName: 'Número Documento',
+      headerName: 'Número D.',
       width: 150,
     },
     {
       field: 'ivaCondition',
-      headerName: 'Condición IVA',
-      width: 150,
+      headerName: 'Cond. IVA',
+      width: 90,
+      renderCell: (params) => {
+        const getIvaConditionShort = (ivaCondition) => {
+          switch (ivaCondition) {
+            case 'Responsable Inscripto':
+              return 'RI';
+            case 'Monotributista':
+              return 'MTR';
+            case 'Consumidor final':
+              return 'CF';
+            default:
+              return 'No definido';
+          }
+        };
+        return (
+          <Tooltip title={params.row.ivaCondition || 'No definido'}>
+            {getIvaConditionShort(params.row.ivaCondition)}
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: 'state',
+      headerName: 'Provincia',
+      renderCell: (params) => `${params.row.address?.state || ''}`,
+    },
+    {
+      field: 'city',
+      headerName: 'Ciudad',
+      renderCell: (params) => `${params.row.address?.city || ''}`,
     },
     {
       field: 'address',
       headerName: 'Dirección',
-      width: 300,
+      width: 180,
       renderCell: (params) => {
         const { address } = params.row;
-        return `${address?.street || ''} ${address?.streetNumber || ''}, ${address?.city || ''}, ${address?.state || ''}`;
+        return `${address?.street || ''} ${address?.streetNumber || ''}`;
       },
     },
     {
@@ -155,7 +184,10 @@ const DataTableCustomers = () => {
             <IconButton disabled={isDisabled} onClick={() => handleDisable(id, name)} size="small">
               <DeleteRounded />
             </IconButton>
-            <IconButton disabled={isDisabled} onClick={() => handleResetPassword(id, name, email, documentNumber)} size="small">
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => handleResetPassword(id, name, email, documentNumber)}
+              size="small">
               <LockOpenRounded />
             </IconButton>
           </div>
@@ -166,7 +198,7 @@ const DataTableCustomers = () => {
 
   return (
     <Box display="flex" height="100%">
-      <DataTable columns={columns} rows={rows} />
+      <DataTable columns={columns} rows={customerState?.isLoading ? [] : rows} />
       <CustomDialog
         title={`Deshabilitar: ${selectedRow.name}`}
         text="Esta acción no se puede deshacer, ¿Desea continuar?"

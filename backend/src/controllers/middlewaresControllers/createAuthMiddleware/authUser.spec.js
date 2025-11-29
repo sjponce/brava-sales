@@ -10,6 +10,8 @@ describe('authUser', () => {
         remember: false,
       },
       hostname: 'localhost',
+      headers: {},
+      secure: false,
     };
     res = {
       status: jest.fn().mockReturnThis(),
@@ -20,6 +22,7 @@ describe('authUser', () => {
       _id: 'user123',
       role: 'user',
       email: 'john.doe@example.com',
+      forcePasswordReset: false,
     };
     userEntity = {
       name: 'John',
@@ -56,7 +59,13 @@ describe('authUser', () => {
     await authUser(req, res, { user, databasePassword, password, UserPasswordModel, userEntity });
 
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.cookie).toHaveBeenCalledWith('token', 'fakeToken', {"Partitioned": true, "domain": "localhost", "httpOnly": true, "maxAge": 86400000, "path": "/", "sameSite": "Lax", "secure": false});
+    expect(res.cookie).toHaveBeenCalledWith('token', 'fakeToken', {
+      maxAge: 86400000,
+      sameSite: 'Lax',
+      httpOnly: true,
+      secure: false,
+      path: '/',
+    });
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       result: {
@@ -67,6 +76,7 @@ describe('authUser', () => {
         email: user.email,
         phone: userEntity.phone,
         photo: userEntity.photo,
+        forcePasswordReset: user.forcePasswordReset,
       },
       message: 'Usuario autenticado.',
     });
@@ -82,7 +92,7 @@ describe('authUser', () => {
     await authUser(req, res, { user, databasePassword, password, UserPasswordModel, userEntity });
 
     expect(jwt.sign).toHaveBeenCalledWith(
-      { id: user._id },
+      expect.objectContaining({ id: user._id }),
       process.env.JWT_SECRET,
       { expiresIn: '120h' }
     );
@@ -91,9 +101,7 @@ describe('authUser', () => {
       sameSite: 'Lax',
       httpOnly: true,
       secure: false,
-      domain: req.hostname,
       path: '/',
-      Partitioned: true,
     });
 
     jwt.sign.mockRestore();
