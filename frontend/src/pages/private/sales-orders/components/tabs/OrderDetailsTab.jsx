@@ -151,7 +151,7 @@ const OrderDetailsTab = ({ saleData }) => {
                 <Typography variant="overline">Monto Base</Typography>
               </TableCell>
               <TableCell align="right">
-                <Typography variant="subtitle2">${saleData?.totalAmount}</Typography>
+                <Typography variant="subtitle2">${saleData?.totalAmount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
               </TableCell>
             </TableRow>
             <TableRow>
@@ -169,7 +169,7 @@ const OrderDetailsTab = ({ saleData }) => {
               <TableCell align="right">
                 <Typography variant="subtitle2">
                   {saleData?.installments?.length} de $
-                  {saleData?.installments ? saleData?.installments[0].amount : 0}
+                  {saleData?.installments ? saleData?.installments[0].amount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -178,7 +178,7 @@ const OrderDetailsTab = ({ saleData }) => {
                 <Typography variant="overline">Monto final</Typography>
               </TableCell>
               <TableCell align="right">
-                <Typography variant="subtitle2">${saleData?.finalAmount}</Typography>
+                <Typography variant="subtitle2">${saleData?.finalAmount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
               </TableCell>
             </TableRow>
           </TableBody>

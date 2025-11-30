@@ -73,6 +73,10 @@ const NavbarMaterial = () => {
     setNotificationOpen(false);
   };
 
+  const stringAvatar = (name) => ({
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1] ? name.split(' ')[1][0] : ''}`,
+  });
+
   return (
     <Stack position="sticky">
       <StyledToolbar
@@ -104,9 +108,12 @@ const NavbarMaterial = () => {
             {theme === 'dark' ? <LightModeOutlined /> : <DarkModeOutlined />}
           </IconButton>
           <Divider orientation="vertical" flexItem variant="middle" />
-          <IconButton onClick={handleClick} id="profile-menu">
-            <Avatar src={user.photo} sx={{ width: 30, height: 30 }} />
-          </IconButton>
+          <Tooltip title={user.name} arrow>
+            <IconButton onClick={handleClick}>
+              {!user.photo ? <Avatar {... stringAvatar(user.name)} sx={{ width: 36, height: 36 }} />
+                : <Avatar src={user.photo} sx={{ width: 36, height: 36 }} />}
+            </IconButton>
+          </Tooltip>
         </Box>
         <Menu
           id="profile-menu"
@@ -115,7 +122,6 @@ const NavbarMaterial = () => {
           onClose={handleClose}
           MenuListProps={{ 'aria-labelledby': 'basic-button' }}
         >
-          <MenuItem onClick={handleClose}>Perfil</MenuItem>
           <MenuItem onClick={() => setDialogOpen(true)}>Cerrar sesión</MenuItem>
         </Menu>
       </StyledToolbar>
