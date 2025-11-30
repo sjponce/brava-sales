@@ -65,6 +65,7 @@ const Navbar = ({ toggleDrawer }) => {
   const { unreadCount } = useNotifications();
 
   const handleToggleTheme = () => {
+    console.log(user.photo);
     dispatch(toggleTheme());
   };
 
@@ -84,6 +85,10 @@ const Navbar = ({ toggleDrawer }) => {
   const handleNotificationClose = () => {
     setNotificationOpen(false);
   };
+
+  const stringAvatar = (name) => ({
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1] ? name.split(' ')[1][0] : ''}`,
+  });
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -146,9 +151,12 @@ const Navbar = ({ toggleDrawer }) => {
             </IconButton>
           </Tooltip>
           <Divider orientation="vertical" flexItem variant="middle" />
-          <IconButton onClick={handleClick}>
-            <Avatar src={user.photo} sx={{ width: 30, height: 30 }} />
-          </IconButton>
+          <Tooltip title={user.name} arrow>
+            <IconButton onClick={handleClick}>
+              {!user.photo ? <Avatar {... stringAvatar(user.name)} sx={{ width: 36, height: 36 }} />
+                : <Avatar src={user.photo} sx={{ width: 36, height: 36 }} />}
+            </IconButton>
+          </Tooltip>
         </Box>
         <Menu
           id="basic-menu"
@@ -156,7 +164,6 @@ const Navbar = ({ toggleDrawer }) => {
           open={open}
           onClose={handleClose}
           MenuListProps={{ 'aria-labelledby': 'basic-button' }}>
-          <MenuItem onClick={handleClose}>Perfil</MenuItem>
           <MenuItem onClick={() => setDialogOpen(true)}>Cerrar sesión</MenuItem>
         </Menu>
       </StyledToolbar>

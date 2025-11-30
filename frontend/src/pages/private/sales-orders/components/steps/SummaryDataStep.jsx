@@ -138,7 +138,7 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
               <TableCell align="right">
                 <Typography variant="subtitle2">
                   $
-                  {watch('totalAmount')?.toFixed(2)}
+                  {watch('totalAmount')?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -161,7 +161,7 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
                   {watch('installments')}
                   {' '}
                   de $
-                  {(watch('finalAmount') / watch('installments'))?.toFixed(2)}
+                  {(watch('finalAmount') / watch('installments'))?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -172,7 +172,7 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
               <TableCell align="right">
                 <Typography variant="subtitle2">
                   $
-                  {watch('finalAmount')?.toFixed(2)}
+                  {watch('finalAmount')?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Typography>
               </TableCell>
             </TableRow>
