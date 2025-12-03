@@ -217,7 +217,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
                     <Typography variant="overline">Total:</Typography>
                   </TableCell>
                   <TableCell align="right">
-                    <Typography variant="subtitle2">${installment?.amount}</Typography>
+                    <Typography variant="subtitle2">${installment?.amount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -225,16 +225,16 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
                     <Typography variant="overline">Pagado:</Typography>
                   </TableCell>
                   <TableCell align="right">
-                    <Typography variant="subtitle2">${payedAmount}</Typography>
+                    <Typography variant="subtitle2">${payedAmount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                    <Typography variant="overline">Por pagar:</Typography>
+                    <Typography variant="overline">Pendiente:</Typography>
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="subtitle2">
-                      {paymentDifference >= 0 ? Math.abs(paymentDifference) : 0}
+                      ${paymentDifference >= 0 ? Math.abs(paymentDifference).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -282,7 +282,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
                   <TableRow>
                     <TableCell>
                       <Typography align="center" variant="subtitle2">
-                        {p.amount}
+                        ${p.amount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Typography>
                     </TableCell>
                     <TableCell>

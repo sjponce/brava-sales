@@ -45,7 +45,7 @@ const AddInstallmentsForm = ({ control, watch, setValue }) => {
               {Array.from({ length: QTY_INSTALLMENTS }, (_, i) => i + 1).map((installments) => (
                 <MenuItem key={installments} value={installments}>
                   {`${installments} cuota${installments > 1 ? 's' : ''} de
-                  $${calculateInstallment(installments).toFixed(2)}`}
+                  $${calculateInstallment(installments).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 </MenuItem>
               ))}
             </Select>

@@ -54,7 +54,7 @@ const PaymentDataStep = ({ control, watch, setValue, ecommerce }) => {
               <TableCell align="right">
                 <Typography color="primary" variant="h6">
                   $
-                  {watch('totalAmount')?.toFixed(2)}
+                  {watch('totalAmount')?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -97,7 +97,7 @@ const PaymentDataStep = ({ control, watch, setValue, ecommerce }) => {
               <TableCell align="right">
                 <Typography color="primary" variant="h6">
                   $
-                  {watch('finalAmount')?.toFixed(2)}
+                  {watch('finalAmount')?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Typography>
               </TableCell>
             </TableRow>
