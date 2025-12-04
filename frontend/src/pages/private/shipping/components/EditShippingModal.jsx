@@ -20,7 +20,6 @@ const EditShippingModal = ({ shipping, open, handlerOpen }) => {
     { label: 'OCA', value: 'oca' },
     { label: 'Andreani', value: 'andreani' },
     { label: 'Retiro en oficina', value: 'officePickup' },
-    { label: 'Envío con viajes', value: 'tripDelivery' },
   ];
   const dispatch = useDispatch();
   const {

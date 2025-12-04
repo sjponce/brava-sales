@@ -54,7 +54,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const handleDialogCancel = () => {
-    setStatusDialogOpen(false);
+    setDialogOpen(false);
   };
   const handleClose = () => {
     handlerOpen(false);
@@ -143,6 +143,10 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
     setStatusDialogOpen(true);
   };
 
+  const handleStatusDialogCancel = () => {
+    setStatusDialogOpen(false);
+  };
+
   const handleDialogAccept = () => {
     const body = {
       paymentData: {
@@ -202,7 +206,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
             text="Esta acción no se puede deshacer, ¿Desea continuar?"
             isOpen={statusDialogOpen}
             onAccept={handleDialogAccept}
-            onCancel={handleDialogCancel}
+            onCancel={handleStatusDialogCancel}
           />
         </Box>
         <Box display="flex" gap={2} maxHeight={400}>
