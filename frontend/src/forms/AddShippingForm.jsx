@@ -6,14 +6,17 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui
 const shippingMethod = {
   andreani: {
     name: 'Andreani',
+    value: 'andreani',
     description: 'Andreani es un servicio de paquetería privado que conlleva un costo adicional.',
   },
   oca: {
     name: 'OCA',
+    value: 'oca',
     description: 'OCA es un servicio de paquetería privado que conlleva un costo adicional.',
   },
   officePickup: {
     name: 'Retiro en oficina',
+    value: 'officePickup',
     description: 'El cliente retirará su pedido en el local de la empresa.',
   },
 };
@@ -30,7 +33,7 @@ const AddShippingForm = ({ control }) => (
     <Controller
       name="shippingMethod"
       control={control}
-      defaultValue="tripDelivery"
+      defaultValue="oca"
       render={({ field }) => (
         <FormControl fullWidth>
           <InputLabel id="shippingMethod">Envío preferido</InputLabel>

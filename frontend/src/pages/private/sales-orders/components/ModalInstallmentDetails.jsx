@@ -194,6 +194,7 @@ const ModalInstallmentDetails = ({ installmentId = '', open, handlerOpen }) => {
               setValue={setValue}
               register={register}
               reset={reset}
+              pendingAmount={paymentDifference}
             />
             <Box display="flex" justifyContent="flex-end" mr={2}>
               <Button

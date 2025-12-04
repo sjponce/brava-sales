@@ -74,6 +74,12 @@ const SalesOrderDataTable = () => {
     if (filterOrderId) {
       newRows = newRows.filter((r) => String(r._id || r.id) === String(filterOrderId));
     }
+
+    newRows.sort((a, b) => {
+      const codeA = a.salesOrderCode || '';
+      const codeB = b.salesOrderCode || '';
+      return codeB.localeCompare(codeA, undefined, { numeric: true });
+    });
     setRows(newRows);
   }, [salesOrderState, filterOrderId]);
 
@@ -97,7 +103,7 @@ const SalesOrderDataTable = () => {
     {
       field: 'customer',
       headerName: 'Cliente',
-      width: 150,
+      width: 160,
       valueGetter: (params) => params.row.customer?.name || '',
       renderCell: (params) => `${params.row.customer?.name || ''}`,
     },

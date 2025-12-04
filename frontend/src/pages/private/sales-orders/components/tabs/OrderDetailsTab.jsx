@@ -18,6 +18,7 @@ import formatDate from '@/utils/formatDate';
 import translateStatus from '@/utils/translateSalesStatus';
 import { selectCurrentAdmin } from '@/redux/auth/selectors';
 import { getProductImages } from '@/redux/stock/selectors';
+import translateShippingMethod from '@/utils/translateShippingMethod';
 
 const OrderDetailsTab = ({ saleData }) => {
   const currentUser = useSelector(selectCurrentAdmin);
@@ -146,6 +147,16 @@ const OrderDetailsTab = ({ saleData }) => {
                 <Typography variant="subtitle2">{saleData?.customer?.name}</Typography>
               </TableCell>
             </TableRow>
+            {saleData?.shippingMethod && (
+              <TableRow>
+                <TableCell>
+                  <Typography variant="overline">Envío Favorito</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography variant="subtitle2">{translateShippingMethod(saleData?.shippingMethod)}</Typography>
+                </TableCell>
+              </TableRow>
+            )}
             <TableRow>
               <TableCell>
                 <Typography variant="overline">Monto Base</Typography>

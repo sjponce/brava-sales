@@ -82,6 +82,7 @@ const EditProductForm = ({ register, setValue, watch }) => {
           />
           <TextField
             name="description"
+            required
             margin="normal"
             label="Descripción"
             {...register('description')}

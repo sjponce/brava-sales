@@ -89,7 +89,7 @@ const EditShippingModal = ({ shipping, open, handlerOpen }) => {
         flexDirection="column">
         <Box alignItems="center" display="flex" mb={2} justifyContent="space-between">
           <Typography variant="h4" color="primary">
-            Editar envio
+            Editar envío
           </Typography>
           <IconButton onClick={() => handleClose()}>
             <Close />
@@ -114,7 +114,7 @@ const EditShippingModal = ({ shipping, open, handlerOpen }) => {
             <Typography variant="button">Guardar cambios</Typography>
           </Button>
           <CustomDialog
-            title="Editar envio"
+            title="Editar envío"
             text="Esta acción no se puede deshacer, ¿Desea continuar?"
             isOpen={dialogOpen}
             onAccept={handleSubmit(onSubmit)}
