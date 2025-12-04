@@ -54,7 +54,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const handleDialogCancel = () => {
-    setStatusDialogOpen(false);
+    setDialogOpen(false);
   };
   const handleClose = () => {
     handlerOpen(false);
@@ -143,6 +143,10 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
     setStatusDialogOpen(true);
   };
 
+  const handleStatusDialogCancel = () => {
+    setStatusDialogOpen(false);
+  };
+
   const handleDialogAccept = () => {
     const body = {
       paymentData: {
@@ -157,13 +161,13 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
 
   return (
     <Box height="auto" borderRadius={2.5} p={2} pt={0} display="flex" flexDirection="column">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Button startIcon={<ArrowBackIosNew />} onClick={handleClose}>
           Volver
         </Button>
         <Typography variant="overline">{`Detalle de cuota ${installment?.installmentNumber}`}</Typography>
       </Box>
-      <Box display="flex" mt={2} mb={2} justifyContent="space-between" gap={2}>
+      <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mb={2}>
         <Box component="form" id="step-1" onSubmit={preSubmit} width="100%">
           <Paper sx={{ borderRadius: 2.5, padding: 2, height: '100%' }}>
             <InstallmentPaymentForm
@@ -172,6 +176,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
               setValue={setValue}
               register={register}
               reset={reset}
+              pendingAmount={paymentDifference}
             />
             <Box display="flex" justifyContent="flex-end" fullWidth>
               <Button
@@ -202,13 +207,12 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
             text="Esta acción no se puede deshacer, ¿Desea continuar?"
             isOpen={statusDialogOpen}
             onAccept={handleDialogAccept}
-            onCancel={handleDialogCancel}
+            onCancel={handleStatusDialogCancel}
           />
         </Box>
-        <Box display="flex" gap={2} maxHeight={400}>
+        <Box display="flex" gap={2} width={{ xs: '100%', md: 'auto' }} maxHeight={{ xs: 'none', md: 400 }}>
           <TableContainer
             component={Paper}
-            maxHeight={400}
             sx={{ borderRadius: 2.5, overflow: 'auto' }}>
             <Table size="small">
               <TableBody>
@@ -243,10 +247,102 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
           </TableContainer>
         </Box>
       </Box>
-      <Box maxHeight={400}>
+      <Box width="100%">
+        {/* Vista Mobile - Cards */}
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+          <Typography variant="button" color="primary" align="center" mb={1}>
+            Pagos
+          </Typography>
+          {installment?.payments?.length > 0 ? (
+            installment.payments.map((p) => (
+              <Paper key={p._id} sx={{ p: 2, borderRadius: 2.5 }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1.5}>
+                  <Typography variant="h6" color="primary" fontWeight="bold">
+                    ${p.amount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: 1,
+                      bgcolor: (() => {
+                        if (p.status === 'Approved') return 'success.main';
+                        if (p.status === 'Rejected') return 'error.main';
+                        return 'warning.main';
+                      })(),
+                      color: '#fff',
+                      fontWeight: 500
+                    }}>
+                    {translateStatus(p.status)}
+                  </Typography>
+                </Box>
+                <Box display="flex" flexDirection="column" gap={1} mb={2}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography variant="caption" color="text.secondary">
+                      Fecha:
+                    </Typography>
+                    <Typography variant="body2">
+                      {formatDate(p.createdAt)}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography variant="caption" color="text.secondary">
+                      Método:
+                    </Typography>
+                    <Typography variant="body2">
+                      {translatePaymentMethod(p.paymentMethod)}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box display="flex" gap={1} justifyContent="flex-end" flexWrap="wrap">
+                  <Tooltip title="Ver comprobante">
+                    <IconButton
+                      disabled={!p.photo}
+                      onClick={() => window.open(p.photo, '_blank')}
+                      size="small">
+                      <Image color={p.photo ? 'primary' : 'disabled'} />
+                    </IconButton>
+                  </Tooltip>
+                  {currentUser.role !== 'customer' && (
+                    <>
+                      <Tooltip title="Aprobar pago">
+                        <IconButton
+                          disabled={p.status === 'Approved'}
+                          onClick={() => handleApproval(p._id, 'Approved')}
+                          size="small">
+                          <Check color={p.status !== 'Approved' ? 'success' : 'disabled'} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Rechazar pago">
+                        <IconButton
+                          disabled={p.status === 'Rejected'}
+                          onClick={() => handleApproval(p._id, 'Rejected')}
+                          size="small">
+                          <Cancel color={p.status !== 'Rejected' ? 'error' : 'disabled'} />
+                        </IconButton>
+                      </Tooltip>
+                    </>
+                  )}
+                </Box>
+              </Paper>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary" align="center" py={4}>
+              No hay pagos registrados
+            </Typography>
+          )}
+        </Box>
+
+        {/* Vista Desktop - Tabla */}
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 400, borderRadius: 2.5, overflow: 'auto' }}>
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            maxHeight: 400,
+            borderRadius: 2.5,
+            overflow: 'auto'
+          }}>
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -270,8 +366,7 @@ const InstallmentDetailsForm = ({ installmentId = '', open, handlerOpen }) => {
                   <Typography variant="overline">Estado</Typography>
                 </TableCell>
                 <TableCell align="center">
-                  {' '}
-                  <Typography variant="overline">Acción</Typography>{' '}
+                  <Typography variant="overline">Acción</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>

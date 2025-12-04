@@ -41,6 +41,12 @@ const ShippingDataTable = () => {
   useEffect(() => {
     if (!shippingState?.result) return;
     const newRows = shippingState.result?.items?.result?.map((item) => ({ ...item, id: item._id }));
+
+    newRows.sort((a, b) => {
+      const codeA = a.salesOrder?.salesOrderCode || '';
+      const codeB = b.salesOrder?.salesOrderCode || '';
+      return codeB.localeCompare(codeA, undefined, { numeric: true });
+    });
     setRows(newRows);
   }, [shippingState, editShippingState]);
 

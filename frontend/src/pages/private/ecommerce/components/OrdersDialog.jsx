@@ -18,10 +18,16 @@ import cart from '@/redux/cart/actions';
 import translateStatus from '@/utils/translateSalesStatus';
 
 const OrdersDialog = ({ handleAction }) => {
-  const orders = useSelector((store) => store.crud.filter)?.result?.result;
+  const ordersRaw = useSelector((store) => store.crud.filter)?.result?.result;
   const orderDialogOpen = useSelector(selectOpenOrderDialog);
   const productImageMap = useSelector(getProductImages);
   const dispatch = useDispatch();
+
+  const orders = ordersRaw ? [...ordersRaw].sort((a, b) => {
+    const codeA = a.salesOrderCode || '';
+    const codeB = b.salesOrderCode || '';
+    return codeB.localeCompare(codeA, undefined, { numeric: true });
+  }) : [];
 
   const toggleDialog = () => {
     dispatch(cart.openOrderDialog());

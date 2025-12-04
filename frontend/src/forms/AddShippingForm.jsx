@@ -4,21 +4,19 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui
 
 // TODO: Consumir tipos de envio desde la API
 const shippingMethod = {
-  tripDelivery: {
-    name: 'Envío con viajes',
-    description:
-      'El envío gratuito se realizará a domicilio del cliente en el próximo viaje de ventas a su localidad.',
-  },
   andreani: {
     name: 'Andreani',
+    value: 'andreani',
     description: 'Andreani es un servicio de paquetería privado que conlleva un costo adicional.',
   },
   oca: {
     name: 'OCA',
+    value: 'oca',
     description: 'OCA es un servicio de paquetería privado que conlleva un costo adicional.',
   },
   officePickup: {
     name: 'Retiro en oficina',
+    value: 'officePickup',
     description: 'El cliente retirará su pedido en el local de la empresa.',
   },
 };
@@ -35,14 +33,14 @@ const AddShippingForm = ({ control }) => (
     <Controller
       name="shippingMethod"
       control={control}
-      defaultValue="tripDelivery"
+      defaultValue="oca"
       render={({ field }) => (
         <FormControl fullWidth>
-          <InputLabel id="shippingMethod">Método de envío preferido</InputLabel>
+          <InputLabel id="shippingMethod">Envío preferido</InputLabel>
           <Select
             {...field}
             labelId="shippingMethod"
-            label="Método de envío"
+            label="Envío preferido"
             value={field.value || 'tripDelivery'}>
             {Object.keys(shippingMethod).map((key) => (
               <MenuItem key={key} value={key}>

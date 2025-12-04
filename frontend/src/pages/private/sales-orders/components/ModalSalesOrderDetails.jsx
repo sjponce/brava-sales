@@ -142,7 +142,82 @@ const ModalSalesOrderDetails = ({ open, handlerOpen }) => {
             {currentOptions?.option === 'installment' && (
               !openDetailsDialog ? (
                 <Box>
-                  <TableContainer component={Paper} sx={{ borderRadius: 2.5, overflow: 'auto' }}>
+                  {/* Vista Mobile - Cards */}
+                  <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+                    <Typography variant="button" color="primary" align="center" mb={1}>
+                      Cuotas
+                    </Typography>
+                    {saleData?.installments?.map((i) => (
+                      <Paper key={i.installmentNumber} sx={{ p: 2, borderRadius: 2.5 }}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1.5}>
+                          <Typography variant="h6" color="primary">
+                            Cuota #{i.installmentNumber}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              px: 1.5,
+                              py: 0.5,
+                              borderRadius: 1,
+                              bgcolor: i.status === 'Paid' ? 'success.dark' : 'warning.dark',
+                              color: '#fff',
+                              fontWeight: 500
+                            }}>
+                            {translateStatus(i.status)}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                          <Typography variant="body2" color="text.secondary">
+                            Monto:
+                          </Typography>
+                          <Typography variant="h6" color="primary" fontWeight="bold">
+                            ${i.amount?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" flexDirection="column" gap={1} mb={2}>
+                          <Box display="flex" justifyContent="space-between">
+                            <Typography variant="caption" color="text.secondary">
+                              Vencimiento:
+                            </Typography>
+                            <Typography variant="body2">
+                              {formatDate(i.dueDate)}
+                            </Typography>
+                          </Box>
+                          {i.totalPaymentDate && (
+                            <Box display="flex" justifyContent="space-between">
+                              <Typography variant="caption" color="text.secondary">
+                                Fecha de pago:
+                              </Typography>
+                              <Typography variant="body2">
+                                {formatDate(i.totalPaymentDate)}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                        <Box display="flex" gap={1} justifyContent="flex-end">
+                          <Tooltip title="Descargar">
+                            <IconButton size="small" onClick={() => handleDownload(i._id)}>
+                              <Download />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Pagar">
+                            <IconButton size="small" onClick={() => handlePayment(i._id)} disabled={i.status === 'Paid'}>
+                              <Payment />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </Paper>
+                    ))}
+                  </Box>
+
+                  {/* Vista Desktop - Tabla */}
+                  <TableContainer
+                    component={Paper}
+                    sx={{
+                      display: { xs: 'none', md: 'block' },
+                      borderRadius: 2.5,
+                      overflow: 'auto'
+                    }}>
                     <Table size="small">
                       <TableHead>
                         <TableRow>
