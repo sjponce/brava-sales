@@ -376,7 +376,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography color="primary" variant="h6">
-                        ${subtotal.toFixed(2)?.toLocaleString('es-AR') || '0'}
+                        ${subtotal?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -396,7 +396,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography color="primary" variant="h6">
-                        ${discountFromPercent.toFixed(2)}
+                        ${discountFromPercent?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -406,7 +406,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography color="primary" variant="h6">
-                        ${discountFixed.toFixed(2)?.toLocaleString('es-AR')}
+                        ${discountFixed?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -416,7 +416,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography color="primary" variant="h6">
-                        ${total.toFixed(2)?.toLocaleString('es-AR')}
+                        ${total?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -483,12 +483,12 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                               </TableCell>
                               <TableCell align="right">
                                 <Typography variant="subtitle2">
-                                  ${unit.toFixed(2)?.toLocaleString('es-AR') || '0'}
+                                  ${unit?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                                 </Typography>
                               </TableCell>
                               <TableCell align="right">
                                 <Typography variant="subtitle2">
-                                  ${sub.toFixed(2)?.toLocaleString('es-AR') || '0'}
+                                  ${sub?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -516,7 +516,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography variant="subtitle2">
-                        ${subtotal.toFixed(2)?.toLocaleString('es-AR')}
+                        ${subtotal?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -526,7 +526,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography variant="subtitle2">
-                        ${discountFromPercent.toFixed(2)}
+                        ${discountFromPercent.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -536,7 +536,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography variant="subtitle2">
-                        ${discountFixed.toFixed(2)?.toLocaleString('es-AR')}
+                        ${discountFixed?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -546,7 +546,7 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                     </TableCell>
                     <TableCell align="right">
                       <Typography variant="subtitle2">
-                        ${total.toFixed(2)?.toLocaleString('es-AR')}
+                        ${total?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </Typography>
                     </TableCell>
                   </TableRow>

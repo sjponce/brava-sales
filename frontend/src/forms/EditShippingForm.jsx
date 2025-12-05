@@ -13,11 +13,11 @@ const EditShippingForm = ({ control, register, watch, setValue, shippingMethodOp
           control={control}
           render={({ field }) => (
             <FormControl>
-              <InputLabel id="shippingMethod">Método de envio</InputLabel>
+              <InputLabel id="shippingMethod">Método de envío</InputLabel>
               <Select
                 {...field}
                 labelId="shippingMethod"
-                label="Método de envio"
+                label="Método de envío"
                 value={field?.value || 1}>
                 {shippingMethodOptions?.map((method) => (
                   <MenuItem key={method.value || method} value={method.value || method}>

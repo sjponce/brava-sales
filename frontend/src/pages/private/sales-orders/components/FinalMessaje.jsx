@@ -10,7 +10,7 @@ const FinalMessaje = ({ orderState, ecommerce = false }) => (
           <>
             Para continuar con la gestión acceda a editar orden.
             <br />
-            Codigo de orden: {orderState.result?.salesOrder.salesOrderCode}
+            Código de orden: {orderState.result?.salesOrder.salesOrderCode}
           </>
         )}
       </Typography>

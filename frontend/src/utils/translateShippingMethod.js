@@ -3,7 +3,7 @@ const translateShippingMethod = (method) => {
     oca: 'OCA',
     andreani: 'Andreani',
     officePickup: 'Retiro en oficina',
-    tripDelivery: 'Envio con viajes',
+    tripDelivery: 'Envío con viajes',
   };
   return paymentMethod[method] || method;
 };
