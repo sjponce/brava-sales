@@ -43,7 +43,12 @@ const TravelDetails = () => {
     const nextIdx = travel.stops.findIndex((s) => !s?.arrivedAt);
     return nextIdx === -1 ? travel.stops.length - 1 : nextIdx - 1;
   }, [travel]);
-
+  const capacityUsedPct = useMemo(() => {
+    if (!travel) return 0;
+    const total = sumBultos(travel?.items || []) + sumBultos(travel?.extraStockItems || []);
+    const cap = Number(travel.capacityBultos || 0) || 0;
+    return cap > 0 ? Math.min(100, Math.round((total * 100) / cap)) : 0;
+  }, [travel]);
   const load = async () => {
     const { result } = await travelsRequest.getDetails(id);
     setTravel(result);
@@ -112,7 +117,7 @@ const TravelDetails = () => {
           <Chip label={`Vehículo: ${travel.vehicle?.plate || ''}`} />
           <Chip label={`Vendedor: ${travel.seller?.name} ${travel.seller?.surname}` || ''} />
           <Chip label={`Capacidad: ${travel.capacityBultos} [u]`} />
-          <Chip label={`Capacidad %: ${((travel.extraStockItems.length / travel.capacityBultos) * 100).toFixed(2)}%`} />
+          <Chip label={`En uso: ${capacityUsedPct}%`} />
         </Box>
       </Paper>
 
