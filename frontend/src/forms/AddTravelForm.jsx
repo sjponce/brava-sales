@@ -26,12 +26,10 @@ const CITIES = [
   { id: 2, name: 'Villa Carlos Paz' },
   { id: 3, name: 'La Rioja' },
   { id: 4, name: 'Chilecito' },
-  { id: 5, name: 'San Salvador de Jujuy' },
-  { id: 6, name: 'Tilcara' },
-  { id: 7, name: 'Salta' },
-  { id: 8, name: 'Cafayate' },
-  { id: 9, name: 'San Miguel de Tucumán' },
-  { id: 10, name: 'Tafí del Valle' },
+  { id: 5, name: 'Tilcara' },
+  { id: 6, name: 'Salta' },
+  { id: 7, name: 'Cafayate' },
+  { id: 8, name: 'Tafí del Valle' },
 ];
 
 const AddTravelForm = ({ setValue, watch }) => {

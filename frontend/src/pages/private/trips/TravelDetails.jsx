@@ -15,7 +15,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { PlayArrowRounded, DoneAllRounded, RocketLaunchRounded, Inventory2Rounded } from '@mui/icons-material';
+import { PlayArrowRounded, DoneAllRounded, RocketLaunchRounded, Inventory2Rounded, NoCrashRounded, NoCrash } from '@mui/icons-material';
 import travelsRequest from '@/request/travelsRequest';
 import stockRequest from '@/request/stockRequest';
 import formatDate from '@/utils/formatDate';
@@ -182,7 +182,7 @@ const TravelDetails = () => {
                         await load();
                       }}
                     >
-                      <RocketLaunchRounded />
+                      <NoCrash />
                     </IconButton>
                   )}
                   {travel.status === 'IN_TRANSIT' && idx === currentStopIndex && (
