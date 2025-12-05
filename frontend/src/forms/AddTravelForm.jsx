@@ -23,8 +23,15 @@ import crud from '@/redux/crud/actions';
 
 const CITIES = [
   { id: 1, name: 'Córdoba' },
-  { id: 2, name: 'Alta Gracia' },
-  { id: 3, name: 'Carlos Paz' },
+  { id: 2, name: 'Villa Carlos Paz' },
+  { id: 3, name: 'La Rioja' },
+  { id: 4, name: 'Chilecito' },
+  { id: 5, name: 'San Salvador de Jujuy' },
+  { id: 6, name: 'Tilcara' },
+  { id: 7, name: 'Salta' },
+  { id: 8, name: 'Cafayate' },
+  { id: 9, name: 'San Miguel de Tucumán' },
+  { id: 10, name: 'Tafí del Valle' },
 ];
 
 const AddTravelForm = ({ setValue, watch }) => {
