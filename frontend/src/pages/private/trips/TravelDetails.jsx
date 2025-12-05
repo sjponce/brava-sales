@@ -110,7 +110,9 @@ const TravelDetails = () => {
           <Chip label={`Inicio: ${formatDate(travel.startDate)}`} />
           <Chip label={`Fin: ${formatDate(travel.endDate)}`} />
           <Chip label={`Vehículo: ${travel.vehicle?.plate || ''}`} />
-          <Chip label={`Conductor: ${travel.driverName || ''}`} />
+          <Chip label={`Vendedor: ${travel.seller?.name} ${travel.seller?.surname}` || ''} />
+          <Chip label={`Capacidad: ${travel.capacityBultos} [u]`} />
+          <Chip label={`Capacidad %: ${((travel.extraStockItems.length / travel.capacityBultos) * 100).toFixed(2)}%`} />
         </Box>
       </Paper>
 
