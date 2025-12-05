@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomDialog from '@/components/customDialog/CustomDialog.component';
 import sales from '@/redux/sales/actions';
+import cart from '@/redux/cart/actions';
 import { getCurrentStep } from '@/redux/sales/selectors';
 
 const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
@@ -54,6 +55,9 @@ const SummaryDataStep = ({ watch, handleSubmit, ecommerce }) => {
       if (!createSalesState.isLoading) {
         setDialogOpen(false);
         dispatch(sales.setCurrentStep(currentStep + 1));
+        if (ecommerce) {
+          dispatch(cart.resetAction({ actionType: 'cart' }));
+        }
       }
     }
   };
