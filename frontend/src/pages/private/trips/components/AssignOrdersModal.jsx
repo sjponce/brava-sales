@@ -172,7 +172,7 @@ const AssignOrdersModal = ({
                     <TableCell>{o.salesOrderCode}</TableCell>
                     <TableCell>{o.customer?.name}</TableCell>
                     <TableCell>{bultosFromOrder(o)}</TableCell>
-                    <TableCell>{o.finalAmount?.toLocaleString()}</TableCell>
+                    <TableCell>{o.finalAmount?.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                     <TableCell align="right">
                       <Button size="small" onClick={() => toggleExpand(o._id)}>
                         {expanded[o._id] ? 'Ocultar' : 'Ver'}

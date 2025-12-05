@@ -212,7 +212,7 @@ const TravelDetails = () => {
             {(travel.travelSalesOrders || []).map((so) => (
               <TableRow key={so._id || String(so)}>
                 <TableCell>{so.salesOrderCode || '-'}</TableCell>
-                <TableCell align="right">${Number(so.finalAmount || 0).toFixed(2)}</TableCell>
+                <TableCell align="right">${Number(so.finalAmount || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                 <TableCell>{translateStatus(so.status) || '-'}</TableCell>
                 <TableCell align="right">
                   <Button size="small" onClick={() => window.location.assign(`/sales-orders?orderId=${so._id || so}`)}>
