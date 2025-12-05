@@ -13,6 +13,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { PlayArrowRounded, DoneAllRounded, RocketLaunchRounded, Inventory2Rounded, NoCrashRounded, NoCrash } from '@mui/icons-material';
@@ -175,15 +176,18 @@ const TravelDetails = () => {
                 <TableCell>{stop.arrivedAt ? formatDate(stop.arrivedAt) : '-'}</TableCell>
                 <TableCell align="right">
                   {travel.status === 'IN_TRANSIT' && !stop.arrivedAt && (
-                    <IconButton
-                      color="primary"
-                      onClick={async () => {
-                        await travelsRequest.arriveStop(id, stop._id);
-                        await load();
-                      }}
-                    >
-                      <NoCrash />
-                    </IconButton>
+                    <Tooltip title="Llegar a parada" arrow>
+
+                      <IconButton
+                        color="primary"
+                        onClick={async () => {
+                          await travelsRequest.arriveStop(id, stop._id);
+                          await load();
+                        }}
+                      >
+                        <NoCrash />
+                      </IconButton>
+                    </Tooltip>
                   )}
                   {travel.status === 'IN_TRANSIT' && idx === currentStopIndex && (
                     <Button
