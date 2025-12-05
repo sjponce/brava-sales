@@ -312,10 +312,10 @@ const CreateTravelSaleModal = ({ open, onClose, travel, stop, onCreated }) => {
                           </Box>
                         </TableCell>
                         <TableCell align="right">
-                          ${unit.toFixed(2)}
+                          ${unit.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </TableCell>
                         <TableCell align="right">
-                          ${accumulated.toFixed(2)}
+                          ${accumulated.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </TableCell>
                       </TableRow>
                     );
