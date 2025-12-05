@@ -17,7 +17,7 @@ const listAll = async (userModel, req, res) => {
     return res.status(200).json({
       success: true,
       result,
-      message: 'se encontro los documentos',
+      message: 'se encontró los documentos',
     });
   } else {
     return res.status(203).json({

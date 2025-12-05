@@ -21,7 +21,7 @@ describe('authStock', () => {
   test('test_authentication_request_failure', async () => {
     axios.post.mockRejectedValue(new Error('Authentication failed'));
 
-    await expect(authStock()).rejects.toThrow('Ocurrio un error contactando a Stock');
+    await expect(authStock()).rejects.toThrow('Ocurrió un error contactando a Stock');
     expect(axios.post).toHaveBeenCalledWith(`${process.env.STOCK_API}/user/login`, {
       userName: process.env.STOCK_USERNAME,
       password: process.env.STOCK_SECRET,

@@ -30,13 +30,13 @@ describe('isValidAuthToken', () => {
     });
   });
 
-  it('should return a 401 status code with a "No se encontro el token" message when the token is not present in the request cookies', async () => {
+  it('should return a 401 status code with a "No se encontró el token" message when the token is not present in the request cookies', async () => {
     await isValidAuthToken(req, res, next, { userModel, jwtSecret });
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'No se encontro el token',
+      message: 'No se encontró el token',
       jwtExpired: true,
     });
   });

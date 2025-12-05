@@ -714,7 +714,7 @@ const listAll = async (req, res) => {
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se encontro todos los elementos',
+      message: 'Se encontró todos los elementos',
     });
   } else {
     return res.status(203).json({
@@ -737,7 +737,7 @@ const remove = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro el Travel',
+      message: 'No se encontró el Travel',
     });
   }
   return res.status(200).json({

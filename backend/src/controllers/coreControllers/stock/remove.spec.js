@@ -39,7 +39,7 @@ describe('remove', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: false,
             result: null,
-            message: 'No se encontro el producto',
+            message: 'No se encontró el producto',
         });
     });
 
@@ -53,7 +53,7 @@ describe('remove', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: false,
             result: null,
-            message: 'Ocurrio un error contactando a Stock',
+            message: 'Ocurrió un error contactando a Stock',
             error: errorMessage,
         });
     });

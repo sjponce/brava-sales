@@ -17,7 +17,7 @@ const filter = async (userModel, req, res) => {
   return res.status(200).json({
     success: true,
     result,
-    message: 'se encontro el documento',
+    message: 'se encontró el documento',
   });
 };
 

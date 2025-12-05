@@ -37,14 +37,14 @@ const updatePassword = async (userModel, req, res) => {
     return res.status(403).json({
       success: false,
       result: null,
-      message: "La contraseña no se actualizo",
+      message: "La contraseña no se actualizó",
     });
   }
 
   return res.status(200).json({
     success: true,
     result: {},
-    message: 'Se actualizo la contraseña ',
+    message: 'Se actualizó la contraseña ',
   });
 };
 

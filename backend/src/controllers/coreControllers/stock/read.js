@@ -8,7 +8,7 @@ const read = async (req, res, axiosInstance) => {
       return res.status(404).json({
         success: false,
         result: null,
-        message: 'No se encontro el producto',
+        message: 'No se encontró el producto',
       });
     }
     const stockData = await getStockDataByName(salesProducts.stockId, axiosInstance);
@@ -42,7 +42,7 @@ const read = async (req, res, axiosInstance) => {
       return res.status(404).json({
         success: false,
         result: null,
-        message: 'No se encontro el producto',
+        message: 'No se encontró el producto',
       });
     }
 
@@ -50,7 +50,7 @@ const read = async (req, res, axiosInstance) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Ocurrio un error contactando a Stock',
+      message: 'Ocurrió un error contactando a Stock',
       error: error.message,
     });
   }

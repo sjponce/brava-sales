@@ -4,7 +4,7 @@ const profile = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: "No se encontro el perfil",
+      message: "No se encontró el perfil",
     });
   }
   const result = {
@@ -19,7 +19,7 @@ const profile = async (req, res) => {
   return res.status(200).json({
     success: true,
     result,
-    message: 'se encontro el perfil',
+    message: 'se encontró el perfil',
   });
 };
 module.exports = profile;

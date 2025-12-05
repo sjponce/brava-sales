@@ -33,7 +33,7 @@ const listBySettingKey = async (req, res) => {
     return res.status(200).json({
       success: true,
       result: results,
-      message: 'Se encontro todos los elementos',
+      message: 'Se encontró todos los elementos',
     });
   } else {
     return res

@@ -20,7 +20,7 @@ await NotificationHelpers.onOrderCreated(
 return res.status(200).json({
   success: true,
   result: { salesOrder },
-  message: `La Orden de venta se creo correctamente`,
+  message: `La Orden de venta se creó correctamente`,
 });
 
 // Para el createPayment.js, agregar después de crear el pago:

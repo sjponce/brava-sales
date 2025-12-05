@@ -45,14 +45,14 @@ const updateStockReservationStatus = async (req, res) => {
         stockReservation,
         salesOrder: updatedSalesOrder
       },
-      message: 'La entrega se actualizo correctamente',
+      message: 'La entrega se actualizó correctamente',
     });
 
   } catch (error) {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Ocurrio un error actualizando la entrega',
+      message: 'Ocurrió un error actualizando la entrega',
       error: error.message
     });
   }

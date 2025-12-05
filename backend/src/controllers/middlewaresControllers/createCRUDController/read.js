@@ -16,14 +16,14 @@ const read = async (Model, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'no se encontro un documento',
+      message: 'no se encontró un documento',
     });
   } else {
     // Return success resposne
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se encontro el documento',
+      message: 'Se encontró el documento',
     });
   }
 };

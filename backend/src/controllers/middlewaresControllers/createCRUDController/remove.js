@@ -18,7 +18,7 @@ const remove = async (Model, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: `No se encontro el ${translate(Model.modelName)}`,
+      message: `No se encontró el ${translate(Model.modelName)}`,
     });
   } else {
     return res.status(200).json({

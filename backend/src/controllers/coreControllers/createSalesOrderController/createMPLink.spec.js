@@ -66,7 +66,7 @@ describe('createMPLink', () => {
   test('test_create_mp_link_installment_not_found', async () => {
     mongoose.model('Installment').findById().populate().exec.mockResolvedValue(null);
 
-    await expect(createMPLink(req, res)).rejects.toThrow('No se encontro la cuota');
+    await expect(createMPLink(req, res)).rejects.toThrow('No se encontró la cuota');
 
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).not.toHaveBeenCalled();

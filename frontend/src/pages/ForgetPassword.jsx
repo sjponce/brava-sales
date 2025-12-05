@@ -54,7 +54,7 @@ const ForgetPassword = () => {
         });
         notification.error({
           message: 'Error',
-          description: 'Ocurrio un erorr al cambiar la contraseña',
+          description: 'Ocurrió un erorr al cambiar la contraseña',
         });
       }
     });

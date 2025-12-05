@@ -58,7 +58,7 @@ const errorHandler = (error) => {
       maxCount: 2,
     });
     notification.error({
-      message: 'Ocurrio un error',
+      message: 'Ocurrió un error',
       description: errorText,
     });
     return response.data;

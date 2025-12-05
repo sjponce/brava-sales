@@ -74,7 +74,7 @@ describe('createPayment', () => {
         _id: 'installment123',
         payments: expect.arrayContaining([expect.objectContaining({ _id: 'payment123' })]),
       }),
-      message: 'Se creo el pago',
+      message: 'Se creó el pago',
     });
   });
 
@@ -87,7 +87,7 @@ describe('createPayment', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: false,
       result: null,
-      message: 'No se encontro la cuota',
+      message: 'No se encontró la cuota',
     });
   });
 
@@ -122,7 +122,7 @@ describe('createPayment', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       installment: expect.any(Object),
-      message: 'Se creo el pago',
+      message: 'Se creó el pago',
     });
   });
 
@@ -162,7 +162,7 @@ describe('createPayment', () => {
           }),
         ]),
       }),
-      message: 'Se creo el pago',
+      message: 'Se creó el pago',
     }));
   });
 

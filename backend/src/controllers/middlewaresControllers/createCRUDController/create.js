@@ -23,7 +23,7 @@ const create = async (Model, req, res) => {
   return res.status(200).json({
     success: true,
     result,
-    message: `El ${translate(Model.modelName)} se creo correctamente`,
+    message: `El ${translate(Model.modelName)} se creó correctamente`,
   });
 };
 

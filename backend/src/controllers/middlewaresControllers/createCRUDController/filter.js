@@ -16,14 +16,14 @@ const filter = async (Model, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro un documento',
+      message: 'No se encontró un documento',
     });
   } else {
     // Return success resposne
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se encontro el documento',
+      message: 'Se encontró el documento',
     });
   }
 };

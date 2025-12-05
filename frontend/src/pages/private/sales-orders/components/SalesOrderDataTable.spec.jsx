@@ -14,7 +14,7 @@ const mockDelete = jest.fn().mockResolvedValue({
 });
 
 const mockListAll = jest.fn().mockResolvedValue({
-  message: 'Se encontro todos los elementos',
+  message: 'Se encontró todos los elementos',
   result: {
     items: {
       result: [

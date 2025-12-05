@@ -10,7 +10,7 @@ const createMPLink = async (req, res) => {
     const installment = await Installment.findById(installmentId).populate('payments').exec();
 
     if (!installment) {
-      throw new Error('No se encontro la cuota');
+      throw new Error('No se encontró la cuota');
     }
 
   const body = {

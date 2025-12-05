@@ -23,14 +23,14 @@ const readBySettingKey = async (req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro un documento: ' + settingKey,
+      message: 'No se encontró un documento: ' + settingKey,
     });
   } else {
     // Return success resposne
     return res.status(200).json({
       success: true,
       result,
-      message: 'Se encontro el documento: ' + settingKey,
+      message: 'Se encontró el documento: ' + settingKey,
     });
   }
 };

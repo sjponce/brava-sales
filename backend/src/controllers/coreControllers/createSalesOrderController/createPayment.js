@@ -18,7 +18,7 @@ const createPayment = async (req, res) => {
       return res.status(404).json({
         success: false,
         result: null,
-        message: 'No se encontro la cuota',
+        message: 'No se encontró la cuota',
       });
     }
 
@@ -157,7 +157,7 @@ const createPayment = async (req, res) => {
       return res.status(200).json({
         success: true,
         installment,
-        message: 'Se creo el pago',
+        message: 'Se creó el pago',
       });
     }
   } catch (error) {
@@ -165,7 +165,7 @@ const createPayment = async (req, res) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Ocurrio un error buscando las ordenes de venta',
+      message: 'Ocurrió un error buscando las ordenes de venta',
       error: error.message,
     });
   }

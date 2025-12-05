@@ -11,7 +11,7 @@ const updatePayment = async (req, res) => {
       return res.status(404).json({
         success: false,
         result: null,
-        message: 'No se encontro el pago',
+        message: 'No se encontró el pago',
       });
     }
 
@@ -24,7 +24,7 @@ const updatePayment = async (req, res) => {
       return res.status(404).json({
         success: false,
         result: null,
-        message: 'No se encontro la cuota',
+        message: 'No se encontró la cuota',
       });
     }
     const totalPayment = installment.payments.reduce((totalAmount, currentPayment) => {
@@ -53,7 +53,7 @@ const updatePayment = async (req, res) => {
       return res.status(200).json({
         success: true,
         installment,
-        message: `Se actualizo el pago`,
+        message: `Se actualizó el pago`,
       });
     }
   } catch (error) {
@@ -61,7 +61,7 @@ const updatePayment = async (req, res) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Ocurrio un error buscando las ordenes de venta',
+      message: 'Ocurrió un error buscando las ordenes de venta',
       error: error.message,
     });
   }

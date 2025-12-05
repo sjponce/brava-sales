@@ -38,7 +38,7 @@ const remove = async (userModel, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro un documento',
+      message: 'No se encontró un documento',
     });
   } else {
     return res.status(200).json({

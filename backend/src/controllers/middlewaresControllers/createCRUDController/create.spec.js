@@ -49,7 +49,7 @@ describe('create', () => {
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       result: savedDoc,
-      message: `El ${translate(Model.modelName)} se creo correctamente`,
+      message: `El ${translate(Model.modelName)} se creó correctamente`,
     });
   });
 

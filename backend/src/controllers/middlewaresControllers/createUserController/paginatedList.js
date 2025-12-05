@@ -49,7 +49,7 @@ const paginatedList = async (userModel, req, res) => {
       success: true,
       result,
       pagination,
-      message: 'Se encontro todos los elementos',
+      message: 'Se encontró todos los elementos',
     });
   } else {
     return res.status(203).json({

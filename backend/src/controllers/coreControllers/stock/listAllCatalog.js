@@ -78,7 +78,7 @@ const listAllCatalog = async (req, res, axiosInstance) => {
     return res.status(500).json({
       success: false,
       result: null,
-      message: 'Ocurrio un error contactando a Stock',
+      message: 'Ocurrió un error contactando a Stock',
       error: error.message,
     });
   }

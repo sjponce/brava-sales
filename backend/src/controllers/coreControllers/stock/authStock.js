@@ -26,7 +26,7 @@ const authStock = async () => {
     return stockToken;
   } catch (error) {
     console.error('Error authenticating with stock API:', error);
-    throw new Error('Ocurrio un error contactando a Stock');
+    throw new Error('Ocurrió un error contactando a Stock');
   }
 };
 

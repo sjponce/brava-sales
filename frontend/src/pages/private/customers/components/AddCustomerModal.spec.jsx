@@ -30,7 +30,7 @@ jest.mock('react-hook-form', () => ({
 }));
 
 const mockCreate = jest.fn().mockResolvedValue({
-  message: 'Se creo el documento',
+  message: 'Se creó el documento',
   success: true,
 });
 

@@ -58,7 +58,7 @@ const update = async (userModel, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro el usuario',
+      message: 'No se encontró el usuario',
     });
   }
 
@@ -74,7 +74,7 @@ const update = async (userModel, req, res) => {
     return res.status(404).json({
       success: false,
       result: null,
-      message: 'No se encontro el vendedor',
+      message: 'No se encontró el vendedor',
     });
   }
 
@@ -90,7 +90,7 @@ const update = async (userModel, req, res) => {
       role: sellerResult.role,
       phone: sellerResult.phone,
     },
-    message: 'Se actualizo el vendedor',
+    message: 'Se actualizó el vendedor',
   });
 };
 
