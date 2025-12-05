@@ -15,7 +15,7 @@ const translateStatus = (status) => {
     Completed: 'Completado',
     PLANNED: 'Planificado',
     RESERVED: 'Reservado',
-    IN_TRANSIT: 'En transito',
+    IN_TRANSIT: 'En tránsito',
     COMPLETED: 'Completado',
     CANCELLED: 'Cancelado',
   };
