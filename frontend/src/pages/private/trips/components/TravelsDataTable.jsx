@@ -63,10 +63,10 @@ const TravelsDataTable = () => {
       renderCell: (params) => params.row.vehicle?.plate || '',
     },
     {
-      field: 'driverName',
-      headerName: 'Conductor',
+      field: 'seller',
+      headerName: 'Vendedor',
       width: 150,
-      renderCell: (params) => params.row.driverName || params.row.vehicle?.driver?.name || '',
+      renderCell: (params) => `${params.row.seller?.name} ${params.row.seller?.surname}` || '',
     },
     {
       field: 'status',
